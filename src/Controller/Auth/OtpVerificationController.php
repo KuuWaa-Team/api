@@ -4,7 +4,6 @@ namespace App\Controller\Auth;
 
 use App\Entity\User;
 use App\Repository\OtpRepository;
-use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;

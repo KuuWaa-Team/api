@@ -6,6 +6,7 @@ use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
+use App\Controller\Auth\CompleteProfileController;
 use App\Controller\Auth\LoginController;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -25,7 +26,13 @@ use Symfony\Component\Security\Core\User\UserInterface;
             requirements: ['phoneNumber' => 'String', 'phoneId' => 'String'],
             controller: LoginController::class,
             description: "Login with phone number",
-        )
+        ),
+        new Post(
+            uriTemplate: '/users/{id}/complete-profile',
+            requirements: ['firstname' => 'String', 'lastname' => 'String', 'address' => 'String'],
+            controller: CompleteProfileController::class,
+            description: "Complete profile informations",
+        ),
     ]
 )]
 class User implements UserInterface
