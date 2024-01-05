@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\TableRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: TableRepository::class)]
 #[ORM\Table(name: '`table`')]
@@ -12,12 +13,15 @@ class Table
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['read:event'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['read:event'])]
     private ?string $name = null;
 
     #[ORM\Column]
+    #[Groups(['read:event'])]
     private ?int $count = null;
 
     #[ORM\ManyToOne(inversedBy: 'tables')]
