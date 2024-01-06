@@ -45,6 +45,11 @@ class EventPack
     public function __construct()
     {
         $this->events = new ArrayCollection();
+        $this->features = [
+            'TABLE_MANAGEMENT' => false,
+            'REPORT_MANAGEMENT' => false,
+            'BEVERAGE_MANAGEMENT' => false,
+        ];
     }
 
     public function getId(): ?int

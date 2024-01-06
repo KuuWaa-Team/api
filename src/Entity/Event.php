@@ -3,12 +3,17 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
 use App\Controller\Event\ActivePackEventController;
+use App\Controller\Event\AddInvitationEventController;
+use App\Controller\Event\AddTableEventController;
 use App\Controller\Event\CreateEventController;
 use App\Controller\Event\ListingEventInvitationsController;
+use App\Controller\Event\ListingEventTablesController;
 use App\Controller\Event\ListingUserEventController;
 use App\Repository\EventRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -28,17 +33,25 @@ use Symfony\Component\Serializer\Annotation\Groups;
             ]
         ),
         new Get(
+            name: "userTables",
+            uriTemplate: "/events/{id}/tables",
+            controller: ListingEventTablesController::class,
+            normalizationContext: [
+                'groups' => ['read:event']
+            ]
+        ),
+        new Get(
             normalizationContext: [
                 'groups' => ['read:events', 'read:event', 'read:event:invitations']
             ]
         ),
         new Post(
             name: 'activePack',
-            uriTemplate: '/events/{id}/active-pack',
+            uriTemplate: '/events/{id}/active_event_pack',
             description: 'Active pack for event',
             controller: ActivePackEventController::class,
             openapiContext: [
-                'summary' => 'create order transaction',
+                'summary' => 'active pack event',
                 'requestBody' => [
                     'content' => [
                         'application/json' => [
@@ -54,16 +67,66 @@ use Symfony\Component\Serializer\Annotation\Groups;
                         ]
                     ]
                 ],
-                'responseBody' => [
+            ],
+        ),
+        new Post(
+            name: 'addTable',
+            uriTemplate: '/events/{id}/tables',
+            description: 'Add table for event',
+            controller: AddTableEventController::class,
+            openapiContext: [
+                'summary' => 'Add table for event',
+                'requestBody' => [
                     'content' => [
                         'application/json' => [
                             'schema' => [
                                 'type' => 'object',
-                                'properties' => []
+                                'properties' => [
+                                    'name' => [
+                                        'type' => 'string',
+                                        'example' => 'Orange',
+                                    ],
+                                    'count' => [
+                                        'type' => 'int',
+                                        'example' => 10,
+                                    ],
+                                ]
                             ]
                         ]
                     ]
-                ]
+                ],
+            ],
+        ),
+        new Post(
+            name: 'addInvitation',
+            uriTemplate: '/events/{id}/invitations',
+            description: 'Add invitation for event',
+            controller: AddInvitationEventController::class,
+            openapiContext: [
+                'summary' => 'Add invitation for event',
+                'requestBody' => [
+                    'content' => [
+                        'application/json' => [
+                            'schema' => [
+                                'type' => 'object',
+                                'properties' => [
+                                    'name' => [
+                                        'type' => 'string',
+                                        'example' => 'Joella',
+                                    ],
+                                    'civility' => [
+                                        'type' => 'string',
+                                        'example' => 'Mme',
+                                    ],
+                                    'count' => [
+                                        'type' => 'int',
+                                        'example' => 1,
+                                    ],
+                                ]
+                            ]
+                        ]
+                    ]
+                ],
             ],
         ),
         new GetCollection(
@@ -75,7 +138,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
         new Post(
             controller: CreateEventController::class,
             openapiContext: [
-                'summary' => 'create order transaction',
+                'summary' => 'create event ressource',
                 'requestBody' => [
                     'content' => [
                         'application/json' => [
@@ -119,18 +182,10 @@ use Symfony\Component\Serializer\Annotation\Groups;
                         ]
                     ]
                 ],
-                'responseBody' => [
-                    'content' => [
-                        'application/json' => [
-                            'schema' => [
-                                'type' => 'object',
-                                'properties' => []
-                            ]
-                        ]
-                    ]
-                ]
             ],
-        )
+        ),
+        new Put(),
+        new Delete()
     ]
 )]
 #[ORM\Entity(repositoryClass: EventRepository::class)]
