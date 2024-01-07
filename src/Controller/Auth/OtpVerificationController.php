@@ -54,6 +54,7 @@ class OtpVerificationController extends AbstractController
             'success'   => $success,
             'message'   => $message,
             'errorType' => $errorType,
+            'new' => $user->getFirstname() === null || $user->getLastname() === null || $user->getAddress() === null
         ];
 
         return new JsonResponse($response, Response::HTTP_OK);

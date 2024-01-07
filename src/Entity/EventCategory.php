@@ -2,20 +2,50 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
+use App\Controller\Event\ActivePackEventController;
+use App\Controller\Event\AddInvitationEventController;
+use App\Controller\Event\AddTableEventController;
+use App\Controller\Event\CreateEventController;
+use App\Controller\Event\ListingEventInvitationsController;
+use App\Controller\Event\ListingEventTablesController;
+use App\Controller\Event\ListingUserEventController;
+use App\Controller\EventCategory\GetEventCategoriesController;
 use App\Repository\EventCategoryRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
+#[ApiResource(
+    operations: [
+        new GetCollection(
+            uriTemplate: "/event_categories",
+            controller: GetEventCategoriesController::class,
+            name: "eventCategories",
+        ),
+        new Get(),
+        new Post(),
+        new Put(),
+        new Delete()
+    ]
+)]
 #[ORM\Entity(repositoryClass: EventCategoryRepository::class)]
 class EventCategory
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['category:pRead'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['category:pRead'])]
     private ?string $name = null;
 
     #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'children')]
@@ -26,6 +56,12 @@ class EventCategory
 
     #[ORM\OneToMany(mappedBy: 'category', targetEntity: Event::class)]
     private Collection $events;
+
+    #[ORM\Column(nullable: true)]
+    private ?bool $paid = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?bool $validated = null;
 
     public function __construct()
     {
@@ -118,6 +154,30 @@ class EventCategory
                 $event->setCategory(null);
             }
         }
+
+        return $this;
+    }
+
+    public function isPaid(): ?bool
+    {
+        return $this->paid;
+    }
+
+    public function setPaid(?bool $paid): static
+    {
+        $this->paid = $paid;
+
+        return $this;
+    }
+
+    public function isValidated(): ?bool
+    {
+        return $this->validated;
+    }
+
+    public function setValidated(?bool $validated): static
+    {
+        $this->validated = $validated;
 
         return $this;
     }

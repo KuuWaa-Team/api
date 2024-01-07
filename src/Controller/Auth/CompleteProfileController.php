@@ -10,11 +10,14 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Serializer\Exception\ExceptionInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 class CompleteProfileController extends AbstractController
 {
     public function __construct(
-        private readonly UserRepository $userRepository
+        private readonly UserRepository      $userRepository,
+        private readonly NormalizerInterface $normalizer,
     )
     {
     }
@@ -22,6 +25,7 @@ class CompleteProfileController extends AbstractController
     /**
      * @throws \JsonException
      * @throws NonUniqueResultException
+     * @throws ExceptionInterface
      */
     public function __invoke(Request $request, User $user): JsonResponse
     {
@@ -38,14 +42,17 @@ class CompleteProfileController extends AbstractController
             ->setLastname($lastname)
             ->setAddress($address)
         ;
+
         $this->userRepository->save($user, true);
 
-        $response = [
+        $return = [
             'success'   => true,
             'message'   => $message,
             'errorType' => $errorType,
+            'user'      => $user
         ];
 
+        $response = $this->normalizer->normalize($return, null, ['groups' => 'user:pRead']);
         return new JsonResponse($response, Response::HTTP_OK);
     }
 }

@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\InvitationRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: InvitationRepository::class)]
 class Invitation
@@ -11,15 +12,19 @@ class Invitation
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(["read:event:invitations"])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(["read:event:invitations"])]
     private ?string $name = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(["read:event:invitations"])]
     private ?string $civility = null;
 
     #[ORM\Column]
+    #[Groups(["read:event:invitations"])]
     private ?int $count = null;
 
     #[ORM\ManyToOne(inversedBy: 'invitations')]

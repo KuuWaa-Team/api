@@ -13,6 +13,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
@@ -39,8 +40,10 @@ class User implements UserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['user:pRead'])]
     private ?int $id = null;
 
+    #[Groups(['user:pRead'])]
     #[ORM\Column(length: 180, unique: true)]
     private ?string $phoneNumber = null;
 
@@ -48,12 +51,15 @@ class User implements UserInterface
     private array $roles = [];
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['user:pRead'])]
     private ?string $firstname = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['user:pRead'])]
     private ?string $lastname = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['user:pRead'])]
     private ?string $address = null;
 
     #[ORM\Column(length: 255, nullable: true)]

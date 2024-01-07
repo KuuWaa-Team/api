@@ -2,12 +2,192 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
+use App\Controller\Event\ActivePackEventController;
+use App\Controller\Event\AddInvitationEventController;
+use App\Controller\Event\AddTableEventController;
+use App\Controller\Event\CreateEventController;
+use App\Controller\Event\ListingEventInvitationsController;
+use App\Controller\Event\ListingEventTablesController;
+use App\Controller\Event\ListingUserEventController;
 use App\Repository\EventRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
+#[ApiResource(
+    operations: [
+        new Get(
+            name: "userInvitations",
+            uriTemplate: "/events/{id}/invitations",
+            controller: ListingEventInvitationsController::class,
+            normalizationContext: [
+                'groups' => ['read:event:invitations']
+            ]
+        ),
+        new Get(
+            name: "userTables",
+            uriTemplate: "/events/{id}/tables",
+            controller: ListingEventTablesController::class,
+            normalizationContext: [
+                'groups' => ['read:event']
+            ]
+        ),
+        new Get(
+            normalizationContext: [
+                'groups' => ['read:events', 'read:event', 'read:event:invitations']
+            ]
+        ),
+        new Post(
+            name: 'activePack',
+            uriTemplate: '/events/{id}/active_event_pack',
+            description: 'Active pack for event',
+            controller: ActivePackEventController::class,
+            openapiContext: [
+                'summary' => 'active pack event',
+                'requestBody' => [
+                    'content' => [
+                        'application/json' => [
+                            'schema' => [
+                                'type' => 'object',
+                                'properties' => [
+                                    'eventPack' => [
+                                        'type' => EventPack::class,
+                                        'example' => 'https://example.com/',
+                                    ],
+                                ]
+                            ]
+                        ]
+                    ]
+                ],
+            ],
+        ),
+        new Post(
+            uriTemplate: '/events/{id}/tables',
+            controller: AddTableEventController::class,
+            openapiContext: [
+                'summary' => 'Add table for event',
+                'requestBody' => [
+                    'content' => [
+                        'application/json' => [
+                            'schema' => [
+                                'type' => 'object',
+                                'properties' => [
+                                    'name' => [
+                                        'type' => 'string',
+                                        'example' => 'Orange',
+                                    ],
+                                    'count' => [
+                                        'type' => 'int',
+                                        'example' => 10,
+                                    ],
+                                ]
+                            ]
+                        ]
+                    ]
+                ],
+            ],
+            description: 'Add table for event',
+            name: 'addTable',
+        ),
+        new Post(
+            name: 'addInvitation',
+            uriTemplate: '/events/{id}/invitations',
+            description: 'Add invitation for event',
+            controller: AddInvitationEventController::class,
+            openapiContext: [
+                'summary' => 'Add invitation for event',
+                'requestBody' => [
+                    'content' => [
+                        'application/json' => [
+                            'schema' => [
+                                'type' => 'object',
+                                'properties' => [
+                                    'name' => [
+                                        'type' => 'string',
+                                        'example' => 'Joella',
+                                    ],
+                                    'civility' => [
+                                        'type' => 'string',
+                                        'example' => 'Mme',
+                                    ],
+                                    'count' => [
+                                        'type' => 'int',
+                                        'example' => 1,
+                                    ],
+                                ]
+                            ]
+                        ]
+                    ]
+                ],
+            ],
+        ),
+        new GetCollection(
+            controller: ListingUserEventController::class,
+            normalizationContext: [
+                'groups' => ['read:events']
+            ]
+        ),
+        new Post(
+            controller: CreateEventController::class,
+            openapiContext: [
+                'summary' => 'create event ressource',
+                'requestBody' => [
+                    'content' => [
+                        'application/json' => [
+                            'schema' => [
+                                'type' => 'object',
+                                'properties' => [
+                                    'name' => [
+                                        'type' => 'string',
+                                        'example' => 'Mariage de Joe',
+                                    ],
+                                    'date' => [
+                                        'type' => 'datetime',
+                                        'example' => '2024-01-04T09:58:22.696Z',
+                                    ],
+                                    'startHour' => [
+                                        'type' => 'string',
+                                        'example' => '2024-01-04T09:58:22.696Z'
+                                    ],
+                                    'endHour' => [
+                                        'type' => 'string',
+                                        'example' => '2024-01-04T09:58:22.696Z'
+                                    ],
+                                    'details' => [
+                                        'type' => 'string',
+                                        'example' => 'lorem ipsum'
+                                    ],
+                                    'address' => [
+                                        'type' => 'string',
+                                        'example' => 'Kinshasa - Gombe'
+                                    ],
+                                    'category' => [
+                                        'type' => EventCategory::class,
+                                        'example' => 'https://example.com/'
+                                    ],
+                                    'user' => [
+                                        'type' => User::class,
+                                        'example' => 'https://example.com/'
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ]
+                ],
+            ],
+        ),
+        new Put(),
+        new Delete()
+    ]
+)]
 #[ORM\Entity(repositoryClass: EventRepository::class)]
 class Event
 {
@@ -16,46 +196,71 @@ class Event
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['read:events'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['read:events'])]
     private ?string $name = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
+    #[Groups(['read:events'])]
     private ?\DateTimeInterface $date = null;
 
     #[ORM\Column(type: Types::TIME_MUTABLE)]
+    #[Groups(['read:events'])]
     private ?\DateTimeInterface $startHour = null;
 
     #[ORM\Column(type: Types::TIME_MUTABLE, nullable: true)]
+    #[Groups(['read:events'])]
     private ?\DateTimeInterface $endHour = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['read:event'])]
     private ?string $address = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['read:event'])]
     private ?string $details = null;
 
     #[ORM\ManyToOne(inversedBy: 'events')]
+    #[Groups(['read:events'])]
     private ?EventCategory $category = null;
 
     #[ORM\ManyToOne(inversedBy: 'events')]
     private ?User $user = null;
 
     #[ORM\OneToMany(mappedBy: 'event', targetEntity: Invitation::class)]
+    #[Groups(['read:event:invitations'])]
     private Collection $invitations;
 
     #[ORM\OneToMany(mappedBy: 'event', targetEntity: Table::class)]
+    #[Groups(['read:event'])]
     private Collection $tables;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['read:events'])]
     private ?string $status = null;
+
+    #[ORM\ManyToOne(inversedBy: 'events')]
+    #[Groups(['read:event'])]
+    private ?EventPack $eventPack = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?bool $paidEvent = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $paymentStatus = null;
+
+    #[ORM\ManyToMany(targetEntity: Feature::class, inversedBy: 'events')]
+    private Collection $features;
 
     public function __construct()
     {
         $this->invitations = new ArrayCollection();
         $this->tables = new ArrayCollection();
         $this->setStatus("pending");
+        $this->features = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -227,6 +432,65 @@ class Event
     public function setStatus(?string $status): static
     {
         $this->status = $status;
+
+        return $this;
+    }
+
+    public function getEventPack(): ?EventPack
+    {
+        return $this->eventPack;
+    }
+
+    public function setEventPack(?EventPack $eventPack): static
+    {
+        $this->eventPack = $eventPack;
+
+        return $this;
+    }
+
+    public function isPaidEvent(): ?bool
+    {
+        return $this->paidEvent;
+    }
+
+    public function setPaidEvent(?bool $paidEvent): static
+    {
+        $this->paidEvent = $paidEvent;
+        return $this;
+    }
+
+    public function getPaymentStatus(): ?string
+    {
+        return $this->paymentStatus;
+    }
+
+    public function setPaymentStatus(?string $paymentStatus): static
+    {
+        $this->paymentStatus = $paymentStatus;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Feature>
+     */
+    public function getFeatures(): Collection
+    {
+        return $this->features;
+    }
+
+    public function addFeature(Feature $feature): static
+    {
+        if (!$this->features->contains($feature)) {
+            $this->features->add($feature);
+        }
+
+        return $this;
+    }
+
+    public function removeFeature(Feature $feature): static
+    {
+        $this->features->removeElement($feature);
 
         return $this;
     }

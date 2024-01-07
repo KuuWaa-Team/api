@@ -19,7 +19,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Serializer\Exception\ExceptionInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-class LoginController extends AbstractController {
+class LoginController extends AbstractController
+{
 
     public function __construct(
         private readonly PhoneService                $phoneService,
@@ -29,8 +30,8 @@ class LoginController extends AbstractController {
         private readonly SmsService                  $SMSService,
         private readonly OTPService                  $OTPService,
         private readonly OtpRepository               $otpRepository,
-    )
-    {}
+    ) {
+    }
 
     /**
      * @throws JsonException|ExceptionInterface
@@ -59,8 +60,7 @@ class LoginController extends AbstractController {
                     // new user
                     $user = (new User())
                         ->setPhoneNumber($phoneNumber)
-                        ->setPhoneId($phoneId)
-                    ;
+                        ->setPhoneId($phoneId);
                     $this->userRepository->save($user, true);
                     $new = true;
                 } else {
@@ -71,8 +71,7 @@ class LoginController extends AbstractController {
                 $code = $this->OTPService->generate();
                 $otp = (new Otp())
                     ->setUser($user)
-                    ->setOtp($code)
-                ;
+                    ->setOtp($code);
                 $this->otpRepository->save($otp, true);
 
                 if ($new) {
@@ -84,8 +83,8 @@ class LoginController extends AbstractController {
                 }
                 $sms .= "Votre code de verification est : {$otp->getOtp()}\nCe code est valide pendant 5 minutes. Ne le partagez avec personne.";
 
-                $this->SMSService->send($phoneNumber, $sms);
-                $message = "Un Code a été envoyé au numéro $phoneNumber par SMS. Veuillez le saisir pour continuer";
+                 $this->SMSService->send($phoneNumber, $sms);
+                $message = "Un Code a été envoyé au numéro +$phoneNumber par SMS. Veuillez le saisir pour continuer";
 
                 $loginAt = new \DateTime();
             } else {
