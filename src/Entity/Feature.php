@@ -36,22 +36,22 @@ class Feature
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(["feature:pRead"])]
+    #[Groups(["feature:pRead", "event:fRead"])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(["feature:pRead"])]
+    #[Groups(["feature:pRead", "event:fRead"])]
     private ?string $name = null;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: '0', nullable: true)]
-    #[Groups(["feature:pRead"])]
+    #[Groups(["feature:pRead", "event:fRead"])]
     private ?string $price = null;
 
     #[ORM\ManyToMany(targetEntity: Event::class, mappedBy: 'features')]
     private Collection $events;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(["feature:pRead"])]
+    #[Groups(["feature:pRead", "event:fRead"])]
     private ?string $description = null;
 
     public function __construct()

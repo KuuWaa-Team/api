@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Exception\ExceptionInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 class ListingEventInvitationsController extends AbstractController
@@ -21,14 +22,16 @@ class ListingEventInvitationsController extends AbstractController
     ) {
     }
 
+    /**
+     * @throws ExceptionInterface
+     */
     public function __invoke(Event $event, UserInterface $user): JsonResponse
     {
         $success = true;
 
-
         $response = [
-            'success'   => $success,
-            'data' => $this->normalizerInterface->normalize($event->getInvitations(), null, ['groups' => ['read:event:invitations']])
+            'success' => $success,
+            'data'    => $this->normalizerInterface->normalize($event->getInvitations(), null, ['groups' => ['event:pRead']])
         ];
 
         return new JsonResponse($response, Response::HTTP_OK);

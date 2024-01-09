@@ -23,7 +23,7 @@ class EventRepository extends ServiceEntityRepository
     }
 
 
-    public function save(Event $event, bool $flush):void {
+    public function save(Event $event, bool $flush = false):void {
         $this->getEntityManager()->persist($event);
         if ($flush) {
             $this->getEntityManager()->flush();

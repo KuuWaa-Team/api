@@ -36,19 +36,19 @@ class EventPack
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(["pack:pRead"])]
+    #[Groups(["pack:pRead", "event:pRead", "event:fRead"])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(["pack:pRead"])]
+    #[Groups(["pack:pRead", "event:pRead", "event:fRead"])]
     private ?string $name = null;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: '0')]
-    #[Groups(["pack:pRead"])]
+    #[Groups(["pack:pRead", "event:pRead", "event:fRead"])]
     private ?string $price = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(["pack:pRead"])]
+    #[Groups(["pack:pRead", "event:pRead", "event:fRead"])]
     private ?int $maxTickets = null;
 
     #[ORM\OneToMany(mappedBy: 'eventPack', targetEntity: Event::class)]

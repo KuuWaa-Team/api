@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Exception\ExceptionInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 class ListingUserEventController extends AbstractController
@@ -21,6 +22,9 @@ class ListingUserEventController extends AbstractController
     ) {
     }
 
+    /**
+     * @throws ExceptionInterface
+     */
     public function __invoke(UserInterface $user): JsonResponse
     {
         $data = [];
@@ -31,8 +35,8 @@ class ListingUserEventController extends AbstractController
         }
 
         $response = [
-            'success'   => $success,
-            'data' => $this->normalizerInterface->normalize($data, null, ['groups' => ['read:events']])
+            'success' => $success,
+            'data'    => $this->normalizerInterface->normalize($data, null, ['groups' => ['event:pRead']])
         ];
 
         return new JsonResponse($response, Response::HTTP_OK);

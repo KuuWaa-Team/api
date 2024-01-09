@@ -7,6 +7,8 @@ use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\Post;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
+use Symfony\Component\HttpFoundation\File\File;
 use ApiPlatform\Metadata\Put;
 use App\Controller\Event\ActivePackEventController;
 use App\Controller\Event\AddInvitationEventController;
@@ -22,33 +24,32 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
+#[Vich\Uploadable]
 #[ApiResource(
     operations: [
         new Get(
-            name: "userInvitations",
             uriTemplate: "/events/{id}/invitations",
             controller: ListingEventInvitationsController::class,
             normalizationContext: [
                 'groups' => ['read:event:invitations']
-            ]
+            ],
+            name: "userInvitations"
         ),
         new Get(
-            name: "userTables",
             uriTemplate: "/events/{id}/tables",
             controller: ListingEventTablesController::class,
             normalizationContext: [
                 'groups' => ['read:event']
-            ]
+            ],
+            name: "userTables"
         ),
         new Get(
             normalizationContext: [
-                'groups' => ['read:events', 'read:event', 'read:event:invitations']
+                'groups' => ['event:fRead']
             ]
         ),
         new Post(
-            name: 'activePack',
             uriTemplate: '/events/{id}/active_event_pack',
-            description: 'Active pack for event',
             controller: ActivePackEventController::class,
             openapiContext: [
                 'summary' => 'active pack event',
@@ -68,6 +69,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
                     ]
                 ],
             ],
+            description: 'Active pack for event',
+            name: 'activePack',
         ),
         new Post(
             uriTemplate: '/events/{id}/tables',
@@ -98,9 +101,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
             name: 'addTable',
         ),
         new Post(
-            name: 'addInvitation',
             uriTemplate: '/events/{id}/invitations',
-            description: 'Add invitation for event',
             controller: AddInvitationEventController::class,
             openapiContext: [
                 'summary' => 'Add invitation for event',
@@ -128,6 +129,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
                     ]
                 ],
             ],
+            description: 'Add invitation for event',
+            name: 'addInvitation',
         ),
         new GetCollection(
             controller: ListingUserEventController::class,
@@ -136,53 +139,9 @@ use Symfony\Component\Serializer\Annotation\Groups;
             ]
         ),
         new Post(
+            inputFormats: ['multipart' => ['multipart/form-data']],
             controller: CreateEventController::class,
-            openapiContext: [
-                'summary' => 'create event ressource',
-                'requestBody' => [
-                    'content' => [
-                        'application/json' => [
-                            'schema' => [
-                                'type' => 'object',
-                                'properties' => [
-                                    'name' => [
-                                        'type' => 'string',
-                                        'example' => 'Mariage de Joe',
-                                    ],
-                                    'date' => [
-                                        'type' => 'datetime',
-                                        'example' => '2024-01-04T09:58:22.696Z',
-                                    ],
-                                    'startHour' => [
-                                        'type' => 'string',
-                                        'example' => '2024-01-04T09:58:22.696Z'
-                                    ],
-                                    'endHour' => [
-                                        'type' => 'string',
-                                        'example' => '2024-01-04T09:58:22.696Z'
-                                    ],
-                                    'details' => [
-                                        'type' => 'string',
-                                        'example' => 'lorem ipsum'
-                                    ],
-                                    'address' => [
-                                        'type' => 'string',
-                                        'example' => 'Kinshasa - Gombe'
-                                    ],
-                                    'category' => [
-                                        'type' => EventCategory::class,
-                                        'example' => 'https://example.com/'
-                                    ],
-                                    'user' => [
-                                        'type' => User::class,
-                                        'example' => 'https://example.com/'
-                                    ]
-                                ]
-                            ]
-                        ]
-                    ]
-                ],
-            ],
+            deserialize: false
         ),
         new Put(),
         new Delete()
@@ -196,64 +155,74 @@ class Event
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['read:events'])]
+    #[Groups(['event:pRead', 'event:fRead'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['read:events'])]
+    #[Groups(['event:pRead', 'event:fRead'])]
     private ?string $name = null;
 
-    #[ORM\Column(type: Types::DATE_MUTABLE)]
-    #[Groups(['read:events'])]
-    private ?\DateTimeInterface $date = null;
-
-    #[ORM\Column(type: Types::TIME_MUTABLE)]
-    #[Groups(['read:events'])]
-    private ?\DateTimeInterface $startHour = null;
-
-    #[ORM\Column(type: Types::TIME_MUTABLE, nullable: true)]
-    #[Groups(['read:events'])]
-    private ?\DateTimeInterface $endHour = null;
-
     #[ORM\Column(length: 255)]
-    #[Groups(['read:event'])]
+    #[Groups(['event:pRead', 'event:fRead'])]
     private ?string $address = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['read:event'])]
+    #[Groups(['event:pRead', 'event:fRead'])]
     private ?string $details = null;
 
     #[ORM\ManyToOne(inversedBy: 'events')]
-    #[Groups(['read:events'])]
+    #[Groups(['event:pRead', 'event:fRead'])]
     private ?EventCategory $category = null;
 
     #[ORM\ManyToOne(inversedBy: 'events')]
     private ?User $user = null;
 
     #[ORM\OneToMany(mappedBy: 'event', targetEntity: Invitation::class)]
-    #[Groups(['read:event:invitations'])]
     private Collection $invitations;
 
     #[ORM\OneToMany(mappedBy: 'event', targetEntity: Table::class)]
-    #[Groups(['read:event'])]
     private Collection $tables;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['read:events'])]
+    #[Groups(['event:pRead', 'event:fRead'])]
     private ?string $status = null;
 
     #[ORM\ManyToOne(inversedBy: 'events')]
-    #[Groups(['read:event'])]
+    #[Groups(['event:pRead', 'event:fRead'])]
     private ?EventPack $eventPack = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['event:pRead', 'event:fRead'])]
     private ?bool $paidEvent = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['event:pRead', 'event:fRead'])]
     private ?string $paymentStatus = null;
 
     #[ORM\ManyToMany(targetEntity: Feature::class, inversedBy: 'events')]
+    #[Groups(['event:fRead'])]
     private Collection $features;
+
+
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['event:pRead', 'event:fRead'])]
+    private ?string $imagePath = null;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    #[Groups(['event:pRead', 'event:fRead'])]
+    private ?\DateTimeInterface $date = null;
+
+    public function getImagePath(): ?string
+    {
+        return $this->imagePath;
+    }
+
+    public function setImagePath(?string $imagePath): static
+    {
+        $this->imagePath = $imagePath;
+
+        return $this;
+    }
 
     public function __construct()
     {
@@ -276,42 +245,6 @@ class Event
     public function setName(string $name): static
     {
         $this->name = $name;
-
-        return $this;
-    }
-
-    public function getDate(): ?\DateTimeInterface
-    {
-        return $this->date;
-    }
-
-    public function setDate(\DateTimeInterface $date): static
-    {
-        $this->date = $date;
-
-        return $this;
-    }
-
-    public function getStartHour(): ?\DateTimeInterface
-    {
-        return $this->startHour;
-    }
-
-    public function setStartHour(\DateTimeInterface $startHour): static
-    {
-        $this->startHour = $startHour;
-
-        return $this;
-    }
-
-    public function getEndHour(): ?\DateTimeInterface
-    {
-        return $this->endHour;
-    }
-
-    public function setEndHour(?\DateTimeInterface $endHour): static
-    {
-        $this->endHour = $endHour;
 
         return $this;
     }
@@ -491,6 +424,18 @@ class Event
     public function removeFeature(Feature $feature): static
     {
         $this->features->removeElement($feature);
+
+        return $this;
+    }
+
+    public function getDate(): ?\DateTimeInterface
+    {
+        return $this->date;
+    }
+
+    public function setDate(?\DateTimeInterface $date): static
+    {
+        $this->date = $date;
 
         return $this;
     }
