@@ -7,6 +7,7 @@ use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\Post;
+use App\Controller\Event\EditEventController;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 use Symfony\Component\HttpFoundation\File\File;
 use ApiPlatform\Metadata\Put;
@@ -131,6 +132,12 @@ use Symfony\Component\Serializer\Annotation\Groups;
             ],
             description: 'Add invitation for event',
             name: 'addInvitation',
+        ),
+        new Post(
+            uriTemplate: '/events/{id}',
+            controller: EditEventController::class,
+            description: 'Edit event',
+            name: 'editEvent',
         ),
         new GetCollection(
             controller: ListingUserEventController::class,
