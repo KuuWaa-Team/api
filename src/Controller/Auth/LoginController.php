@@ -83,7 +83,7 @@ class LoginController extends AbstractController
                 }
                 $sms .= "Votre code de verification est : {$otp->getOtp()}\nCe code est valide pendant 5 minutes. Ne le partagez avec personne.";
 
-//                 $this->SMSService->send($phoneNumber, $sms);
+                 $this->SMSService->send($phoneNumber, $sms);
                 $message = "Un Code a été envoyé au numéro +$phoneNumber par SMS. Veuillez le saisir pour continuer";
 
                 $loginAt = new \DateTime();

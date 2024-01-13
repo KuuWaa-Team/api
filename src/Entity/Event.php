@@ -8,6 +8,7 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\Post;
 use App\Controller\Event\EditEventController;
+use App\Controller\Event\EditEventImageController;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 use Symfony\Component\HttpFoundation\File\File;
 use ApiPlatform\Metadata\Put;
@@ -148,6 +149,12 @@ use Symfony\Component\Serializer\Annotation\Groups;
         new Post(
             inputFormats: ['multipart' => ['multipart/form-data']],
             controller: CreateEventController::class,
+            deserialize: false
+        ),
+        new Post(
+            uriTemplate: '/events/{id}/image',
+            inputFormats: ['multipart' => ['multipart/form-data']],
+            controller: EditEventImageController::class,
             deserialize: false
         ),
         new Put(),
