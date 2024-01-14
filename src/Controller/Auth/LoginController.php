@@ -53,13 +53,13 @@ class LoginController extends AbstractController
             if ($this->phoneService->isValidPhoneNumber($content['phoneNumber'])) {
                 $phoneNumber = $this->phoneService->format($content['phoneNumber']);
                 $user = $this->userRepository->findOneBy([
-                    'phoneNumber' => $phoneNumber
+                    'phoneNumber' => $content['phoneNumber']
                 ]);
                 $success = true;
                 if ($user === null) {
                     // new user
                     $user = (new User())
-                        ->setPhoneNumber($phoneNumber)
+                        ->setPhoneNumber($content['phoneNumber'])
                         ->setPhoneId($phoneId);
                     $this->userRepository->save($user, true);
                     $new = true;

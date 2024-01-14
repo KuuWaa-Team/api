@@ -226,6 +226,17 @@ class Event
     #[Groups(['event:pRead', 'event:fRead'])]
     private ?\DateTimeInterface $date = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $slug = null;
+
+    #[ORM\Column(nullable: true)]
+    #[Groups(['event:pRead', 'event:fRead'])]
+    private ?int $tablesCount = null;
+
+    #[ORM\Column(nullable: true)]
+    #[Groups(['event:pRead', 'event:fRead'])]
+    private ?int $invitationsCount = null;
+
     public function getImagePath(): ?string
     {
         return $this->imagePath;
@@ -244,6 +255,7 @@ class Event
         $this->tables = new ArrayCollection();
         $this->setStatus("pending");
         $this->features = new ArrayCollection();
+        $this->invitationsCount = $this->invitations->count();
     }
 
     public function getId(): ?int
@@ -453,4 +465,41 @@ class Event
 
         return $this;
     }
+
+    public function getInvitationsCount(): ?int
+    {
+        return $this->invitationsCount;
+    }
+
+    public function setInvitationsCount(?int $invitationsCount): static
+    {
+        $this->invitationsCount = $invitationsCount;
+
+        return $this;
+    }
+
+    public function getSlug(): ?string
+    {
+        return $this->slug;
+    }
+
+    public function setSlug(?string $slug): static
+    {
+        $this->slug = $slug;
+
+        return $this;
+    }
+
+    public function getTablesCount(): ?int
+    {
+        return $this->tablesCount;
+    }
+
+    public function setTablesCount(?int $tablesCount): static
+    {
+        $this->tablesCount = $tablesCount;
+
+        return $this;
+    }
+
 }

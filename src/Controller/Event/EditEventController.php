@@ -30,7 +30,6 @@ class EditEventController extends AbstractController
     public function __invoke(Event $event, Request $request, UserInterface $user, KernelInterface $kernel): JsonResponse
     {
         $content = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
-        dd($content);
         $message = 'Evénement modifié avec succès !';
         $success = true;
         $errorType = null;

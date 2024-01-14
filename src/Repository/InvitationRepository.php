@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Event;
 use App\Entity\Invitation;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -29,20 +30,19 @@ class InvitationRepository extends ServiceEntityRepository
         }
     }
 
-    //    /**
-    //     * @return Invitation[] Returns an array of Invitation objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('i')
-    //            ->andWhere('i.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('i.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+        /**
+         * @return Invitation[] Returns an array of Invitation objects
+         */
+        public function findByEvent(Event $event): array
+        {
+            return $this->createQueryBuilder('i')
+                ->andWhere('i.event = :event')
+                ->setParameter('event', $event)
+                ->orderBy('i.name', 'ASC')
+                ->getQuery()
+                ->getResult()
+            ;
+        }
 
     //    public function findOneBySomeField($value): ?Invitation
     //    {
