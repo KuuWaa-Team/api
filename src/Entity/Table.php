@@ -55,7 +55,7 @@ class Table
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['table:pRead'])]
+    #[Groups(['table:pRead', 'invitation:pRead'])]
     private ?string $name = null;
 
     #[ORM\Column]

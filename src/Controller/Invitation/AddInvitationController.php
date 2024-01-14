@@ -26,7 +26,7 @@ class AddInvitationController extends AbstractController
     /**
      * @throws \JsonException
      */
-    public function __invoke(Request $request)
+    public function __invoke(Request $request): JsonResponse
     {
         $success = true;
         $content = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
@@ -56,7 +56,7 @@ class AddInvitationController extends AbstractController
             if ($countTable < $countTableTaken + $count) {
                 $response = [
                     'success'   => false,
-                    'message'   => "Pas assez de place à la table {$table->getName()} table pour cette invitation",
+                    'message'   => "Pas assez de place à la table {$table->getName()} pour cette invitation",
                 ];
 
                 return new JsonResponse($response, Response::HTTP_OK);

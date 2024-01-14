@@ -95,6 +95,7 @@ class Invitation
     private ?string $status = null;
 
     #[ORM\ManyToOne(inversedBy: 'invitations')]
+    #[Groups(["invitation:pRead"])]
     private ?Table $invitationTable = null;
 
     public function getId(): ?int
