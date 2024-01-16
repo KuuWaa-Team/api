@@ -9,6 +9,11 @@ use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\Post;
 use App\Controller\Event\EditEventController;
 use App\Controller\Event\EditEventImageController;
+use App\Controller\Event\EventDetailController;
+use App\Controller\Event\ListingAdminsController;
+use App\Controller\Event\ListingEventBeveragesController;
+use App\Entity\Event\EventAdmin;
+use App\Entity\Payment\Payment;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 use Symfony\Component\HttpFoundation\File\File;
 use ApiPlatform\Metadata\Put;
@@ -30,6 +35,14 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ApiResource(
     operations: [
         new Get(
+            uriTemplate: "/events/{id}/admins",
+            controller: ListingAdminsController::class,
+            normalizationContext: [
+                'groups' => ['read:event']
+            ],
+            name: "userEventAdmins"
+        ),
+        new Get(
             uriTemplate: "/events/{id}/invitations",
             controller: ListingEventInvitationsController::class,
             normalizationContext: [
@@ -46,9 +59,20 @@ use Symfony\Component\Serializer\Annotation\Groups;
             name: "userTables"
         ),
         new Get(
+            uriTemplate: "/events/{id}/beverages",
+            controller: ListingEventBeveragesController::class,
+            normalizationContext: [
+                'groups' => ['read:event']
+            ],
+            name: "userTBeverages"
+        ),
+        new Get(
+            uriTemplate: "/events/{id}",
+            controller: EventDetailController::class,
             normalizationContext: [
                 'groups' => ['event:fRead']
-            ]
+            ],
+            name: "eventDetail"
         ),
         new Post(
             uriTemplate: '/events/{id}/active_event_pack',
@@ -169,23 +193,23 @@ class Event
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['event:pRead', 'event:fRead'])]
+    #[Groups(['event:pRead', 'event:fRead', 'invitation:fRead'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['event:pRead', 'event:fRead'])]
+    #[Groups(['event:pRead', 'event:fRead', 'invitation:fRead'])]
     private ?string $name = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['event:pRead', 'event:fRead'])]
+    #[Groups(['event:pRead', 'event:fRead', 'invitation:fRead'])]
     private ?string $address = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['event:pRead', 'event:fRead'])]
+    #[Groups(['event:pRead', 'event:fRead', 'invitation:fRead'])]
     private ?string $details = null;
 
     #[ORM\ManyToOne(inversedBy: 'events')]
-    #[Groups(['event:pRead', 'event:fRead'])]
+    #[Groups(['event:pRead', 'event:fRead', 'invitation:fRead'])]
     private ?EventCategory $category = null;
 
     #[ORM\ManyToOne(inversedBy: 'events')]
@@ -219,11 +243,11 @@ class Event
 
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['event:pRead', 'event:fRead'])]
+    #[Groups(['event:pRead', 'event:fRead', 'invitation:fRead'])]
     private ?string $imagePath = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    #[Groups(['event:pRead', 'event:fRead'])]
+    #[Groups(['event:pRead', 'event:fRead', 'invitation:fRead'])]
     private ?\DateTimeInterface $date = null;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -236,6 +260,34 @@ class Event
     #[ORM\Column(nullable: true)]
     #[Groups(['event:pRead', 'event:fRead'])]
     private ?int $invitationsCount = null;
+
+    #[ORM\OneToMany(mappedBy: 'event', targetEntity: Beverage::class)]
+    #[Groups(['event:pRead', 'event:fRead', 'invitation:fRead'])]
+    private Collection $beverages;
+
+    #[ORM\Column(nullable: true)]
+    #[Groups(['event:pRead', 'event:fRead'])]
+    private ?int $beveragesCount = null;
+
+    #[ORM\OneToMany(mappedBy: 'event', targetEntity: Payment::class)]
+    private Collection $payments;
+
+    #[ORM\OneToMany(mappedBy: 'event', targetEntity: EventAdmin::class)]
+    #[Groups(['event:pRead', 'event:fRead'])]
+    private Collection $eventAdmins;
+
+    #[ORM\Column(nullable: true)]
+    #[Groups(['event:pRead', 'event:fRead'])]
+    private ?int $adminsCount = null;
+
+    #[Groups(['event:pRead', 'event:fRead'])]
+    private ?bool $shared = null;
+
+    #[Groups(['event:pRead', 'event:fRead'])]
+    private ?string $adminStatus = null;
+
+    #[Groups(['event:pRead', 'event:fRead'])]
+    private ?int $adminId = null;
 
     public function getImagePath(): ?string
     {
@@ -256,6 +308,9 @@ class Event
         $this->setStatus("pending");
         $this->features = new ArrayCollection();
         $this->invitationsCount = $this->invitations->count();
+        $this->beverages = new ArrayCollection();
+        $this->payments = new ArrayCollection();
+        $this->eventAdmins = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -498,6 +553,156 @@ class Event
     public function setTablesCount(?int $tablesCount): static
     {
         $this->tablesCount = $tablesCount;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Beverage>
+     */
+    public function getBeverages(): Collection
+    {
+        return $this->beverages;
+    }
+
+    public function addBeverage(Beverage $beverage): static
+    {
+        if (!$this->beverages->contains($beverage)) {
+            $this->beverages->add($beverage);
+            $beverage->setEvent($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBeverage(Beverage $beverage): static
+    {
+        if ($this->beverages->removeElement($beverage)) {
+            // set the owning side to null (unless already changed)
+            if ($beverage->getEvent() === $this) {
+                $beverage->setEvent(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getBeveragesCount(): ?int
+    {
+        return $this->beveragesCount;
+    }
+
+    public function setBeveragesCount(?int $beveragesCount): static
+    {
+        $this->beveragesCount = $beveragesCount;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Payment>
+     */
+    public function getPayments(): Collection
+    {
+        return $this->payments;
+    }
+
+    public function addPayment(Payment $payment): static
+    {
+        if (!$this->payments->contains($payment)) {
+            $this->payments->add($payment);
+            $payment->setEvent($this);
+        }
+
+        return $this;
+    }
+
+    public function removePayment(Payment $payment): static
+    {
+        if ($this->payments->removeElement($payment)) {
+            // set the owning side to null (unless already changed)
+            if ($payment->getEvent() === $this) {
+                $payment->setEvent(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, EventAdmin>
+     */
+    public function getEventAdmins(): Collection
+    {
+        return $this->eventAdmins;
+    }
+
+    public function addEventAdmin(EventAdmin $eventAdmin): static
+    {
+        if (!$this->eventAdmins->contains($eventAdmin)) {
+            $this->eventAdmins->add($eventAdmin);
+            $eventAdmin->setEvent($this);
+        }
+
+        return $this;
+    }
+
+    public function removeEventAdmin(EventAdmin $eventAdmin): static
+    {
+        if ($this->eventAdmins->removeElement($eventAdmin)) {
+            // set the owning side to null (unless already changed)
+            if ($eventAdmin->getEvent() === $this) {
+                $eventAdmin->setEvent(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getAdminsCount(): ?int
+    {
+        return $this->adminsCount;
+    }
+
+    public function setAdminsCount(?int $adminsCount): static
+    {
+        $this->adminsCount = $adminsCount;
+
+        return $this;
+    }
+
+    public function isShared(): ?bool
+    {
+        return $this->shared;
+    }
+
+    public function setShared(?bool $shared): static
+    {
+        $this->shared = $shared;
+
+        return $this;
+    }
+
+    public function getAdminStatus(): ?string
+    {
+        return $this->adminStatus;
+    }
+
+    public function setAdminStatus(?string $adminStatus): static
+    {
+        $this->adminStatus = $adminStatus;
+
+        return $this;
+    }
+
+    public function getAdminId(): ?int
+    {
+        return $this->adminId;
+    }
+
+    public function setAdminId(?int $adminId): static
+    {
+        $this->adminId = $adminId;
 
         return $this;
     }

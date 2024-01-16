@@ -41,11 +41,11 @@ class EventCategory
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['category:pRead', 'event:pRead', 'event:fRead'])]
+    #[Groups(['category:pRead', 'event:pRead', 'event:fRead', 'invitation:fRead'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['category:pRead', 'event:pRead', 'event:fRead'])]
+    #[Groups(['category:pRead', 'event:pRead', 'event:fRead', 'invitation:fRead'])]
     private ?string $name = null;
 
     #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'children')]

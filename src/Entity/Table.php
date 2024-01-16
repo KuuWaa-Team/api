@@ -8,8 +8,6 @@ use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
-use App\Controller\Invitation\AddInvitationController;
-use App\Controller\Invitation\SendInvitationController;
 use App\Controller\Table\AddTableController;
 use App\Repository\TableRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -51,15 +49,15 @@ class Table
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['table:pRead'])]
+    #[Groups(["invitation:pRead", 'table:pRead', 'invitation:fRead'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['table:pRead', 'invitation:pRead'])]
+    #[Groups(["invitation:pRead", 'table:pRead', 'invitation:fRead'])]
     private ?string $name = null;
 
     #[ORM\Column]
-    #[Groups(['table:pRead'])]
+    #[Groups(["invitation:pRead", 'table:pRead', 'invitation:fRead'])]
     private ?int $count = null;
 
     #[ORM\ManyToOne(inversedBy: 'tables')]

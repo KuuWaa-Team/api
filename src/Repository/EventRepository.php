@@ -29,20 +29,38 @@ class EventRepository extends ServiceEntityRepository
             $this->getEntityManager()->flush();
         }
     }
-//    /**
-//     * @return Event[] Returns an array of Event objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('e')
-//            ->andWhere('e.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('e.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+
+    /**
+     * @return Event[] Returns an array of Event objects
+     */
+    public function findInvitationsByPhoneNumber($value): array
+    {
+        return $this->createQueryBuilder('e')
+            ->leftJoin('e.invitations', 'i')
+            ->andWhere('i.phoneNumber = :p')
+            ->setParameter('p', $value)
+            ->orderBy('e.name', 'ASC')
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
+    /**
+     * @return Event[] Returns an array of Event objects
+     */
+    public function findListableEvents(User $user): array
+    {
+        return $this->createQueryBuilder('e')
+            ->leftJoin('e.eventAdmins', 'a')
+            ->where('e.user = :u')
+            ->orWhere("a.phoneNumber = :p and a.status <> 'refused'")
+            ->setParameter('p', $user->getPhoneNumber())
+            ->setParameter('u', $user)
+            ->orderBy('e.name', 'ASC')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
 
 //    public function findOneBySomeField($value): ?Event
 //    {
