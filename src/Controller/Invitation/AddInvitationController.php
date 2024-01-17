@@ -6,10 +6,19 @@ use App\Entity\Invitation;
 use App\Repository\EventRepository;
 use App\Repository\InvitationRepository;
 use App\Repository\TableRepository;
+use Endroid\QrCode\Builder\Builder;
+use Endroid\QrCode\Encoding\Encoding;
+use Endroid\QrCode\ErrorCorrectionLevel;
+use Endroid\QrCode\Label\Font\NotoSans;
+use Endroid\QrCode\Label\LabelAlignment;
+use Endroid\QrCode\QrCode;
+use Endroid\QrCode\RoundBlockSizeMode;
+use Endroid\QrCode\Writer\PngWriter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 class AddInvitationController extends AbstractController
@@ -26,7 +35,7 @@ class AddInvitationController extends AbstractController
     /**
      * @throws \JsonException
      */
-    public function __invoke(Request $request): JsonResponse
+    public function __invoke(Request $request, KernelInterface $kernel): JsonResponse
     {
         $success = true;
         $content = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
@@ -38,6 +47,17 @@ class AddInvitationController extends AbstractController
         $tableId = $content["tableId"] ?? null;
 
         $event = $this->eventRepository->find($eventId);
+
+        if ($this->invitationRepository->InvitationExists($phoneNumber)) {
+            $invitations = $this->invitationRepository->findByEvent($event);
+            $response = [
+                'success'   => false,
+                'invitations' => $this->normalizer->normalize($invitations, null, ['groups' => ['invitation:pRead']]),
+                'message'   => "Un invité est déjà enrégistré avec ce numéro de téléphone",
+            ];
+
+            return new JsonResponse($response, Response::HTTP_OK);
+        }
 
         $invitation = (new Invitation())
             ->setName($name)
@@ -66,6 +86,41 @@ class AddInvitationController extends AbstractController
             $table->setCountTaken($countTableTaken + $count);
             $this->tableRepository->save($table, true);
         }
+
+        $this->invitationRepository->save($invitation, true);
+
+        $qrCodeData = [
+            'status' => $invitation->getStatus(),
+            'civility' => $invitation->getCivility(),
+            'name' => $invitation->getName(),
+            'count' => $invitation->getCount(),
+            'table' => $invitation->getInvitationTable()->getName(),
+        ];
+
+        $jsonQrCodeData = json_encode($qrCodeData, JSON_THROW_ON_ERROR);
+//        $qrCode = new QrCode($jsonQrCodeData);
+//        $qrCode->setSize(300);
+        $fileName = uniqid('', true) . '.png';
+        $destinationPath = $kernel->getProjectDir() . '/public/events/invitations/qr_code';
+//        $qrCode->render($destinationPath);
+        $result = Builder::create()
+            ->writer(new PngWriter())
+            ->writerOptions([])
+            ->data($jsonQrCodeData)
+            ->encoding(new Encoding('UTF-8'))
+//            ->errorCorrectionLevel(ErrorCorrectionLevel::High)
+            ->size(300)
+            ->margin(10)
+            ->roundBlockSizeMode(RoundBlockSizeMode::Margin)
+            ->logoPath($kernel->getProjectDir() . '/public/images/logo-dark.png')
+            ->logoResizeToWidth(80)
+//            ->logoPunchoutBackground(false)
+            ->validateResult(false)
+            ->build();
+
+        $result->saveToFile($destinationPath . "/" . $fileName);
+
+        $invitation->setCodePath($fileName);
 
         $this->invitationRepository->save($invitation, true);
 

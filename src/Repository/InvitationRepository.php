@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Event;
+use App\Entity\Event\EventAdmin;
 use App\Entity\Invitation;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -28,6 +29,30 @@ class InvitationRepository extends ServiceEntityRepository
         if ($flush) {
             $this->getEntityManager()->flush();
         }
+    }
+
+    public function findByEventAndphoneNumber(Event $event, String $phone): ?EventAdmin
+    {
+        return $this->createQueryBuilder('i')
+            ->andWhere('i.event = :ev')
+            ->andWhere('i.phoneNumber = :phone')
+            ->setParameter('ev', $event)
+            ->setParameter('phone', $phone)
+            ->orderBy('i.name', 'ASC')
+            ->getQuery()
+            ->getOneOrNullResult()
+            ;
+    }
+
+    public function InvitationExists(String $phone): bool
+    {
+        $result = $this->createQueryBuilder('i')
+            ->andWhere('i.phoneNumber = :phone')
+            ->setParameter('phone', $phone)
+            ->getQuery()
+            ->getResult()
+        ;
+        return count($result) > 0;
     }
 
     /**

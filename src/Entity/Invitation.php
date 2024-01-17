@@ -144,6 +144,9 @@ class Invitation
     #[Groups(["invitation:pRead", 'invitation:fRead'])]
     private ?Beverage $beverage = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $codePath = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -241,6 +244,18 @@ class Invitation
     public function setBeverage(?Beverage $beverage): static
     {
         $this->beverage = $beverage;
+
+        return $this;
+    }
+
+    public function getCodePath(): ?string
+    {
+        return $this->codePath;
+    }
+
+    public function setCodePath(?string $codePath): static
+    {
+        $this->codePath = $codePath;
 
         return $this;
     }
