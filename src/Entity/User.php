@@ -6,13 +6,14 @@ use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
+use App\Controller\Auth\CompleteProfileController;
 use App\Controller\Auth\LoginController;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
-
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
@@ -25,7 +26,13 @@ use Symfony\Component\Security\Core\User\UserInterface;
             requirements: ['phoneNumber' => 'String', 'phoneId' => 'String'],
             controller: LoginController::class,
             description: "Login with phone number",
-        )
+        ),
+        new Post(
+            uriTemplate: '/users/{id}/complete-profile',
+            requirements: ['firstname' => 'String', 'lastname' => 'String', 'address' => 'String'],
+            controller: CompleteProfileController::class,
+            description: "Complete profile informations",
+        ),
     ]
 )]
 class User implements UserInterface
@@ -33,8 +40,10 @@ class User implements UserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['user:pRead'])]
     private ?int $id = null;
 
+    #[Groups(['user:pRead'])]
     #[ORM\Column(length: 180, unique: true)]
     private ?string $phoneNumber = null;
 
@@ -42,12 +51,15 @@ class User implements UserInterface
     private array $roles = [];
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['user:pRead'])]
     private ?string $firstname = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['user:pRead'])]
     private ?string $lastname = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['user:pRead'])]
     private ?string $address = null;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -56,9 +68,13 @@ class User implements UserInterface
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Otp::class)]
     private Collection $otps;
 
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Event::class)]
+    private Collection $events;
+
     public function __construct()
     {
         $this->otps = new ArrayCollection();
+        $this->events = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -189,6 +205,36 @@ class User implements UserInterface
             // set the owning side to null (unless already changed)
             if ($otp->getUser() === $this) {
                 $otp->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Event>
+     */
+    public function getEvents(): Collection
+    {
+        return $this->events;
+    }
+
+    public function addEvent(Event $event): static
+    {
+        if (!$this->events->contains($event)) {
+            $this->events->add($event);
+            $event->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeEvent(Event $event): static
+    {
+        if ($this->events->removeElement($event)) {
+            // set the owning side to null (unless already changed)
+            if ($event->getUser() === $this) {
+                $event->setUser(null);
             }
         }
 

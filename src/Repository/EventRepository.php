@@ -1,0 +1,74 @@
+<?php
+
+namespace App\Repository;
+
+use App\Entity\Event;
+use App\Entity\User;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Persistence\ManagerRegistry;
+
+/**
+ * @extends ServiceEntityRepository<Event>
+ *
+ * @method Event|null find($id, $lockMode = null, $lockVersion = null)
+ * @method Event|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Event[]    findAll()
+ * @method Event[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ */
+class EventRepository extends ServiceEntityRepository
+{
+    public function __construct(ManagerRegistry $registry)
+    {
+        parent::__construct($registry, Event::class);
+    }
+
+
+    public function save(Event $event, bool $flush = false):void {
+        $this->getEntityManager()->persist($event);
+        if ($flush) {
+            $this->getEntityManager()->flush();
+        }
+    }
+
+    /**
+     * @return Event[] Returns an array of Event objects
+     */
+    public function findInvitationsByPhoneNumber($value): array
+    {
+        return $this->createQueryBuilder('e')
+            ->leftJoin('e.invitations', 'i')
+            ->andWhere('i.phoneNumber = :p')
+            ->setParameter('p', $value)
+            ->orderBy('e.name', 'ASC')
+            ->getQuery()
+            ->getResult()
+            ;
+    }
+
+    /**
+     * @return Event[] Returns an array of Event objects
+     */
+    public function findListableEvents(User $user): array
+    {
+        return $this->createQueryBuilder('e')
+            ->leftJoin('e.eventAdmins', 'a')
+            ->where('e.user = :u')
+            ->orWhere("a.phoneNumber = :p and a.status <> 'refused'")
+            ->setParameter('p', $user->getPhoneNumber())
+            ->setParameter('u', $user)
+            ->orderBy('e.name', 'ASC')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+//    public function findOneBySomeField($value): ?Event
+//    {
+//        return $this->createQueryBuilder('e')
+//            ->andWhere('e.exampleField = :val')
+//            ->setParameter('val', $value)
+//            ->getQuery()
+//            ->getOneOrNullResult()
+//        ;
+//    }
+}

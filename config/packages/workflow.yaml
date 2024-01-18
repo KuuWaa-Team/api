@@ -1,0 +1,25 @@
+framework:
+    workflows:
+        event_status:
+            type: 'state_machine'
+            marking_store:
+                type: 'method'
+                property: 'status'
+            supports:
+                - App\Entity\Event
+            initial_marking: pending
+            places:
+                - pending
+                - paid
+                - rejected
+                - deleted
+            transitions:
+                pay:
+                    from: [pending]
+                    to: paid
+                reject:
+                    from: [pending, paid, rejected]
+                    to: rejected
+                delete:
+                    from: [pending, paid, rejected]
+                    to: deleted
