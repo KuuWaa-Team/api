@@ -6,12 +6,9 @@ use App\Entity\Invitation;
 use App\Repository\EventRepository;
 use App\Repository\InvitationRepository;
 use App\Repository\TableRepository;
+use App\Service\OTPService;
 use Endroid\QrCode\Builder\Builder;
 use Endroid\QrCode\Encoding\Encoding;
-use Endroid\QrCode\ErrorCorrectionLevel;
-use Endroid\QrCode\Label\Font\NotoSans;
-use Endroid\QrCode\Label\LabelAlignment;
-use Endroid\QrCode\QrCode;
 use Endroid\QrCode\RoundBlockSizeMode;
 use Endroid\QrCode\Writer\PngWriter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -27,13 +24,15 @@ class AddInvitationController extends AbstractController
         private readonly EventRepository $eventRepository,
         private readonly TableRepository $tableRepository,
         private readonly InvitationRepository $invitationRepository,
-        private readonly NormalizerInterface $normalizer
+        private readonly NormalizerInterface $normalizer,
+        private readonly OTPService $OTPService
     )
     {
     }
 
     /**
      * @throws \JsonException
+     * @throws \Exception
      */
     public function __invoke(Request $request, KernelInterface $kernel): JsonResponse
     {
@@ -48,7 +47,7 @@ class AddInvitationController extends AbstractController
 
         $event = $this->eventRepository->find($eventId);
 
-        if ($this->invitationRepository->InvitationExists($phoneNumber)) {
+        if ($this->invitationRepository->invitationExists($phoneNumber)) {
             $invitations = $this->invitationRepository->findByEvent($event);
             $response = [
                 'success'   => false,
@@ -59,6 +58,10 @@ class AddInvitationController extends AbstractController
             return new JsonResponse($response, Response::HTTP_OK);
         }
 
+        do {
+            $code = $this->OTPService->generate(6);
+        } while ($this->invitationRepository->invitationCodeExists($code));
+
         $invitation = (new Invitation())
             ->setName($name)
             ->setPhoneNumber($phoneNumber)
@@ -66,6 +69,7 @@ class AddInvitationController extends AbstractController
             ->setCivility($civility)
             ->setStatus("created")
             ->setCount($count)
+            ->setCode($code)
         ;
 
         if ($tableId !== null) {
@@ -90,12 +94,14 @@ class AddInvitationController extends AbstractController
         $this->invitationRepository->save($invitation, true);
 
         $qrCodeData = [
+            'id' => $invitation->getId(),
             'status' => $invitation->getStatus(),
             'civility' => $invitation->getCivility(),
             'name' => $invitation->getName(),
             'count' => $invitation->getCount(),
             'table' => $invitation->getInvitationTable()->getName(),
         ];
+
 
         $jsonQrCodeData = json_encode($qrCodeData, JSON_THROW_ON_ERROR);
 //        $qrCode = new QrCode($jsonQrCodeData);
@@ -120,7 +126,7 @@ class AddInvitationController extends AbstractController
 
         $result->saveToFile($destinationPath . "/" . $fileName);
 
-        $invitation->setCodePath($fileName);
+        $invitation->setCodePath("/events/invitations/qr_code/" . $fileName);
 
         $this->invitationRepository->save($invitation, true);
 

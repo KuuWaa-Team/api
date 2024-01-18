@@ -1,0 +1,253 @@
+/*
+	Template Name 	: EasyPlay - App Coming Soon Creative Page
+	Author 			: Awaiken Theme
+	Author Url 		: https://awaikenthemes.com
+*/
+
+/************************************/
+/***** 	     General css		 ****/
+/************************************/
+html{
+	height: 100%;
+}
+
+body{
+	font-size: 16px;
+	height: 100%;
+	font-family: 'Montserrat', sans-serif;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6{
+	margin:0;
+	font-weight: 700;
+}
+
+img{
+	max-width: 100%;
+}
+
+a:hover{
+	text-decoration: none;
+	outline: 0;
+}
+
+a:focus{
+	text-decoration: none;
+	outline: 0;
+}
+
+.comming-soon{
+	width: 100%;
+	position: relative;
+	min-height: 100%;
+}
+
+.comming-soon:before{
+	content: '';
+	display: block;
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background: rgba(0,0,0,0.85);
+}
+
+.mobile-screen{
+	position: absolute;
+	top: 50%;
+	left: 40%;
+	width: 240px;
+	z-index: 10;
+	transform: translate(-50%,-50%);
+}
+
+.comming-soon-info{
+	width: 40%;
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	overflow: hidden;
+	z-index: 2;
+	display: flex;
+	align-items: center;
+	background: url(../images/main-image.jpg) no-repeat top center;
+	background-size: cover;
+}
+
+.comming-soon-info:after{
+	content: '';
+	display: block;
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background: rgba(0,0,0,0.1);
+}
+
+.social-link{
+	margin-top: 20px;
+}
+
+.social-link a{
+	display: inline-block;
+	background: #fff;
+	color: #2F2644;
+	width: 32px;
+	height: 32px;
+	text-align: center;
+	padding-top: 6px;
+	border-radius: 50%;
+	margin-right: 4px;
+}
+
+.social-link a:hover{
+	background: #2F2644;
+	color: #fff;
+}
+
+.easyapp-info{
+	width: 60%;
+	background: #2F2644;
+	position: absolute;
+	top: 0;
+	left: 40%;
+	bottom: 0;
+	z-index: 2;
+	padding: 140px;
+	display: flex;
+	align-items: center;
+}
+
+.easyapp-box{
+	width: 100%;
+	margin: 0 auto;
+}
+
+.logo h2{
+	font-family: 'Josefin Sans', sans-serif;
+	font-size: 54px;
+	text-transform: uppercase;
+	color: #fff;
+	margin-top: 10px;
+}
+
+.logo h3{
+	font-family: 'Josefin Sans', sans-serif;
+	font-size: 44px;
+	color: #fff;
+	margin-top: 10px;
+}
+
+.button-download{
+	margin-top: 20px;
+}
+
+.button-download p{
+	color: #fff;
+	font-weight: 300;
+	font-style: italic;
+}
+
+.btn-download{
+	display: inline-block;
+	background: #df2e4c;
+	color: #fff;
+	font-size: 18px;
+	text-transform: uppercase;
+	font-weight: 300;
+	letter-spacing: 0.1em;
+	padding: 16px 20px 12px;
+	margin-right: 10px;
+	margin-bottom: 10px;
+	transition: all 0.3s;
+}
+
+.btn-download i{
+	font-size: 30px;
+	margin-right: 10px;
+	display: inline-block;
+	vertical-align: middle;
+	position: relative;
+	top: -2px;
+}
+
+.btn-download:hover{
+	background: #000;
+	color: #fff;
+}
+
+.about{
+	margin-top: 30px;
+}
+
+.about p{
+	color: #fff;
+	font-size: 13px;
+	line-height: 1.5em;
+}
+
+/****************************************
+		Responsive Media Query
+****************************************/
+
+@media only screen and (max-width:1024px){
+	.mobile-screen{
+		display: none;
+	}
+	
+	.easyapp-info{
+		padding: 40px;
+	}
+}
+
+@media only screen and (max-width:768px){
+	.comming-soon-info{
+		width: 100%;
+		bottom: 0;
+	}
+	
+	.easyapp-info{
+		background: rgba(47, 38, 68, .8);
+		width: 100%;
+		position: absolute;
+		left: 0;		
+		bottom: auto;
+		min-height: 100%;
+	}
+}
+
+@media only screen and (max-width:480px){
+	.logo h2{
+		font-size: 28px;
+	}
+	
+	.easyapp-info{
+		position: absolute;
+		padding: 20px;
+		height: 100%;
+		overflow: auto;
+	}
+	
+	.button-download p{
+		font-size: 14px;
+	}
+	
+	.btn-download{
+		width: 100%;
+		text-align: center;
+		font-size: 14px;
+		margin: 0 0 10px;
+	}
+	
+	.btn-download i{
+		font-size: 20px;
+		margin-right: 4px;
+	}
+}

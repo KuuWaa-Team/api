@@ -11,6 +11,7 @@ use ApiPlatform\Metadata\Put;
 use App\Controller\Event\ActivePackEventController;
 use App\Controller\Event\CreateEventController;
 use App\Controller\Invitation\AddInvitationController;
+use App\Controller\Invitation\CheckByCodeController;
 use App\Controller\Invitation\MyInvitationsController;
 use App\Controller\Invitation\SendAllController;
 use App\Controller\Invitation\SendInvitationController;
@@ -62,6 +63,24 @@ use Symfony\Component\Serializer\Annotation\Groups;
             ],
             description: 'add invitation',
             name: 'addInvitation',
+        ),
+        new Post(
+            uriTemplate: '/invitations/check-code',
+            controller: CheckByCodeController::class,
+            openapiContext: [
+                'summary' => 'check invitation code',
+                'requestBody' => [
+                    'content' => [
+                        'application/json' => [
+                            'schema' => [
+                                'type' => 'object',
+                            ]
+                        ]
+                    ]
+                ],
+            ],
+            description: 'check invitation code',
+            name: 'checkInvitationCode',
         ),
         new Post(
             uriTemplate: '/invitations/{id}/send',
@@ -145,7 +164,12 @@ class Invitation
     private ?Beverage $beverage = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(["invitation:pRead", 'invitation:fRead'])]
     private ?string $codePath = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(["invitation:pRead", 'invitation:fRead'])]
+    private ?string $code = null;
 
     public function getId(): ?int
     {
@@ -256,6 +280,18 @@ class Invitation
     public function setCodePath(?string $codePath): static
     {
         $this->codePath = $codePath;
+
+        return $this;
+    }
+
+    public function getCode(): ?string
+    {
+        return $this->code;
+    }
+
+    public function setCode(?string $code): static
+    {
+        $this->code = $code;
 
         return $this;
     }

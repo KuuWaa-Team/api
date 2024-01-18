@@ -10,6 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Serializer\Exception\ExceptionInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 class SendInvitationController extends AbstractController
@@ -23,6 +24,10 @@ class SendInvitationController extends AbstractController
     {
     }
 
+    /**
+     * @throws ExceptionInterface
+     * @throws \JsonException
+     */
     public function __invoke(Request $request, Invitation $invitation): JsonResponse
     {
         $content = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
@@ -34,6 +39,8 @@ class SendInvitationController extends AbstractController
         $message .= "\n\nVous êtes invité pour un évenement pour au " . $invitation->getEvent()->getDate()->format('d/m/Y') . " (" . $invitation->getEvent()->getName() . ")";
         $message .= "\n\nVeuillez cliquer sur le lien ci-dessous pour voir votre invitation";
         $message .= "\n\n" . $link;
+        $message .= "\n\nSi vous êtes dans l'impossibilité d'accéder à l'application, retenez le code de votre invitation et présentez le lors de la vérification.";
+        $message .= "\n\nCode Invitation : {$invitation->getCode()}";
 
         $phoneNumber = $this->phoneService->format($invitation->getPhoneNumber());
         if ($method === "sms") {

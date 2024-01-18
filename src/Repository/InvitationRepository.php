@@ -6,6 +6,7 @@ use App\Entity\Event;
 use App\Entity\Event\EventAdmin;
 use App\Entity\Invitation;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -44,11 +45,35 @@ class InvitationRepository extends ServiceEntityRepository
             ;
     }
 
-    public function InvitationExists(String $phone): bool
+    public function invitationExists(String $phone): bool
     {
         $result = $this->createQueryBuilder('i')
             ->andWhere('i.phoneNumber = :phone')
             ->setParameter('phone', $phone)
+            ->getQuery()
+            ->getResult()
+        ;
+        return count($result) > 0;
+    }
+
+    /**
+     * @throws NonUniqueResultException
+     */
+    public function findByCode(String $code): ?Invitation
+    {
+        return $this->createQueryBuilder('i')
+            ->andWhere('i.code = :code')
+            ->setParameter('code', $code)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
+
+    public function invitationCodeExists(String $code): bool
+    {
+        $result = $this->createQueryBuilder('i')
+            ->andWhere('i.code = :code')
+            ->setParameter('code', $code)
             ->getQuery()
             ->getResult()
         ;
