@@ -7,11 +7,13 @@ use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\Post;
+use App\Controller\Book\AddController;
 use App\Controller\Event\EditEventController;
 use App\Controller\Event\EditEventImageController;
 use App\Controller\Event\EventDetailController;
 use App\Controller\Event\ListingAdminsController;
 use App\Controller\Event\ListingEventBeveragesController;
+use App\Entity\Event\Book;
 use App\Entity\Event\EventAdmin;
 use App\Entity\Payment\Payment;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
@@ -97,6 +99,24 @@ use Symfony\Component\Serializer\Annotation\Groups;
             ],
             description: 'Active pack for event',
             name: 'activePack',
+        ),
+        new Post(
+            uriTemplate: '/events/{id}/book',
+            controller: AddController::class,
+            openapiContext: [
+                'summary' => 'add book',
+                'requestBody' => [
+                    'content' => [
+                        'application/json' => [
+                            'schema' => [
+                                'type' => 'object',
+                            ]
+                        ]
+                    ]
+                ],
+            ],
+            description: 'Active book',
+            name: 'addEventBook',
         ),
         new Post(
             uriTemplate: '/events/{id}/tables',
@@ -289,6 +309,10 @@ class Event
     #[Groups(['event:pRead', 'event:fRead'])]
     private ?int $adminId = null;
 
+    #[ORM\OneToMany(mappedBy: 'event', targetEntity: Book::class)]
+    #[Groups(['event:pRead', 'event:fRead'])]
+    private Collection $books;
+
     public function getImagePath(): ?string
     {
         return $this->imagePath;
@@ -311,6 +335,7 @@ class Event
         $this->beverages = new ArrayCollection();
         $this->payments = new ArrayCollection();
         $this->eventAdmins = new ArrayCollection();
+        $this->books = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -703,6 +728,36 @@ class Event
     public function setAdminId(?int $adminId): static
     {
         $this->adminId = $adminId;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Book>
+     */
+    public function getBooks(): Collection
+    {
+        return $this->books;
+    }
+
+    public function addBook(Book $book): static
+    {
+        if (!$this->books->contains($book)) {
+            $this->books->add($book);
+            $book->setEvent($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBook(Book $book): static
+    {
+        if ($this->books->removeElement($book)) {
+            // set the owning side to null (unless already changed)
+            if ($book->getEvent() === $this) {
+                $book->setEvent(null);
+            }
+        }
 
         return $this;
     }

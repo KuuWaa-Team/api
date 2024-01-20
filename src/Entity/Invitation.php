@@ -15,7 +15,10 @@ use App\Controller\Invitation\CheckByCodeController;
 use App\Controller\Invitation\MyInvitationsController;
 use App\Controller\Invitation\SendAllController;
 use App\Controller\Invitation\SendInvitationController;
+use App\Entity\Event\Book;
 use App\Repository\InvitationRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
@@ -132,11 +135,11 @@ class Invitation
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(["invitation:pRead", 'table:pRead', 'invitation:fRead'])]
+    #[Groups(["invitation:pRead", 'table:pRead', 'invitation:fRead', 'event:pRead', 'event:fRead'])]
     private ?string $name = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(["invitation:pRead", 'table:pRead', 'invitation:fRead'])]
+    #[Groups(["invitation:pRead", 'table:pRead', 'invitation:fRead', 'event:pRead', 'event:fRead'])]
     private ?string $civility = null;
 
     #[ORM\Column(nullable: true)]
@@ -170,6 +173,18 @@ class Invitation
     #[ORM\Column(length: 255, nullable: true)]
     #[Groups(["invitation:pRead", 'invitation:fRead'])]
     private ?string $code = null;
+
+    #[ORM\OneToMany(mappedBy: 'invitation', targetEntity: Book::class)]
+    private Collection $books;
+
+    #[ORM\Column(nullable: true)]
+    #[Groups(["invitation:pRead", 'table:pRead', 'invitation:fRead', 'event:pRead', 'event:fRead'])]
+    private ?bool $bookSent = null;
+
+    public function __construct()
+    {
+        $this->books = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -292,6 +307,48 @@ class Invitation
     public function setCode(?string $code): static
     {
         $this->code = $code;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Book>
+     */
+    public function getBooks(): Collection
+    {
+        return $this->books;
+    }
+
+    public function addBook(Book $book): static
+    {
+        if (!$this->books->contains($book)) {
+            $this->books->add($book);
+            $book->setInvitation($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBook(Book $book): static
+    {
+        if ($this->books->removeElement($book)) {
+            // set the owning side to null (unless already changed)
+            if ($book->getInvitation() === $this) {
+                $book->setInvitation(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function isBookSent(): ?bool
+    {
+        return $this->bookSent;
+    }
+
+    public function setBookSent(?bool $bookSent): static
+    {
+        $this->bookSent = $bookSent;
 
         return $this;
     }

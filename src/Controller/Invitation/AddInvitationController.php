@@ -9,6 +9,9 @@ use App\Repository\TableRepository;
 use App\Service\OTPService;
 use Endroid\QrCode\Builder\Builder;
 use Endroid\QrCode\Encoding\Encoding;
+use Endroid\QrCode\ErrorCorrectionLevel;
+use Endroid\QrCode\Label\Font\NotoSans;
+use Endroid\QrCode\Label\LabelAlignment;
 use Endroid\QrCode\RoundBlockSizeMode;
 use Endroid\QrCode\Writer\PngWriter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -36,7 +39,6 @@ class AddInvitationController extends AbstractController
      */
     public function __invoke(Request $request, KernelInterface $kernel): JsonResponse
     {
-        $success = true;
         $content = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
         $civility = $content["civility"] ?? null;
         $name = $content["name"] ?? null;
@@ -94,33 +96,35 @@ class AddInvitationController extends AbstractController
         $this->invitationRepository->save($invitation, true);
 
         $qrCodeData = [
+            'type' => 'KuuWaa',
             'id' => $invitation->getId(),
             'status' => $invitation->getStatus(),
             'civility' => $invitation->getCivility(),
             'name' => $invitation->getName(),
             'count' => $invitation->getCount(),
             'table' => $invitation->getInvitationTable()->getName(),
+            'kwEv' => "KW000" . $event->getId()
         ];
 
 
         $jsonQrCodeData = json_encode($qrCodeData, JSON_THROW_ON_ERROR);
-//        $qrCode = new QrCode($jsonQrCodeData);
-//        $qrCode->setSize(300);
         $fileName = uniqid('', true) . '.png';
         $destinationPath = $kernel->getProjectDir() . '/public/events/invitations/qr_code';
-//        $qrCode->render($destinationPath);
+
         $result = Builder::create()
             ->writer(new PngWriter())
             ->writerOptions([])
             ->data($jsonQrCodeData)
             ->encoding(new Encoding('UTF-8'))
-//            ->errorCorrectionLevel(ErrorCorrectionLevel::High)
+            ->errorCorrectionLevel(ErrorCorrectionLevel::Medium)
             ->size(300)
             ->margin(10)
             ->roundBlockSizeMode(RoundBlockSizeMode::Margin)
             ->logoPath($kernel->getProjectDir() . '/public/images/logo-dark.png')
             ->logoResizeToWidth(80)
-//            ->logoPunchoutBackground(false)
+            ->labelText($code)
+            ->labelFont(new NotoSans(20))
+            ->labelAlignment(LabelAlignment::Center)
             ->validateResult(false)
             ->build();
 
