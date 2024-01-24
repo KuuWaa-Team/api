@@ -12,6 +12,7 @@ use App\Controller\Event\ActivePackEventController;
 use App\Controller\Event\CreateEventController;
 use App\Controller\Invitation\AddInvitationController;
 use App\Controller\Invitation\CheckByCodeController;
+use App\Controller\Invitation\EditInvitationController;
 use App\Controller\Invitation\MyInvitationsController;
 use App\Controller\Invitation\SendAllController;
 use App\Controller\Invitation\SendInvitationController;
@@ -103,6 +104,24 @@ use Symfony\Component\Serializer\Annotation\Groups;
             ],
             description: 'send invitation',
             name: 'sendInvitation',
+        ),
+        new Post(
+            uriTemplate: '/invitations/{id}/edit',
+            controller: EditInvitationController::class,
+            openapiContext: [
+                'summary' => 'edit invitation',
+                'requestBody' => [
+                    'content' => [
+                        'application/json' => [
+                            'schema' => [
+                                'type' => 'object',
+                            ]
+                        ]
+                    ]
+                ],
+            ],
+            description: 'edit invitation',
+            name: 'editInvitation',
         ),
         new Post(
             uriTemplate: '/invitations/send-all',
