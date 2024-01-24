@@ -104,7 +104,7 @@ class AddInvitationController extends AbstractController
             'civility' => $invitation->getCivility(),
             'name' => $invitation->getName(),
             'count' => $invitation->getCount(),
-            'table' => $invitation->getInvitationTable()->getName(),
+            'table' => $invitation->getInvitationTable()?->getName(),
             'kwEv' => "KW000" . $event->getId()
         ];
 
