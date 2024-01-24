@@ -13,6 +13,7 @@ use App\Controller\Event\EditEventImageController;
 use App\Controller\Event\EventDetailController;
 use App\Controller\Event\ListingAdminsController;
 use App\Controller\Event\ListingEventBeveragesController;
+use App\Entity\Address\Address;
 use App\Entity\Event\Book;
 use App\Entity\Event\EventAdmin;
 use App\Entity\Payment\Payment;
@@ -220,10 +221,6 @@ class Event
     #[Groups(['event:pRead', 'event:fRead', 'invitation:fRead'])]
     private ?string $name = null;
 
-    #[ORM\Column(length: 255)]
-    #[Groups(['event:pRead', 'event:fRead', 'invitation:fRead'])]
-    private ?string $address = null;
-
     #[ORM\Column(length: 255, nullable: true)]
     #[Groups(['event:pRead', 'event:fRead', 'invitation:fRead'])]
     private ?string $details = null;
@@ -313,6 +310,10 @@ class Event
     #[Groups(['event:pRead', 'event:fRead'])]
     private Collection $books;
 
+    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    #[Groups(['event:pRead', 'event:fRead', 'invitation:fRead'])]
+    private ?Address $address = null;
+
     public function getImagePath(): ?string
     {
         return $this->imagePath;
@@ -355,12 +356,12 @@ class Event
         return $this;
     }
 
-    public function getAddress(): ?string
+    public function getAddress(): ?Address
     {
         return $this->address;
     }
 
-    public function setAddress(string $address): static
+    public function setAddress(?Address $address): static
     {
         $this->address = $address;
 

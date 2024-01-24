@@ -6,6 +6,7 @@ use App\Entity\Invitation;
 use App\Repository\EventRepository;
 use App\Repository\InvitationRepository;
 use App\Repository\TableRepository;
+use App\Service\DateService;
 use App\Service\OTPService;
 use Endroid\QrCode\Builder\Builder;
 use Endroid\QrCode\Encoding\Encoding;
@@ -28,7 +29,8 @@ class AddInvitationController extends AbstractController
         private readonly TableRepository $tableRepository,
         private readonly InvitationRepository $invitationRepository,
         private readonly NormalizerInterface $normalizer,
-        private readonly OTPService $OTPService
+        private readonly OTPService $OTPService,
+        private readonly DateService $dateService
     )
     {
     }
@@ -49,7 +51,7 @@ class AddInvitationController extends AbstractController
 
         $event = $this->eventRepository->find($eventId);
 
-        if ($this->invitationRepository->invitationExists($phoneNumber)) {
+        if ($this->invitationRepository->invitationExists($phoneNumber, $event)) {
             $invitations = $this->invitationRepository->findByEvent($event);
             $response = [
                 'success'   => false,
@@ -106,7 +108,6 @@ class AddInvitationController extends AbstractController
             'kwEv' => "KW000" . $event->getId()
         ];
 
-
         $jsonQrCodeData = json_encode($qrCodeData, JSON_THROW_ON_ERROR);
         $fileName = uniqid('', true) . '.png';
         $destinationPath = $kernel->getProjectDir() . '/public/events/invitations/qr_code';
@@ -130,7 +131,18 @@ class AddInvitationController extends AbstractController
 
         $result->saveToFile($destinationPath . "/" . $fileName);
 
+        $link = "https://kuuwaa.com/invitations/" . $invitation->getId();
+
+        $message = "Bonjour " . $invitation->getCivility() . " " . $invitation->getName();
+        $message .= ",\nVous êtes invité à l'évenement \"{$invitation->getEvent()->getName()}\" le " . $this->dateService->getFullDate($invitation->getEvent()->getDate(), true, true) . ".";
+        $message .= "\n\nPour accéder à votre invitation, veuillez ouvrir le lien suivant.";
+        $message .= "\n" . $link;
+        $message .= "\n\nSi vous rencontrez des difficultés pour ouvrir le lien ou pour accéder à l'application KuuWaa, veuillez retenir le code d'invitation à 6 chiffres ({$invitation->getCode()}) et présentez-le lors de la vérification à l'entrée de l'événement.";
+
+        $body = "$message\n\nCeci est un message automatique, veuillez ne pas y repondre.";
+
         $invitation->setCodePath("/events/invitations/qr_code/" . $fileName);
+        $invitation->setMessage($body);
 
         $this->invitationRepository->save($invitation, true);
 

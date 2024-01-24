@@ -12,7 +12,7 @@ class InvitationController extends AbstractController
     public function index($id, InvitationRepository $invitationRepository): Response
     {
         $invitation = $invitationRepository->find($id);
-        return $this->render('public/invitation/index.html.twig', [
+            return $this->render('public/invitation/index.html.twig', [
             'invitation' => $invitation,
         ]);
     }

@@ -22,7 +22,6 @@ class EventRepository extends ServiceEntityRepository
         parent::__construct($registry, Event::class);
     }
 
-
     public function save(Event $event, bool $flush = false):void {
         $this->getEntityManager()->persist($event);
         if ($flush) {

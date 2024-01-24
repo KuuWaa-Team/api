@@ -2,9 +2,13 @@
 
 namespace App\Controller\Event;
 
+use App\Entity\Address\Address;
 use App\Entity\Event;
 use App\Entity\EventCategory;
 use App\Entity\User;
+use App\Repository\Address\AddressRepository;
+use App\Repository\Address\CountryRepository;
+use App\Repository\Address\ProvinceRepository;
 use App\Repository\EventCategoryRepository;
 use App\Repository\EventPackRepository;
 use App\Repository\EventRepository;
@@ -23,6 +27,9 @@ class CreateEventController extends AbstractController
         private readonly EventCategoryRepository $categoryRepository,
         private readonly EventPackRepository $packRepository,
         private readonly FeatureRepository $featureRepository,
+        private readonly ProvinceRepository $provinceRepository,
+        private readonly CountryRepository $countryRepository,
+        private readonly AddressRepository $addressRepository,
     ) {
     }
 
@@ -39,7 +46,10 @@ class CreateEventController extends AbstractController
         $name = $content['name'];
         $paid = $content['paid'];
         $date = $content['date'];
-        $address = $content['address'];
+        $provinceId = $content['province_id'] ?? null;
+        $street = $content['street'] ?? null;
+        $number = $content['number'] ?? null;
+        $ref = $content['ref'] ?? null;
         $details = $content['details'];
 
         $features = $content['features_id'] ?? null;
@@ -75,10 +85,24 @@ class CreateEventController extends AbstractController
              ->setDetails($details)
              ->setUser($this->getUser())
              ->setPaidEvent($paid)
-             ->setAddress($address)
              ->setPaymentStatus('waiting')
              ->setImagePath($imagePath)
          ;
+
+         $address = (new Address())
+            ->setRef($ref)
+            ->setCountry($this->countryRepository->find(1))
+            ->setNumber($number)
+            ->setStreet($street)
+         ;
+
+         if ($provinceId !== null) {
+             $address->setProvince($this->provinceRepository->find($provinceId));
+         }
+
+         $this->addressRepository->save($address, true);
+
+         $event->setAddress($address);
 
          $this->eventRepository->save($event);
 

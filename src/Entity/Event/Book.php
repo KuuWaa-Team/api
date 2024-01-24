@@ -2,6 +2,14 @@
 
 namespace App\Entity\Event;
 
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
+use App\Controller\Beverage\AddBeverageController;
+use App\Controller\Book\DeleteController;
 use App\Entity\Event;
 use App\Entity\Invitation;
 use App\Repository\Event\BookRepository;
@@ -9,6 +17,33 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: BookRepository::class)]
+#[ApiResource(
+    operations: [
+        new Get(),
+        new GetCollection(),
+        new Post(
+            uriTemplate: '/books/{id}/delete',
+            controller: DeleteController::class,
+            openapiContext: [
+                'summary' => 'delete book',
+                'requestBody' => [
+                    'content' => [
+                        'application/json' => [
+                            'schema' => [
+                                'type' => 'object',
+                            ]
+                        ]
+                    ]
+                ],
+            ],
+            description: 'delete book',
+            name: 'deleteBook',
+        ),
+        new Put(),
+        new Delete()
+    ],
+    order: ['id' => 'ASC']
+)]
 class Book
 {
     #[ORM\Id]

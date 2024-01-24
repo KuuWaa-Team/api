@@ -41,7 +41,7 @@ class EditEventController extends AbstractController
 
         $category_id = $content['category_id'] ?? null;
 
-         if ($category_id === null) {
+         if ($category_id === null || $category_id === 0) {
              $category = (new EventCategory())
                  ->setName($content['category_name'] ?? 'Non défini')
                  ->setValidated(false)

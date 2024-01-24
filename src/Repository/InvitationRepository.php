@@ -45,11 +45,13 @@ class InvitationRepository extends ServiceEntityRepository
             ;
     }
 
-    public function invitationExists(String $phone): bool
+    public function invitationExists(String $phone, Event $event): bool
     {
         $result = $this->createQueryBuilder('i')
             ->andWhere('i.phoneNumber = :phone')
+            ->andWhere('i.event = :ev')
             ->setParameter('phone', $phone)
+            ->setParameter('ev', $event)
             ->getQuery()
             ->getResult()
         ;

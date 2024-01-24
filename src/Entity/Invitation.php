@@ -19,6 +19,7 @@ use App\Entity\Event\Book;
 use App\Repository\InvitationRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
@@ -180,6 +181,10 @@ class Invitation
     #[ORM\Column(nullable: true)]
     #[Groups(["invitation:pRead", 'table:pRead', 'invitation:fRead', 'event:pRead', 'event:fRead'])]
     private ?bool $bookSent = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Groups(["invitation:pRead", 'table:pRead', 'invitation:fRead', 'event:pRead', 'event:fRead'])]
+    private ?string $message = null;
 
     public function __construct()
     {
@@ -349,6 +354,18 @@ class Invitation
     public function setBookSent(?bool $bookSent): static
     {
         $this->bookSent = $bookSent;
+
+        return $this;
+    }
+
+    public function getMessage(): ?string
+    {
+        return $this->message;
+    }
+
+    public function setMessage(?string $message): static
+    {
+        $this->message = $message;
 
         return $this;
     }

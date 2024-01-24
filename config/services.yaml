@@ -4,6 +4,12 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
+  twilio_account_sid: 'ACff7a18d7bfc2825d8ad0de5719362d1c'
+  twilio_auth_token: '9ca35716f6ad3526a908cf5131cd1a65'
+  twilio_whatsapp_from: 'whatsapp:+13197748400'
+
+  telegram_bot_token: '6583205215:AAEzE7r52D34qYVJRZZYBWl62J7JiSLxj5c'
+  telegram_chat_id: '5222905724'
 
 services:
   # default configuration for services in *this* file
@@ -22,3 +28,13 @@ services:
 
   # add more service definitions when explicit configuration is needed
   # please note that last definitions always *replace* previous ones
+  App\Service\WhatsappService:
+    arguments:
+      $accountSid: '%twilio_account_sid%'
+      $authToken: '%twilio_auth_token%'
+      $from: '%twilio_whatsapp_from%'
+
+  App\Service\TelegramService:
+    arguments:
+      $telegramBotToken: '%telegram_bot_token%'
+      $telegramChatId: '%telegram_chat_id%'
