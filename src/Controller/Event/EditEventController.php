@@ -2,9 +2,13 @@
 
 namespace App\Controller\Event;
 
+use App\Entity\Address\Address;
 use App\Entity\Event;
 use App\Entity\EventCategory;
 use App\Entity\User;
+use App\Repository\Address\AddressRepository;
+use App\Repository\Address\CountryRepository;
+use App\Repository\Address\ProvinceRepository;
 use App\Repository\EventCategoryRepository;
 use App\Repository\EventPackRepository;
 use App\Repository\EventRepository;
@@ -21,6 +25,9 @@ class EditEventController extends AbstractController
     public function __construct(
         private readonly EventRepository $eventRepository,
         private readonly EventCategoryRepository $categoryRepository,
+        private readonly ProvinceRepository $provinceRepository,
+        private readonly CountryRepository $countryRepository,
+        private readonly AddressRepository $addressRepository,
     ) {
     }
 
@@ -36,8 +43,11 @@ class EditEventController extends AbstractController
 
         $name = $content['name'] ?? null;
         $date = $content['date'] ?? null;
-        $address = $content['address'] ?? null;
         $details = $content['details'] ?? null;
+        $provinceId = $content['province_id'] ?? null;
+        $street = $content['street'] ?? null;
+        $number = $content['number'] ?? null;
+        $ref = $content['ref'] ?? null;
 
         $category_id = $content['category_id'] ?? null;
 
@@ -62,7 +72,22 @@ class EditEventController extends AbstractController
             $event->setDetails($details);
         }
 
-        if ($address !== null) {
+        if (
+            $street !== $event->getAddress()->getStreet()
+            || $number !== $event->getAddress()->getNumber()
+            || $ref !== $event->getAddress()->getRef()
+            || $provinceId !== $event->getAddress()->getProvince()->getId()
+        ) {
+            $address = (new Address())
+                ->setRef($ref)
+                ->setCountry($this->countryRepository->find(1))
+                ->setNumber($number)
+                ->setStreet($street)
+            ;
+            if ($provinceId !== null) {
+                $address->setProvince($this->provinceRepository->find($provinceId));
+            }
+            $this->addressRepository->save($address, true);
             $event->setAddress($address);
         }
 
