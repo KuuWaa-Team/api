@@ -9,11 +9,13 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Serializer\Exception\ExceptionInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 class CheckByCodeController extends AbstractController
 {
     public function __construct(
-        private readonly InvitationRepository $invitationRepository
+        private readonly InvitationRepository $invitationRepository,
+        private readonly NormalizerInterface $normalizer,
     )
     {
     }
@@ -33,17 +35,14 @@ class CheckByCodeController extends AbstractController
 
         $invitation = $this->invitationRepository->findByCode($code);
 
-        $message = null;
-
         if ($invitation === null) {
             $message = "Code invalide";
         } else if ($invitation->getStatus() === 'verified') {
             $message = "Cette invitation à été déjà vérifiée";
-        }
-
-        if ($invitation !== null && $invitation->getStatus() !== 'verified') {
+        } else {
             $success = true;
-            $data = $invitation;
+            $data = $this->normalizer->normalize($invitation, null, ['groups' => ['invitation:fRead']]);
+            $message = "Invitation valide. L'invité peut accéder à la salle";
         }
 
         $response = [
