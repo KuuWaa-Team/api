@@ -43,6 +43,10 @@ class EditInvitationController extends AbstractController
         $content = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
         $phoneNumber = $content["phoneNumber"] ?? null;
         $tableId = $content["tableId"] ?? null;
+        $name = $content["name"] ?? null;
+        $count = $content["count"] ?? null;
+        $civility = $content["civility"] ?? null;
+
 
         $event = $invitation->getEvent();
 
@@ -58,7 +62,12 @@ class EditInvitationController extends AbstractController
                 return new JsonResponse($response, Response::HTTP_OK);
             }
 
-            $invitation->setPhoneNumber($phoneNumber);
+            $invitation
+                ->setPhoneNumber($phoneNumber)
+                ->setName($name)
+                ->setCivility($civility)
+                ->setCount($count)
+            ;
         }
 
         if ($tableId !== null && ($invitation->getInvitationTable() === null || $tableId !== $invitation->getInvitationTable()->getId())) {

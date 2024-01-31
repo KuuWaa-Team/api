@@ -205,6 +205,10 @@ class Invitation
     #[Groups(["invitation:pRead", 'table:pRead', 'invitation:fRead', 'event:pRead', 'event:fRead'])]
     private ?string $message = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(["invitation:pRead", 'table:pRead', 'invitation:fRead'])]
+    private ?string $decryptKey = null;
+
     public function __construct()
     {
         $this->books = new ArrayCollection();
@@ -385,6 +389,18 @@ class Invitation
     public function setMessage(?string $message): static
     {
         $this->message = $message;
+
+        return $this;
+    }
+
+    public function getDecryptKey(): ?string
+    {
+        return $this->decryptKey;
+    }
+
+    public function setDecryptKey(?string $decryptKey): static
+    {
+        $this->decryptKey = $decryptKey;
 
         return $this;
     }

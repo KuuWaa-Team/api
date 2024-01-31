@@ -9,6 +9,7 @@
         "ext-curl": "*",
         "ext-iconv": "*",
         "api-platform/core": "^3.2",
+        "defuse/php-encryption": "^2.4",
         "doctrine/doctrine-bundle": "^2.11",
         "doctrine/doctrine-migrations-bundle": "^3.3",
         "doctrine/orm": "^2.17",

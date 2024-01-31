@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use DateTime;
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class DateService extends AbstractController{
@@ -35,4 +36,16 @@ class DateService extends AbstractController{
 
         return $new_date;
     }
+
+    public function imageToBase64($path) {
+        try {
+            $path = $path;
+            $type = pathinfo($path, PATHINFO_EXTENSION);
+            $data = file_get_contents($path);
+            $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
+            return $base64;
+        } catch (Exception $e) {
+            
+        }
+    } 
 }

@@ -90,7 +90,7 @@ textarea:focus {
     padding-top:80px;
 }
 .wd_toppadder90{
-    padding-top:80px;
+    padding-top:20px;
 }
 .wd_toppadder100{
     padding-top:100px;
@@ -1533,7 +1533,7 @@ textarea:focus {
 .wd_gallery_wrapper{
     float:left;
     width:100%;
-    background-color:#0c0c0c;
+    background-color:#2F2644;
     position: relative;
     z-index:0;
 }
@@ -1899,7 +1899,7 @@ textarea:focus {
 .wd_footer_bottom_wrapper{
     float:left;
     width:100%;
-    background-color:#0c0c0c;
+    background-color:#2F2644;
     position:relative;
     padding-left: 50px;
     padding-right: 50px;
@@ -1913,7 +1913,6 @@ textarea:focus {
     width:auto;
 }
 .wd_footer_section p{
-    float:right;
     width:auto;
     padding-top:20px;
     margin:0px;
@@ -2523,7 +2522,7 @@ textarea:focus {
 .wd_footer_bottom_wrapper{
     float:left;
     width:100%;
-    background-color:#0c0c0c;
+    background-color:#2F2644;
     position:relative;
     padding-left: 50px;
     padding-right: 50px;
@@ -2537,7 +2536,6 @@ textarea:focus {
     width:auto;
 }
 .wd_footer_section p{
-    float:right;
     width:auto;
     padding-top:20px;
     margin:0px;
