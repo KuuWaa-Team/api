@@ -41,6 +41,7 @@ class CompleteProfileController extends AbstractController
             ->setFirstname($firstname)
             ->setLastname($lastname)
             ->setAddress($address)
+            ->setCompleted(true)
         ;
 
         $this->userRepository->save($user, true);

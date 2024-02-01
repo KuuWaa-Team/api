@@ -126,7 +126,8 @@ class EditInvitationController extends AbstractController
                 ->labelFont(new NotoSans(20))
                 ->labelAlignment(LabelAlignment::Center)
                 ->validateResult(false)
-                ->build();
+                ->build()
+            ;
 
             $result->saveToFile($destinationPath . "/" . $fileName);
             $invitation->setCodePath("/events/invitations/qr_code/" . $fileName);

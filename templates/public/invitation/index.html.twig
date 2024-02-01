@@ -154,7 +154,7 @@
 
 <!-- About Wrapper Start -->
 <div section-scroll='1' class="wd_scroll_wrap">
-    <div class="wd_about_wrapper wd_toppadder90 wd_bottompadder70">
+    <div class="wd_about_wrapper wd_toppadder90 wd_bottompadder70" style="padding-bottom:0  ">
         <div class="container">
             <div class="row">
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -197,9 +197,11 @@
                            <button id="downloadButton" class="btn btn-sm btn-default" style="float-rigth; border-radius:0; width:100%"><i class="fa fa-download" aria-hidden="true"></i> Télécharger votre invitation</button>
                         </div>
 
-                       {# <div class="wd_btn wd_event_infobox">
-                            <a href='#' style="padding:5px 10px;line-height: 21px;height:30px;font-size: 15px;" data-toggle="modal" data-target="#modal-preference" style=""><i class="fa fa-bars" aria-hidden="true"></i> Vos préferences</a>
-                        </div> #}
+                        {% if invitation.bookSent != true %}
+                            <div class="wd_btn wd_event_infobox" style="margin-top:10px">
+                                <a href='#' style="padding:5px 10px;line-height: 21px;height:30px;font-size: 15px;" data-toggle="modal" data-target="#modal-preference" style=""><i class="fa fa-message" aria-hidden="true"></i> Laissez un message au livre d'Or</a>
+                            </div>
+                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -211,146 +213,18 @@
         <div class="modal-dialog modal-dialog-centered" user_role="document">
             <div class="modal-content" style="line-height: initial;">
                 <div class="modal-header">
-                    <h2 style="" class="modal-title text-center">Préférences</h2>
+                    <h2 style="" class="modal-title text-center">Livre d'Or</h2>
                 </div>
                 <div class="modal-body">
-                    <form method="POST" action="https://iparty-rdc.com/invite/preferences" id="preferences">
+                    {{ form_start(form, {'method': 'POST', 'attr': {'id': 'preferences'}}) }}
                         <div class="">   <!-- wd_about_infobox -->
                             <div class="" style="text-align:left;font-size:0.8em;">  <!-- wd_about_infobox_date -->
                                 <div class="row">
                                     <div class="form-group col-lg-12">
-                                        <label class="focus-label" >Tél</label> (WhatsApp)
-                                        <input name="tel" type="text" id="tel" class="form-control" value="" placeholder="Ex. +243977799594">
-                                        <small class="text-primary">Vous recevrez des notifications sur ce numéro.</small>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="form-group col-lg-12">
-                                        <label class="focus-label">Que voulez-vous boire ?</label> <br>
-                                        <small class="text-muted">Aidez les mariés dans l'organisation en leur suggérant vos goûts ! (Choisissez 2 goûts)</small> <br><br>
-                                        <i class="text-primary"> Boissons sans alcool :</i>
-                                        <ul class="ks-cboxtags" style="padding:0px;">
-                                            <li id="ckb-client" class="me-2">
-                                                <input class="form-check-input cbx-boisson" type="checkbox" name="boisson_ids[]" value="5" id="boisson-5" class="group-boissons"  >
-                                                <label class="form-check-label" for="boisson-5">
-                                                    COCA                                                                </label>
-                                            </li>
-                                            <li id="ckb-client" class="me-2">
-                                                <input class="form-check-input cbx-boisson" type="checkbox" name="boisson_ids[]" value="30" id="boisson-30" class="group-boissons"  >
-                                                <label class="form-check-label" for="boisson-30">
-                                                    EAU	                                                                </label>
-                                            </li>
-                                            <li id="ckb-client" class="me-2">
-                                                <input class="form-check-input cbx-boisson" type="checkbox" name="boisson_ids[]" value="8" id="boisson-8" class="group-boissons"  >
-                                                <label class="form-check-label" for="boisson-8">
-                                                    ENERGY MALT	                                                                </label>
-                                            </li>
-                                            <li id="ckb-client" class="me-2">
-                                                <input class="form-check-input cbx-boisson" type="checkbox" name="boisson_ids[]" value="9" id="boisson-9" class="group-boissons"  >
-                                                <label class="form-check-label" for="boisson-9">
-                                                    FANTA	                                                                </label>
-                                            </li>
-                                            <li id="ckb-client" class="me-2">
-                                                <input class="form-check-input cbx-boisson" type="checkbox" name="boisson_ids[]" value="12" id="boisson-12" class="group-boissons"  >
-                                                <label class="form-check-label" for="boisson-12">
-                                                    MALTINA	                                                                </label>
-                                            </li>
-                                            <li id="ckb-client" class="me-2">
-                                                <input class="form-check-input cbx-boisson" type="checkbox" name="boisson_ids[]" value="20" id="boisson-20" class="group-boissons"  >
-                                                <label class="form-check-label" for="boisson-20">
-                                                    SPRITE	                                                                </label>
-                                            </li>
-                                            <li id="ckb-client" class="me-2">
-                                                <input class="form-check-input cbx-boisson" type="checkbox" name="boisson_ids[]" value="22" id="boisson-22" class="group-boissons"  >
-                                                <label class="form-check-label" for="boisson-22">
-                                                    TONIC	                                                                </label>
-                                            </li>
-                                            <li id="ckb-client" class="me-2">
-                                                <input class="form-check-input cbx-boisson" type="checkbox" name="boisson_ids[]" value="25" id="boisson-25" class="group-boissons"  >
-                                                <label class="form-check-label" for="boisson-25">
-                                                    VITALO	                                                                </label>
-                                            </li>
-                                        </ul>
-                                        <i class="text-primary">Boissons avec alcool :</i>
-                                        <ul class="ks-cboxtags" style="padding:0px;">
-                                            <li id="ckb-client" class="me-2">
-                                                <input class="form-check-input cbx-boisson" type="checkbox" name="boisson_ids[]" value="2" id="boisson-2" class="group-boissons"  >
-                                                <label class="form-check-label" for="boisson-2">
-                                                    BEAUFORT	                                                                </label>
-                                            </li>
-                                            <li id="ckb-client" class="me-2">
-                                                <input class="form-check-input cbx-boisson" type="checkbox" name="boisson_ids[]" value="3" id="boisson-3" class="group-boissons"  >
-                                                <label class="form-check-label" for="boisson-3">
-                                                    CASTEL	                                                                </label>
-                                            </li>
-                                            <li id="ckb-client" class="me-2">
-                                                <input class="form-check-input cbx-boisson" type="checkbox" name="boisson_ids[]" value="4" id="boisson-4" class="group-boissons"  >
-                                                <label class="form-check-label" for="boisson-4">
-                                                    CLASS	                                                                </label>
-                                            </li>
-                                            <li id="ckb-client" class="me-2">
-                                                <input class="form-check-input cbx-boisson" type="checkbox" name="boisson_ids[]" value="7" id="boisson-7" class="group-boissons"  >
-                                                <label class="form-check-label" for="boisson-7">
-                                                    DOPPEL	                                                                </label>
-                                            </li>
-                                            <li id="ckb-client" class="me-2">
-                                                <input class="form-check-input cbx-boisson" type="checkbox" name="boisson_ids[]" value="10" id="boisson-10" class="group-boissons"  >
-                                                <label class="form-check-label" for="boisson-10">
-                                                    HEINEKEN	                                                                </label>
-                                            </li>
-                                            <li id="ckb-client" class="me-2">
-                                                <input class="form-check-input cbx-boisson" type="checkbox" name="boisson_ids[]" value="11" id="boisson-11" class="group-boissons"  >
-                                                <label class="form-check-label" for="boisson-11">
-                                                    LEGEND	                                                                </label>
-                                            </li>
-                                            <li id="ckb-client" class="me-2">
-                                                <input class="form-check-input cbx-boisson" type="checkbox" name="boisson_ids[]" value="13" id="boisson-13" class="group-boissons"  >
-                                                <label class="form-check-label" for="boisson-13">
-                                                    MUTZIG                                                                </label>
-                                            </li>
-                                            <li id="ckb-client" class="me-2">
-                                                <input class="form-check-input cbx-boisson" type="checkbox" name="boisson_ids[]" value="14" id="boisson-14" class="group-boissons"  >
-                                                <label class="form-check-label" for="boisson-14">
-                                                    NKOY	                                                                </label>
-                                            </li>
-                                            <li id="ckb-client" class="me-2">
-                                                <input class="form-check-input cbx-boisson" type="checkbox" name="boisson_ids[]" value="15" id="boisson-15" class="group-boissons"  >
-                                                <label class="form-check-label" for="boisson-15">
-                                                    NKOY BLACK	                                                                </label>
-                                            </li>
-                                            <li id="ckb-client" class="me-2">
-                                                <input class="form-check-input cbx-boisson" type="checkbox" name="boisson_ids[]" value="16" id="boisson-16" class="group-boissons"  >
-                                                <label class="form-check-label" for="boisson-16">
-                                                    PETITE YA QUARTIER	                                                                </label>
-                                            </li>
-                                            <li id="ckb-client" class="me-2">
-                                                <input class="form-check-input cbx-boisson" type="checkbox" name="boisson_ids[]" value="17" id="boisson-17" class="group-boissons"  >
-                                                <label class="form-check-label" for="boisson-17">
-                                                    PRIMUS                                                                </label>
-                                            </li>
-                                            <li id="ckb-client" class="me-2">
-                                                <input class="form-check-input cbx-boisson" type="checkbox" name="boisson_ids[]" value="19" id="boisson-19" class="group-boissons"  >
-                                                <label class="form-check-label" for="boisson-19">
-                                                    SKOL	                                                                </label>
-                                            </li>
-                                            <li id="ckb-client" class="me-2">
-                                                <input class="form-check-input cbx-boisson" type="checkbox" name="boisson_ids[]" value="21" id="boisson-21" class="group-boissons"  >
-                                                <label class="form-check-label" for="boisson-21">
-                                                    TEMBO	                                                                </label>
-                                            </li>
-                                            <li id="ckb-client" class="me-2">
-                                                <input class="form-check-input cbx-boisson" type="checkbox" name="boisson_ids[]" value="23" id="boisson-23" class="group-boissons"  >
-                                                <label class="form-check-label" for="boisson-23">
-                                                    TURBO	                                                                </label>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-
-                                <div class="row">
-                                    <div class="form-group col-lg-12">
-                                        <label class="focus-label">Livre d'or</label>
-                                        <textarea style="text-align:left" name="note" class="form-control" rows="4" cols="50" placeholder="Laissez un mot aux mariés ici..."></textarea>
+                                    {{ form_label(form.message, 'Un souhait, un voeux, un message qui restera dans le livre d\'Or', {
+                                        'label_attr': {'class': 'col-form-label'}
+                                    }) }}
+                                    {{ form_widget(form.message, { 'attr': {'class': 'form-control', 'rows':'4', 'cols':'50', 'placeholder': 'Laissez un mot aux mariés ici...', 'style': 'text-align:left'} }) }}
                                     </div>
                                 </div>
 
@@ -358,10 +232,10 @@
                         </div>
                         <div style="margin-top:5px;">
                             <input name="invite_id" type="hidden" value="758" class="form-control floating" required>
-                            <button type="submit"  class="btn btn-success ">Enregistrer</button>
+                            {{ form_widget(form.submit, { 'attr': {'class': 'btn btn-primary'} }) }}
                             <button type="button" class="btn btn-default float-right" data-dismiss="modal">Fermer</button>
                         </div>
-                    </form>
+                    {{ form_end(form    ) }}
                 </div>
 
             </div>
@@ -409,6 +283,7 @@
 </div>
 <!-- Footer Wrapper End -->
 <!--main js file start-->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script> 
 <script>
     document.getElementById('downloadButton').addEventListener('click', function () {
         // Contenu HTML à convertir en image
@@ -429,6 +304,9 @@
             content.style.display = 'none';
         });
     });
+    $('#myModal').on('shown.bs.modal', function () {
+        $('#myInput').trigger('focus')
+    })
 </script>
 <script type="text/javascript" src="{{ asset('js/bootstrap.js') }}"></script>
 <script type="text/javascript" src="{{ asset('js/owl.carousel.js') }}"></script>
