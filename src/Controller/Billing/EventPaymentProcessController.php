@@ -55,7 +55,7 @@ class EventPaymentProcessController extends AbstractController
                     ->setRef($ref)
                     ->setOrderNumber($paymentSuccess[1]);
                 $success = true;
-                $message = "Processus de paiement lancé";
+                $message = "Processus de paiement en cours...";
             }
         } catch (\Throwable $e) {
             $message = "Paiement échoué";

@@ -128,6 +128,7 @@ class CreateEventController extends AbstractController
 
         $response = [
             'success'   => $success,
+            'eventId'   => $success ? $event->getId() : null,
             'message'   => $message,
             'errorType' => $errorType,
         ];
