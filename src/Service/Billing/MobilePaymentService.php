@@ -2,8 +2,16 @@
 
 namespace App\Service\Billing;
 
+use Doctrine\ORM\EntityManagerInterface;
+
 class MobilePaymentService
 {
+    public function __construct(
+        private readonly EntityManagerInterface $entityManager
+    )
+    {
+        
+    }
     /**
      * @throws \JsonException
      */

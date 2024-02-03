@@ -51,6 +51,18 @@ class AddInvitationController extends AbstractController
 
         $event = $this->eventRepository->find($eventId);
 
+        if ($event->getInvitations()->count() >= $event->getEventPack()->getMaxTickets()) {
+            $invitations = $this->invitationRepository->findByEvent($event);
+            $response = [
+                'success' => false,
+                'full' => true,
+                'invitations' => $this->normalizer->normalize($invitations, null, ['groups' => ['invitation:pRead']]),
+                'message'   => "Vous avez atteint la limite de votre pack et vous ne pouvez plus ajouter des invitation. Pour ajouter plus d'invitations, vous devez élargir votre abonnement.",
+            ];
+
+            return new JsonResponse($response, Response::HTTP_OK);
+        }
+
         if ($this->invitationRepository->invitationExists($phoneNumber, $event)) {
             $invitations = $this->invitationRepository->findByEvent($event);
             $response = [

@@ -251,7 +251,7 @@ class Event
     private ?bool $paidEvent = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['event:pRead', 'event:fRead'])]
+    #[Groups(['event:pRead', 'event:fRead', 'invitation:fRead'])]
     private ?string $paymentStatus = null;
 
     #[ORM\ManyToMany(targetEntity: Feature::class, inversedBy: 'events')]
@@ -283,7 +283,7 @@ class Event
     private Collection $beverages;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['event:pRead', 'event:fRead'])]
+    #[Groups(['event:pRead', 'event:fRead', 'invitation:fRead'])]
     private ?int $beveragesCount = null;
 
     #[ORM\OneToMany(mappedBy: 'event', targetEntity: Payment::class)]
@@ -313,6 +313,10 @@ class Event
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
     #[Groups(['event:pRead', 'event:fRead', 'invitation:fRead'])]
     private ?Address $address = null;
+
+    #[ORM\Column(length: 255, nullable:true)]
+    #[Groups(['event:pRead', 'event:fRead', 'invitation:fRead'])]
+    private ?string $featureslugs = null;
 
     public function getImagePath(): ?string
     {
@@ -759,6 +763,18 @@ class Event
                 $book->setEvent(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getFeatureslugs(): ?string
+    {
+        return $this->featureslugs;
+    }
+
+    public function setFeatureslugs(?string $featureslugs): static
+    {
+        $this->featureslugs = $featureslugs;
 
         return $this;
     }

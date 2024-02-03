@@ -52,65 +52,72 @@ class CreateEventController extends AbstractController
         $ref = $content['ref'] ?? null;
         $details = $content['details'];
 
+        $featuresSlugs = [];
+
         $features = $content['features_id'] ?? null;
 
         $pack_id = $content['pack_id'];
 
         $category_id = $content['category_id'] ?? null;
 
-         if ($category_id === null) {
-             $category = (new EventCategory())
-                 ->setName($content['category_name'] ?? 'Non défini')
-                 ->setPaid($paid)
-                 ->setValidated(false)
-             ;
-         } else {
-             $category = $this->categoryRepository->find($category_id);
-         }
+        if ($category_id === null) {
+            $category = (new EventCategory())
+                ->setName($content['category_name'] ?? 'Non défini')
+                ->setPaid($paid)
+                ->setValidated(false)
+            ;
+        } else {
+            $category = $this->categoryRepository->find($category_id);
+        }
 
-        $image = $request->files->get('image');
-        $fileName = uniqid('', true) . '.' . $image->guessExtension();
-        $destinationPath = $kernel->getProjectDir() . '/public/events/images';
-        $image->move($destinationPath, $fileName);
-        $imagePath = '/events/images/'.$fileName;
+    $image = $request->files->get('image');
+    $fileName = uniqid('', true) . '.' . $image->guessExtension();
+    $destinationPath = $kernel->getProjectDir() . '/public/events/images';
+    $image->move($destinationPath, $fileName);
+    $imagePath = '/events/images/'.$fileName;
 
-         $event = (new Event())
-             ->setName($name)
-             ->setDate(new \DateTime($date))
-             ->setEventPack(
-                 $this->packRepository->find($pack_id)
-             )
-             ->setCategory($category)
-             ->setStatus('wainting')
-             ->setDetails($details)
-             ->setUser($this->getUser())
-             ->setPaidEvent($paid)
-             ->setPaymentStatus('waiting')
-             ->setImagePath($imagePath)
-         ;
+        $event = (new Event())
+            ->setName($name)
+            ->setDate(new \DateTime($date))
+            ->setEventPack(
+                $this->packRepository->find($pack_id)
+            )
+            ->setCategory($category)
+            ->setStatus('wainting')
+            ->setDetails($details)
+            ->setUser($this->getUser())
+            ->setPaidEvent($paid)
+            ->setPaymentStatus('waiting')
+            ->setImagePath($imagePath)
+        ;
 
-         $address = (new Address())
-            ->setRef($ref)
-            ->setCountry($this->countryRepository->find(1))
-            ->setNumber($number)
-            ->setStreet($street)
-         ;
+        $address = (new Address())
+        ->setRef($ref)
+        ->setCountry($this->countryRepository->find(1))
+        ->setNumber($number)
+        ->setStreet($street)
+        ;
 
-         if ($provinceId !== null) {
-             $address->setProvince($this->provinceRepository->find($provinceId));
-         }
+        if ($provinceId !== null) {
+            $address->setProvince($this->provinceRepository->find($provinceId));
+        }
 
-         $this->addressRepository->save($address, true);
+        $this->addressRepository->save($address, true);
 
-         $event->setAddress($address);
+        $event->setAddress($address);
 
-         $this->eventRepository->save($event);
+        $this->eventRepository->save($event);
 
-         foreach ($content as $key => $field) {
-             if (str_starts_with($key, "feature")) {
-                 $event->addFeature($this->featureRepository->find($field));
-             }
-         }
+        foreach ($content as $key => $field) {
+            if (str_starts_with($key, "feature")) {
+            $feature = $this->featureRepository->find($field);
+                $event->addFeature($feature);
+                $featuresSlugs[] = $feature->getSlug();
+            }
+        }
+
+        $stringSlugs = json_encode($featuresSlugs);
+        $event->setFeatureslugs($stringSlugs);
 
         try {
             $this->eventRepository->save($event, true);

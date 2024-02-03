@@ -11,9 +11,9 @@
     <title> KuuWaa === 🏷 INVITATION</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
     <meta name="description" content="{{ invitation.event.name }}" />
-    <meta property="og:image" itemprop="image" content="{{ 'https://kuuwaa.com' ~ invitation.event.imagePath }}" />
+    <meta property="og:image" itemprop="image" content="{{ 'http://kuuwaa.com' ~ invitation.event.imagePath }}" />
     <meta name="MobileOptimized" content="320" />
-    <link itemprop="thumbnailUrl" href="{{ 'https://kuuwaa.com' ~ invitation.event.imagePath }}">
+    <link itemprop="thumbnailUrl" href="{{ 'http://kuuwaa.com' ~ invitation.event.imagePath }}">
 
     <!--style -->
     <link rel="stylesheet" type="text/css" href="{{ asset('css/animate.css') }}" />
@@ -161,7 +161,7 @@
                     <div class="col-lg-12 col-md-3 col-sm-12 col-xs-12" style="">
                         <div class="wd_about_infobox wd_toppadder20">
                             <div class="wd_about_infobox_img" style="display: flex; align-items: center; justify-content: center; ">
-                                <div class="img" style="background-image: url({{ 'https://kuuwaa.com' ~ invitation.event.imagePath }}); border-radius: 100%; width: 200px; height: 200px; background-position: center; background-size: cover"></div>
+                                <div class="img" style="background-image: url({{ 'http://kuuwaa.com' ~ invitation.event.imagePath }}); border-radius: 100%; width: 200px; height: 200px; background-position: center; background-size: cover"></div>
                             </div>
                             <h2>{{ invitation.event.name }}</h2>
                         </div>
@@ -188,7 +188,7 @@
                                 <hr>
                             </div>
                             <div class="align-center" id="qrcode" style="height:200px; margin:0;">
-                                <img width="200" src="{{ 'https://kuuwaa.com' ~ invitation.codePath }}">
+                                <img width="200" src="{{ 'http://kuuwaa.com' ~ invitation.codePath }}">
                             </div>
                         </div>
                     </div>
@@ -276,7 +276,7 @@
                         </div>
                     </a>
                 </div>
-                <p class="mb-2" style="margin-top: 30px; background-color: rgba(0, 0, 0, .3); padding: 10px">@ Copyright 2024. Designed By <a href="https://kuuwaa.com" style="color:orange">KuuWaa</a> <br></p>
+                <p class="mb-2" style="margin-top: 30px; background-color: rgba(0, 0, 0, .3); padding: 10px">@ Copyright 2024. Designed By <a href="http://kuuwaa.com" style="color:orange">KuuWaa</a> <br></p>
             </div>
         </div>
     </div>
@@ -297,7 +297,7 @@
             // Créer un lien de téléchargement et déclencher le téléchargement
             const link = document.createElement('a');
             link.href = image;
-            link.download = "Invitation {{ invitation.name }}.png";
+            link.download = "Invitation {{ invitation.name }}.jpg";
             link.target = "_blank"; // Pour les navigateurs qui ne prennent pas en charge l'attribut download
             link.click();
 
@@ -408,7 +408,7 @@
         $reactions = $('.reaction').find('mark');
         $.ajax({
             type: 'GET',
-            url: 'https://iparty-rdc.com/invite/ajax/reactionByEvent',
+            url: 'http://iparty-rdc.com/invite/ajax/reactionByEvent',
             data: {
                 'event_id': '14',
             },
@@ -442,42 +442,6 @@
 
 
         console.log(countChecked);
-    });
-
-    $(".reaction").on('click',function (e) {
-        e.preventDefault();
-
-        if ($(this).data('type') == 'COMMENT') {
-            $('#modal-preference').modal('show');
-            return;
-        }
-
-        var $mark = $(this).find("mark");
-        var value = parseInt($mark.text());
-        var type = $(this).data('type');
-        var invite_id = '758';
-
-        console.log(type);
-        $.ajax({
-            type: 'POST',
-            url: 'https://iparty-rdc.com/invite/ajax/reaction',
-            data: {
-                'invite_id': invite_id,
-                'type': type,
-            },
-            success: function(response){
-                console.log(response);
-                if(response.is_ok){
-                    if (response.message == "add") {
-                        value += 1;
-                    } else {
-                        value -= 1;
-                    }
-                    $mark.text(value);
-                }
-            }
-        });
-
     });
 </script>
 
