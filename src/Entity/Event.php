@@ -20,6 +20,8 @@ use App\Entity\Payment\Payment;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 use Symfony\Component\HttpFoundation\File\File;
 use ApiPlatform\Metadata\Put;
+use App\Controller\Billing\EventPaymentProcessController;
+use App\Controller\Billing\EventPaymentStatusController;
 use App\Controller\Event\ActivePackEventController;
 use App\Controller\Event\AddInvitationEventController;
 use App\Controller\Event\AddTableEventController;
@@ -180,6 +182,38 @@ use Symfony\Component\Serializer\Annotation\Groups;
             name: 'addInvitation',
         ),
         new Post(
+            uriTemplate: '/events/{id}/pay-pack',
+            controller: EventPaymentProcessController::class,
+            openapiContext: [
+                'summary' => 'Add payment pack for event',
+                'requestBody' => [
+                    'content' => [
+                        'application/json' => [
+                            'schema' => [
+                                'type' => 'object',
+                                'properties' => [
+                                    'phoneNumber' => [
+                                        'type' => 'string',
+                                        'example' => '243XXXXXXXXX',
+                                    ],
+                                ]
+                            ]
+                        ]
+                    ]
+                ],
+            ],
+            description: 'Add invitation for event',
+            name: 'addPay',
+        ),
+        new Get(
+            uriTemplate: "/events/{id}/pay/{orderNumber}/status",
+            controller: EventPaymentStatusController::class,
+            normalizationContext: [
+                'groups' => ['event:pRead']
+            ],
+            name: "getEventPayStatus"
+        ),
+        new Post(
             uriTemplate: '/events/{id}',
             controller: EditEventController::class,
             description: 'Edit event',
@@ -202,6 +236,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
             controller: EditEventImageController::class,
             deserialize: false
         ),
+
         new Put(),
         new Delete()
     ]
@@ -314,6 +349,12 @@ class Event
     #[Groups(['event:pRead', 'event:fRead', 'invitation:fRead'])]
     private ?Address $address = null;
 
+    #[ORM\OneToMany(mappedBy: 'event', targetEntity: TicketType::class)]
+    private Collection $ticketTypes;
+
+    #[ORM\OneToMany(mappedBy: 'event', targetEntity: Ticket::class)]
+    private Collection $tickets;
+
     public function getImagePath(): ?string
     {
         return $this->imagePath;
@@ -337,6 +378,8 @@ class Event
         $this->payments = new ArrayCollection();
         $this->eventAdmins = new ArrayCollection();
         $this->books = new ArrayCollection();
+        $this->ticketTypes = new ArrayCollection();
+        $this->tickets = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -763,4 +806,63 @@ class Event
         return $this;
     }
 
+    /**
+     * @return Collection<int, TicketType>
+     */
+    public function getTicketTypes(): Collection
+    {
+        return $this->ticketTypes;
+    }
+
+    public function addTicketType(TicketType $ticketType): static
+    {
+        if (!$this->ticketTypes->contains($ticketType)) {
+            $this->ticketTypes->add($ticketType);
+            $ticketType->setEvent($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTicketType(TicketType $ticketType): static
+    {
+        if ($this->ticketTypes->removeElement($ticketType)) {
+            // set the owning side to null (unless already changed)
+            if ($ticketType->getEvent() === $this) {
+                $ticketType->setEvent(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Ticket>
+     */
+    public function getTickets(): Collection
+    {
+        return $this->tickets;
+    }
+
+    public function addTicket(Ticket $ticket): static
+    {
+        if (!$this->tickets->contains($ticket)) {
+            $this->tickets->add($ticket);
+            $ticket->setEvent($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTicket(Ticket $ticket): static
+    {
+        if ($this->tickets->removeElement($ticket)) {
+            // set the owning side to null (unless already changed)
+            if ($ticket->getEvent() === $this) {
+                $ticket->setEvent(null);
+            }
+        }
+
+        return $this;
+    }
 }

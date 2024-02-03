@@ -2,11 +2,13 @@
 
 namespace App\Entity\Payment;
 
+use ApiPlatform\Metadata\ApiResource;
 use App\Entity\Event;
 use App\Repository\Payment\PaymentRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
+#[ApiResource()]
 #[ORM\Entity(repositoryClass: PaymentRepository::class)]
 class Payment
 {
