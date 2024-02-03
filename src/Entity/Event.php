@@ -206,10 +206,10 @@ use Symfony\Component\Serializer\Annotation\Groups;
             name: 'addPay',
         ),
         new Get(
-            uriTemplate: "/events/{id}/check/{orderNumber}/status",
+            uriTemplate: "/events/{id}/check-pay",
             controller: EventPaymentStatusController::class,
             normalizationContext: [
-                'groups' => ['event:pRead']
+                'groups' => ['event:fRead']
             ],
             name: "getEventPayStatus"
         ),
@@ -349,7 +349,7 @@ class Event
     #[Groups(['event:pRead', 'event:fRead', 'invitation:fRead'])]
     private ?Address $address = null;
 
-    #[ORM\Column(length: 255, nullable:true)]
+    #[ORM\Column(length: 255, nullable: true)]
     #[Groups(['event:pRead', 'event:fRead', 'invitation:fRead'])]
     private ?string $featureslugs = null;
     #[ORM\OneToMany(mappedBy: 'event', targetEntity: TicketType::class)]
