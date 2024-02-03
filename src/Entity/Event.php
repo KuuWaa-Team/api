@@ -206,7 +206,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
             name: 'addPay',
         ),
         new Get(
-            uriTemplate: "/events/{id}/pay/{orderNumber}/status",
+            uriTemplate: "/events/{id}/check/{orderNumber}/status",
             controller: EventPaymentStatusController::class,
             normalizationContext: [
                 'groups' => ['event:pRead']
