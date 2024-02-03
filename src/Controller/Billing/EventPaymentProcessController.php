@@ -5,6 +5,7 @@ namespace App\Controller\Billing;
 use App\Entity\Event;
 use App\Entity\Payment\Payment;
 use App\Repository\EventRepository;
+use App\Repository\Payment\PaymentRepository;
 use App\Service\Billing\MobilePaymentService;
 use App\Service\PhoneService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -18,7 +19,7 @@ class EventPaymentProcessController extends AbstractController
     public function __construct(
         private readonly PhoneService $phoneService,
         private readonly MobilePaymentService $mobilePaymentService,
-        private readonly EventRepository $eventRepository,
+        private readonly PaymentRepository $paymentRepository,
     ) {
     }
 
@@ -53,12 +54,14 @@ class EventPaymentProcessController extends AbstractController
                     ->setAmount($amount)
                     ->setCurrency("USD")
                     ->setRef($ref)
+                    ->setStatus('created')
                     ->setOrderNumber($paymentSuccess[1]);
+                $this->paymentRepository->save($payment, true);
                 $success = true;
                 $message = "Processus de paiement en cours...";
             }
         } catch (\Throwable $e) {
-            $message = "Paiement échoué";
+            $message = "Paiement échoué $e";
         }
         $response = [
             'success'   => $success,

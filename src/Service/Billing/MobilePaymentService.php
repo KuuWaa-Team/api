@@ -9,9 +9,9 @@ class MobilePaymentService
 {
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
-        Private HttpClientInterface $client,
-    )
-    {}
+        private HttpClientInterface $client,
+    ) {
+    }
 
     private $baseUrlFlexPay = 'https://backend.flexpay.cd/api/rest/v1/';
     private $token = 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJIT3BxVjBzcXZReElDc2JpQjRXUSIsInJvbGVzIjpbIk1FUkNIQU5UIl0sImlzcyI6Ii9sb2dpbiIsImV4cCI6MTczNTY4NjAwMH0.rjTD5VKDb4PKemfAsV7jg7U5qUMYx9WqvKg8Qij1Mv0';
@@ -31,12 +31,12 @@ class MobilePaymentService
         ];
 
         $data = json_encode($data, JSON_THROW_ON_ERROR);
-        $gateway = $this->baseUrlFlexPay."paymentService";
+        $gateway = $this->baseUrlFlexPay . "paymentService";
 
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $gateway);
         curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-Type: application/json", "Authorization: ".$this->token));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-Type: application/json", "Authorization: " . $this->token));
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
@@ -65,15 +65,15 @@ class MobilePaymentService
         return [$success, $orderNumber];
     }
 
-    public function status(String $orderNumber) : array
+    public function status(String $orderNumber): array
     {
         $response = $this->client->request(
             'GET',
-            $this->baseUrlFlexPay.'check/'.$orderNumber,
+            $this->baseUrlFlexPay . 'check/' . $orderNumber,
             [
                 'headers' => [
                     'Accept: */*',
-                    'Authorization: '.$this->token,
+                    'Authorization: ' . $this->token,
                 ],
             ]
         );
@@ -82,18 +82,17 @@ class MobilePaymentService
 
         $content = $response->getContent();
         $content = $response->toArray();
-
-        if($content["transaction"]){
-            if($content["transaction"]["status"] == "0"){
-              $message = 'Le paiement a reçu';
-              $success = true;
-            }else{
+        if ($content["transaction"]) {
+            if ($content["transaction"]["status"] == "0") {
+                $message = 'Le paiement a reçu';
+                $success = true;
+            } else {
                 $message = $content["message"];
-              $success = false;
+                $success = false;
             }
         }
         return [
-            'success' => $success, 
+            'success' => $success,
             'message' => $message
         ];
     }
