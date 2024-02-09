@@ -55,7 +55,7 @@ class EventRepository extends ServiceEntityRepository
             ->orWhere("a.phoneNumber = :p and a.status <> 'refused'")
             ->setParameter('p', $user->getPhoneNumber())
             ->setParameter('u', $user)
-            ->orderBy('e.name', 'ASC')
+            ->orderBy('e.date', 'ASC')
             ->getQuery()
             ->getResult()
         ;

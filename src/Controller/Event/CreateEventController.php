@@ -92,10 +92,10 @@ class CreateEventController extends AbstractController
         ;
 
         $address = (new Address())
-        ->setRef($ref)
-        ->setCountry($this->countryRepository->find(1))
-        ->setNumber($number)
-        ->setStreet($street)
+            ->setRef($ref) // salle
+            ->setCountry($this->countryRepository->find(1))
+            ->setNumber($number)
+            ->setStreet($street) // full address
         ;
 
         if ($provinceId !== null) {

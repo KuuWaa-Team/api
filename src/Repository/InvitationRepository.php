@@ -58,6 +58,19 @@ class InvitationRepository extends ServiceEntityRepository
         return count($result) > 0;
     }
 
+    public function invitationHasBook(String $phone, Event $event): bool
+    {
+        $result = $this->createQueryBuilder('i')
+            ->andWhere('i.event = :ev')
+            ->andWhere('ev.features = :f')
+            ->setParameter('f.', $phone)
+            ->setParameter('ev', $event)
+            ->getQuery()
+            ->getResult()
+        ;
+        return count($result) > 0;
+    }
+
     /**
      * @throws NonUniqueResultException
      */

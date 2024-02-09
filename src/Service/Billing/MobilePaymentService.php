@@ -80,7 +80,7 @@ class MobilePaymentService
         $message = '';
         $success = false;
 
-        $content = $response->getContent();
+        //$content = $response->getContent();
         $content = $response->toArray();
         if ($content["transaction"]) {
             if ($content["transaction"]["status"] == "0") {
@@ -93,6 +93,7 @@ class MobilePaymentService
         }
         return [
             'success' => $success,
+            'waiting' => $content["transaction"]["status"] == "2",
             'message' => $message
         ];
     }

@@ -30,39 +30,45 @@ class EventPaymentStatusController extends AbstractController
      */
     public function __invoke(Request $request, Event $event)
     {
+        $waiting = true;
         $success = false;
         $message = '';
-        if ($request->get('on') != null) {
+        if ($request->get('on') !== null) {
             $orderNumber = $request->get('on');
-            try {
+//            try {
                 $payment = $this->paymentRepository->findOneByOrderNumber($orderNumber);
                 if (
-                    $payment != null
+                    $payment !== null
                 ) {
-                    $response = $this->mobilePaymentService->status($payment->getOrderNumber());
-                    if ($response['success']) {
-                        $payment->setStatus('paid');
-                        $event->setPaymentStatus('paid');
-                        $this->eventRepository->save($event, false);
-                        $this->paymentRepository->save($payment, true);
-                        $success = true;
-                        $message = $response['message'];
-                    } else {
-
-                        $success = false;
-                        $message = $response['message'];
-                    }
+                    do {
+                        $response = $this->mobilePaymentService->status($payment->getOrderNumber());
+                        $waiting = $response['waiting'];
+                        if (!$waiting) {
+                            if ($response['success']) {
+                                $payment->setStatus('paid');
+                                $event->setPaymentStatus('paid');
+                                $this->eventRepository->save($event, false);
+                                $this->paymentRepository->save($payment, true);
+                                $success = true;
+                                $message = $response['message'];
+                            } else {
+                                $success = false;
+                                $message = $response['message'];
+                            }
+                        }
+                    } while($waiting);
                 }
-            } catch (\Throwable $e) {
-                $message = "Une erreur est survenue";
-            }
+//            } catch (\Throwable $e) {
+//                $message = "Une erreur est survenue";
+//            }
         } else {
             $message = "Parametre orderNumber (on) manquant";
         }
 
         $response = [
-            'success'   => $success,
-            'message'   => $message,
+            'success' => $success,
+            'waiting' => $waiting,
+            'message' => $message,
         ];
 
         return new JsonResponse($response, Response::HTTP_OK);
