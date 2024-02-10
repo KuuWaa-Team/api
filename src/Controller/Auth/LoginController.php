@@ -47,6 +47,7 @@ class LoginController extends AbstractController
         $new = null;
         $token = null;
         $loginAt = null;
+        $appSignature = '';
 
         if (array_key_exists('phoneNumber', $content) && $content['phoneNumber'] !== null) {
             $phoneId = $content['phoneId'] ?? null;
@@ -73,6 +74,7 @@ class LoginController extends AbstractController
                     ->setUser($user)
                     ->setOtp($code);
                 $this->otpRepository->save($otp, true);
+                $appSignature = $content['signature'] ?? '';
 
                 if ($new) {
                     $sms = "Bienvenue chez KuuWaa!\n";
@@ -85,6 +87,7 @@ class LoginController extends AbstractController
 
                  $this->SMSService->send($phoneNumber, $sms);
                 $message = "Un Code a été envoyé au numéro +$phoneNumber par SMS. Veuillez le saisir pour continuer";
+                $message .= "\n\$appSignature";
 
                 $loginAt = new \DateTime();
             } else {
@@ -104,6 +107,7 @@ class LoginController extends AbstractController
             'user'      => $user,
             'login_at'  => $loginAt,
             'token'     => $token,
+            'signture'  => $appSignature
         ];
 
         $response = $this->normalizer->normalize($return, null, ['groups' => 'user:pRead']);
