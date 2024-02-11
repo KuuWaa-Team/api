@@ -99,11 +99,43 @@
         .form-group {
             margin: 5px;
         }
-        label {
+        bev.label {
             margin: 1px;
         }
         small {
             color: #ccc;
+        }
+        input[type="radio"] {
+            display: none;
+        }
+        bev.label {
+            position: relative;
+            color: #4189e0;
+            font-family: "Poppins", sans-serif;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.8em;
+            border: 3px solid #4189e0;
+            padding: 1em 2em;
+            border-radius: 0.5em;
+        }
+        bev.label:before {
+            content: "";
+            height: 2em;
+            width: 2em;
+            border: 3px solid #4189e0;
+            border-radius: 50%;
+        }
+        input[type="radio"]:checked + bev.label:before {
+            height: 1em;
+            width: 1em;
+            border: 0.65em solid #ffffff;
+            background-color: #4189e0;
+        }
+        input[type="radio"]:checked + bev.label {
+            background-color: #4189e0;
+            color: #ffffff;
         }
     </style>
 
@@ -133,10 +165,11 @@
                 <img src="{{ asset("images/map.png") }}" width="25" alt="map">
                 <p style="margin: 0; color: #0b0b0b">{{ invitation.event.address.number ~ ", " ~ invitation.event.address.street ~ ". " ~ invitation.event.address.province.name }}</p>
                 {% if invitation.event.address.ref != null and invitation.event.address.ref != "null" and invitation.event.address.ref != "" %}
-                    <p style="margin: 0; color: #0b0b0b;    font-size: 15px;
-    background-color: lightblue;
-    margin-top: 10px;
-    margin-bottom: 20px;padding: 5px;border-radius: 4px;font-style: italic;">{{ invitation.event.address.ref }}</p>
+                    <p style="margin: 0; color: #0b0b0b; font-size: 15px;
+                        background-color: lightblue;
+                        margin-bottom: 20px;
+                        margin-top: 10px;
+                        margin-bottom: 20px;padding: 5px;border-radius: 4px;font-style: italic;">{{ invitation.event.address.ref }}</p>
                 {% endif %}
             </div>
             <hr>
@@ -175,13 +208,17 @@
                             <h1>Invitation</h1>
                             <div class="wd_about_infobox_date" style="padding-bottom: 0">
                                 <h3 style="font-size:1.3em;">{{ invitation.civility }} {{ invitation.name }}</h3> <br><br>
-                                <p class="mt-2">{{ invitation.event.details}}</p>
+                                <p class="mt-2" style="margin-bottom: 20px">{{ invitation.event.details}}</p>
                             </div>
                             <div style="padding: 10px; ">
                                 <img src="{{ asset("images/map.png") }}" width="25" alt="map">
-                                <p style="margin: 0; color: #0b0b0b">{{ invitation.event.address.number ~ ", " ~ invitation.event.address.street ~ ". " ~ invitation.event.address.province.name }}</p>
+                                <p style="margin: 0; color: #0b0b0b">{{ invitation.event.address.province.name ~ ", " ~ invitation.event.address.street }}</p>
                                 {% if invitation.event.address.ref != null and invitation.event.address.ref != "null" and invitation.event.address.ref != "" %}
-                                    <p style="margin: 0; color: #0b0b0b">Réf {{ invitation.event.address.ref }}</p>
+                                    <p style="margin: 0; color: #0b0b0b; font-size: 15px;
+                                        background-color: lightblue;
+                                        margin-bottom: 20px;
+                                        margin-top: 10px;
+                                        margin-bottom: 20px;padding: 5px;border-radius: 4px;font-style: italic;">{{ invitation.event.address.ref }}</p>
                                 {% endif %}
                             </div>
                             <hr>
@@ -197,14 +234,20 @@
                     </div>
                    <div class="col-lg-3 col-md-3 col-sm-21 col-xs-12" style="">
                        <div class="wd_about_infobox wd_toppadder20" style="position: fixed;bottom: 0;left: 0;right: 0;margin:0; z-index:1000">
-                           <button id="downloadButton" class="btn btn-sm btn-default" style="float-rigth; border-radius:0; width:100%"><i class="fa fa-download" aria-hidden="true"></i> Télécharger votre invitation</button>
+                           <button id="downloadButton" class="btn btn-sm btn-default" style="border-radius:0; width:100%"><i class="fa fa-download" aria-hidden="true"></i> Télécharger votre invitation</button>
                         </div>
 
-                        {% if hasBook and invitation.bookSent != true %}
-                            <div class="wd_btn wd_event_infobox" style="margin-top:10px">
-                                <a href='#' style="padding:5px 10px;line-height: 21px;height:30px;font-size: 15px;" data-toggle="modal" data-target="#modal-preference" style=""><i class="fa fa-message" aria-hidden="true"></i> Laissez un message au livre d'Or</a>
-                            </div>
-                        {% endif %}
+                       {% if hasBook and invitation.bookSent != true %}
+                           <div class="wd_btn wd_event_infobox" style="margin-bottom:0; margin-top: 20px">
+                               <a href='#' style="padding:5px 10px;line-height: 21px;height:30px;font-size: 15px;" data-toggle="modal" data-target="#modal-preference" style=""><i class="fa fa-message" aria-hidden="true"></i> Laissez un message au livre d'Or</a>
+                           </div>
+                       {% endif %}
+
+                       {% if hasBeverage and invitation.event.beveragesCount != null and invitation.event.beveragesCount > 0 and invitation.beverage == null %}
+                           <div class="wd_btn wd_event_infobox" style="margin-top:10px">
+                               <a href='#' style="padding:5px 10px;line-height: 21px;height:30px;font-size: 15px;" data-toggle="modal" data-target="#modal-preference2" style=""><i class="fa-solid fa-wine-bottle" aria-hidden="true"></i> Péférence Boisson</a>
+                           </div>
+                       {% endif %}
                     </div>
                 </div>
             </div>
@@ -220,25 +263,58 @@
                 </div>
                 <div class="modal-body">
                     {{ form_start(form, {'method': 'POST', 'attr': {'id': 'preferences'}}) }}
-                        <div class="">   <!-- wd_about_infobox -->
-                            <div class="" style="text-align:left;font-size:0.8em;">  <!-- wd_about_infobox_date -->
-                                <div class="row">
-                                    <div class="form-group col-lg-12">
+                    <div class="">   <!-- wd_about_infobox -->
+                        <div class="" style="text-align:left;font-size:0.8em;">  <!-- wd_about_infobox_date -->
+                            <div class="row">
+                                <div class="form-group col-lg-12">
                                     {{ form_label(form.message, 'Un souhait, un voeux, un message qui restera dans le livre d\'Or', {
                                         'label_attr': {'class': 'col-form-label'}
                                     }) }}
                                     {{ form_widget(form.message, { 'attr': {'class': 'form-control', 'rows':'4', 'cols':'50', 'placeholder': 'Laissez un mot aux mariés ici...', 'style': 'text-align:left'} }) }}
-                                    </div>
                                 </div>
+                            </div>
 
+                        </div>
+                    </div>
+                    <div style="margin-top:5px;">
+                        <input name="invite_id" type="hidden" value="758" class="form-control floating" required>
+                        {{ form_widget(form.submit, { 'attr': {'class': 'btn btn-primary'} }) }}
+                        <button type="button" class="btn btn-default float-right" data-dismiss="modal">Fermer</button>
+                    </div>
+                    {{ form_end(form) }}
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal préférences -->
+    <div id="modal-preference2" class="modal custom-modal fade" user_role="dialog">
+        <div class="modal-dialog modal-dialog-centered" user_role="document">
+            <div class="modal-content" style="line-height: initial;">
+                <div class="modal-header">
+                    <h2 style="" class="modal-title text-center">Préférence boisson</h2>
+                </div>
+                <div class="modal-body">
+                    {{ form_start(beverageForm, {'method': 'POST', 'attr': {'id': 'preferences'}}) }}
+                    <div class="">   <!-- wd_about_infobox -->
+                        <div class="" style="text-align:left;font-size:0.8em;">  <!-- wd_about_infobox_date -->
+                            <div class="row">
+                                <div class="form-group col-lg-12">
+                                    {{ form_label(beverageForm.beverage, 'Un souhait, un voeux, un message qui restera dans le livre d\'Or', {
+                                        'label_attr': {'class': 'col-form-label'}
+                                    }) }}
+                                    {{ form_widget(beverageForm.beverage, { 'attr': {'class': 'form-control', 'rows':'4', 'cols':'50', 'placeholder': 'Laissez un mot aux mariés ici...', 'style': 'text-align:left'} }) }}
+                                </div>
                             </div>
                         </div>
-                        <div style="margin-top:5px;">
-                            <input name="invite_id" type="hidden" value="758" class="form-control floating" required>
-                            {{ form_widget(form.submit, { 'attr': {'class': 'btn btn-primary'} }) }}
-                            <button type="button" class="btn btn-default float-right" data-dismiss="modal">Fermer</button>
-                        </div>
-                    {{ form_end(form    ) }}
+                    </div>
+                    <div style="margin-top:5px;">
+                        <input name="invite_id" type="hidden" value="758" class="form-control floating" required>
+                        {{ form_widget(beverageForm.submit, { 'attr': {'class': 'btn btn-primary'} }) }}
+                        <button type="button" class="btn btn-default float-right" data-dismiss="modal">Fermer</button>
+                    </div>
+                    {{ form_end(beverageForm) }}
                 </div>
 
             </div>

@@ -8,6 +8,7 @@ use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
+use App\Controller\Beverage\SelectBeverageController;
 use App\Controller\Event\ActivePackEventController;
 use App\Controller\Event\CreateEventController;
 use App\Controller\Invitation\AddInvitationController;
@@ -140,6 +141,24 @@ use Symfony\Component\Serializer\Annotation\Groups;
             ],
             description: 'send all invitation',
             name: 'sendAllInvitation',
+        ),
+        new Post(
+            uriTemplate: '/invitations/{id}/beverage',
+            controller: SelectBeverageController::class,
+            openapiContext: [
+                'summary' => 'Select beverage',
+                'requestBody' => [
+                    'content' => [
+                        'application/json' => [
+                            'schema' => [
+                                'type' => 'object',
+                            ]
+                        ]
+                    ]
+                ],
+            ],
+            description: 'Select beverage',
+            name: 'selectInvitationBeverage',
         ),
         new Put(),
         new Delete()

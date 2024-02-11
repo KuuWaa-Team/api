@@ -65,7 +65,7 @@ class SendInvitationController extends AbstractController
                 try {
                     $messageSid = $this->whatsappService->sendWhatsAppMessage($to, $body);
                 } catch (ConfigurationException|TwilioException $e) {
-                    dd($e);
+
                 }
             } else {
                 // error

@@ -112,16 +112,18 @@ class InvitationRepository extends ServiceEntityRepository
     /**
      * @return Invitation[] Returns an array of Invitation objects
      */
-    public function findByPhoneNumber(String $phoneNumber): array
+    public function findByPhoneNumberAndStatus(String $phoneNumber, String $status): array
     {
         return $this->createQueryBuilder('i')
             ->andWhere('i.phoneNumber = :phone')
+            ->andWhere('i.status = :status')
             ->leftJoin('i.event', 'e')
             ->setParameter('phone', $phoneNumber)
+            ->setParameter('status', $status)
             ->orderBy('e.name', 'ASC')
             ->getQuery()
             ->getResult()
-            ;
+        ;
     }
 
     //    public function findOneBySomeField($value): ?Invitation
