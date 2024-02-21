@@ -146,7 +146,7 @@ class AddInvitationController extends AbstractController
         $message = "Bonjour " . $invitation->getCivility() . " " . $invitation->getName();
         $message .= ",\nVous êtes invité à l'évenement \"{$invitation->getEvent()->getCategory()->getName()} - {$invitation->getEvent()->getName()}\" le " . $this->dateService->getFullDate($invitation->getEvent()->getDate(), true, true)  . " à {$invitation->getEvent()->getDate()->format('h:i')}.";
         $message .= "\n\nPour accéder à votre invitation, veuillez ouvrir le lien suivant.";
-        $message .= "\nhttp://localhost:8000/invitations/" . $invitation->getCode();
+        $message .= "\nhttp://kuuwaa.com/invitations/" . $invitation->getCode();
         $message .= "\n\nSi vous rencontrez des difficultés pour ouvrir le lien ou pour accéder à l'application KuuWaa, veuillez retenir le code d'invitation à 6 chiffres ({$invitation->getCode()}) et présentez-le lors de la vérification à l'entrée de l'événement.";
 
         $body = "$message\n\nCeci est un message automatique, veuillez ne pas y repondre.";

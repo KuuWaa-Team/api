@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+  {% block stylesheets %} {{ encore_entry_link_tags('app') }} {% endblock %}
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Marck+Script&display=swap" rel="stylesheet">
+</head>
+<body>
+
+{% block base %}
+<div class="container-fluid mb-5">
+  <div class="row">
+    {% block body %}{% endblock %}
+  </div>
+</div>
+{% endblock %}
+</body>
+</html>

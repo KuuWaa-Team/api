@@ -1,0 +1,49 @@
+{% extends 'filebase.html.twig' %}
+
+{% block body %}
+    <div class="container-fluid mt-3 mb-5">
+        <div>
+            <h1 class="title" style="margin-bottom: 20px">LIVRE D'OR</h1>
+            <p style="font-size: 25px; opacity: .5; width: 400px; margin: auto; text-align: center">Vous leur avez invité à votre évenement, ils vous ont laissé un mot en guise de leur reconnaissance et amour.</p>
+            <div class="eventImage" style="width: 300px; height: 300px; border-radius: 50%; background-image: url({{ eventImage }}); background-size: cover; background-position: center; margin: auto; margin-top: 80px;"></div>
+            <p style="font-size: 30px; color: #F24173; width: 400px; margin: auto; text-align: center; font-weight: bolder; margin-top: 30px">{{ event.name }}</p>
+            <p style="font-size: 20px; opacity: .5; width: 400px; margin: auto; text-align: center; margin-top: 10px">{{ event.category.name }}</p>
+            <div style="position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); text-align: center" class="footer">
+                <div>
+                    <img src="{{ logoKuuwaa }}" width="30px">
+                    <span style="display: inline-block; font-size: 25px; color: #F24173; font-weight: bolder; margin-left: 10px; margin-bottom: 0">KuuWaa</span>
+                </div>
+                <p style="font-size: 20px; opacity: .5; margin-top: 0">www.kuuwaa.com</p>
+            </div>
+        </div>
+        {% for book in books %}
+            <div class="page_break"></div>
+            <div style="width: 80%; margin: auto; height: 100vh; position: fixed; top: 50%; transform: translateY(-50%); left: 50px; align-items: center; justify-content: center">
+                <img src="{{ quoteImage }}" width="200">
+                <p style="font-size: 25px; opacity: .5; margin: auto; text-align: left; margin-top: 30px">{{ book.message }}</p>
+                <p style="font-size: 25px; font-weight: bolder; margin: auto; text-align: left; margin-top: 30px">{{ book.invitation.civility }} {{ book.invitation.name }}</p>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset("build/app.css") }}">
+    <style>
+        body {
+            min-height: 100vh;
+            min-height: -webkit-fill-available;
+            font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", "Fira Sans", Ubuntu, Oxygen, "Oxygen Sans", Cantarell, "Droid Sans", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Lucida Grande", Helvetica, Arial, sans-serif;
+        }
+        h3, p, span {
+            font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", "Fira Sans", Ubuntu, Oxygen, "Oxygen Sans", Cantarell, "Droid Sans", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Lucida Grande", Helvetica, Arial, sans-serif;
+        }
+        .title {
+            font-style: normal;
+            font-weight: 700;
+            font-size: 70px;
+            text-align: center;
+        }
+        .page_break { page-break-before: always; }
+    </style>
+{% endblock %}

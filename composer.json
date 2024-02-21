@@ -13,6 +13,7 @@
         "doctrine/doctrine-bundle": "^2.11",
         "doctrine/doctrine-migrations-bundle": "^3.3",
         "doctrine/orm": "^2.17",
+        "dompdf/dompdf": "^2.0",
         "endroid/qr-code": "^5.0",
         "lexik/jwt-authentication-bundle": "*",
         "nelmio/cors-bundle": "^2.4",
