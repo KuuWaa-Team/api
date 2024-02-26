@@ -1,16 +1,245 @@
 <!DOCTYPE html>
 <html>
-    <head>
+    <head lang="fr">
         <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
         <title>{% block title %}Welcome!{% endblock %}</title>
-        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
+        {# <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>"> #}
+        
+        <!--fivicon icon-->
+        <link rel="icon" href="{{asset("web_side/assets/img/fevicon.png")}}">
+
+        <!-- Stylesheet -->
+        <link rel="stylesheet" href="{{asset("web_side/assets/css/animate.min.css")}}">
+        <link rel="stylesheet" href="{{asset("web_side/assets/css/bootstrap.min.css")}}">
+        <link rel="stylesheet" href="{{asset("web_side/assets/css/magnific.min.css")}}">
+        <link rel="stylesheet" href="{{asset("web_side/assets/css/nice-select.min.css")}}">
+        <link rel="stylesheet" href="{{asset("web_side/assets/css/owl.min.css")}}">
+        <link rel="stylesheet" href="{{asset("web_side/assets/css/slick-slide.min.css")}}">
+        <link rel="stylesheet" href="{{asset("web_side/assets/css/fontawesome.min.css")}}">
+        <link rel="stylesheet" href="{{asset("web_side/assets/css/style.css")}}">
+        <link rel="stylesheet" href="{{asset("web_side/assets/css/responsive.css")}}">
+        
+        <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;0,900;1,400&display=swap" rel="stylesheet">
+        <style>
+            .download-button {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                margin-bottom: 10px;
+                padding: 10px 20px;
+                background-color: rgba(var(--main-color-opacity), .6);
+                color: #fff;
+                text-decoration: none;
+                border-radius: 7px;
+                font-size: 20px;
+                margin-right: 10px;
+            }
+
+            .download-button:last-child {
+                margin-right: 0px;
+            }
+
+            .download-button:hover {
+                background-color: rgba(var(--main-color-opacity), .8);
+            }
+        </style>
         {% block stylesheets %}
         {% endblock %}
 
         {% block javascripts %}
         {% endblock %}
     </head>
-    <body>
+    <body class='sc5'>
+        <!-- preloader area start -->
+        <div class="preloader" id="preloader">
+            <div class="preloader-inner">
+                <div id="wave1">
+                </div>
+                <div class="spinner">
+                    <div class="dot1"></div>
+                    <div class="dot2"></div>
+                </div>
+            </div>
+        </div>
+        <!-- preloader area end -->
+    <div class="body-overlay" id="body-overlay"></div>
+
+    <!-- navbar start -->
+    <header class="navbar-area">
+        <nav class="navbar navbar-expand-lg">
+            <div class="container nav-container">
+                <div class="responsive-mobile-menu">
+                    <button class="menu toggle-btn d-block d-lg-none" data-target="#themefie_main_menu" 
+                    aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="icon-left"></span>
+                        <span class="icon-right"></span>
+                    </button>
+                </div>
+                <div class="logo">
+                    <a class="main-logo" href="index.html"><img style="width: 40px;" src="{{asset("web_side/assets/img/logo-2.png")}}" alt="img"></a>
+                </div>
+                <div class="nav-right-part nav-right-part-mobile">
+                    <ul>
+                        <li><a class="search header-search" href="#"><i class="fa fa-search"></i></a></li>
+                    </ul>
+                </div>
+                <div class="collapse navbar-collapse" id="themefie_main_menu">
+                    <ul class="navbar-nav menu-open text-end">
+                        <li class="current-menu-item">
+                            <a href="#">Accueil</a>
+                        </li>
+                        <li>
+                            <a href="service.html">Nos services</a>
+                        </li>
+                        <li>
+                            <a href="about.html">A propos</a>
+                        </li>
+                        <li>
+                            <a href="faq.html">FAQ</a>
+                        </li>
+                        <li>
+                            <a href="contact.html">Nous contacter</a>
+                        </li>
+                    </ul>
+                </div>
+<!--                <div class="nav-right-part nav-right-part-desktop">-->
+<!--                    <ul>-->
+<!--                        <li><a class="search header-search" href="#"><i class="fa fa-search"></i></a></li>-->
+<!--                        <li class="">-->
+<!--                            <a href="log-in.html" class="btn btn-white">-->
+<!--                                Télécharger-->
+<!--                            </a>-->
+<!--                        </li>-->
+<!--                    </ul>-->
+<!--                </div>-->
+            </div>
+        </nav>
+    </header>
         {% block body %}{% endblock %}
+
+    <!-- subscribe-Area Start-->
+    <section class="subscribe-area">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="subscribe-inner">
+                        <div class="row no-gutters">
+                            <div class="col-xl-5 col-lg-6">
+                                <h2>Subscribe For Newsletter</h2>
+                                <p class="pe-5">Subscribe to our newsletter and we will bring you the latest news. Roin tincidunt nisl et odio faucibus</p>
+                            </div>
+                            <div class="col-lg-6 offset-xl-1 align-self-center">
+                                <div class="single-input-wrap">
+                                    <input type="text" placeholder="Enter Your Email Address">
+                                    <button class="btn btn-base">Sign Up</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- subscribe-Area end-->
+
+    <!-- footer area start -->
+    <footer class="footer-area style-1">
+        <div class="footer-inner">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xl-4 col-lg-4 col-sm-6">
+                        <div class="footer-widget widget">
+                            <a class="logo" style="margin-bottom:0px;" href="index.html"><img style="width: 40px;" src="{{asset("web_side/assets/img/logo-2.png")}}" alt="#"></a>
+                            <h6>(+1) 123-4567-8910 </h6>
+                            <p>New York, NY 256364, United States contact@example.com</p>
+                            <ul class="social-area">
+                                <li><a href="#"><i class="fab fa-facebook-f"></i></a></li>
+                                <li><a href="#"><i class="fab fa-twitter"></i></a></li>
+                                <li><a href="#"><i class="fab fa-linkedin-in"></i></a></li>
+                                <li><a href="#"><i class="fab fa-pinterest"></i></a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-xl-2 col-lg-2 col-6">
+                        <div class="footer-widget widget widget_link">
+                            <h6 class="widget-title">Menu</h6>
+                            <ul>
+                                <li><a href="about.html"><i class="fas fa-angle-right"></i>About</a></li>
+                                <li><a href="service.html"><i class="fas fa-angle-right"></i>Service</a></li>
+                                <li><a href="team.html"><i class="fas fa-angle-right"></i>Team</a></li>
+                                <li><a href="blog.html"><i class="fas fa-angle-right"></i>Blog</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-xl-2 offset-lg-1 col-lg-2 col-6">
+                        <div class="footer-widget widget widget_link">
+                            <h6 class="widget-title">Services</h6>
+                            <ul>
+                                <li><a href="service.html"><i class="fas fa-angle-right"></i>Graphics </a></li>
+                                <li><a href="service.html"><i class="fas fa-angle-right"></i>Web Design </a></li>
+                                <li><a href="service.html"><i class="fas fa-angle-right"></i>Web Development </a></li>
+                                <li><a href="service.html"><i class="fas fa-angle-right"></i>SEO</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-xl-2 offset-lg-1 col-lg-2 col-6">
+                        <div class="footer-widget widget widget_link">
+                            <h6 class="widget-title">Our Link</h6>
+                            <ul>
+                                <li><a href="contact.html"><i class="fas fa-angle-right"></i>Help </a></li>
+                                <li><a href="contact.html"><i class="fas fa-angle-right"></i>Support </a></li>
+                                <li><a href="contact.html"><i class="fas fa-angle-right"></i>Clients </a></li>
+                                <li><a href="contact.html"><i class="fas fa-angle-right"></i>Contacts</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--Footer bottom-->
+        <div class="footer-bottom">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6 align-self-center">
+                        <div class="copyright-area">
+                            <p>© Copyright 2021 All rights reserved.</p>       
+                        </div>
+                    </div>
+                    <div class="col-md-6 align-self-center text-md-end">
+                        <div class="author-area">
+                            <p>Made theme by <a href="https://themeforest.net/user/themefie">Themefie.</a></p>       
+                        </div>
+                    </div>
+                </div>                
+            </div>
+        </div>
+        <!--Footer bottom-->
+    </footer>
+    <!-- footer area end -->    
+
+    <!-- back-to-top end -->
+    <div class="back-to-top">
+        <span class="back-top"><i class="fas fa-angle-double-up"></i></span>
+    </div>
+
+    
+
+    <!-- all plugins here -->
+    <script src="{{asset("web_side/assets/js/jquery.3.6.min.js")}}"></script>
+    <script src="{{asset("web_side/assets/js/bootstrap.min.js")}}"></script>
+    <script src="{{asset("web_side/assets/js/imageloded.min.js")}}"></script>
+    <script src="{{asset("web_side/assets/js/counterup.js")}}"></script>
+    <script src="{{asset("web_side/assets/js/waypoint.js")}}"></script>
+    <script src="{{asset("web_side/assets/js/magnific.min.js")}}"></script>
+    <script src="{{asset("web_side/assets/js/nice-select.min.js")}}"></script>
+    <script src="{{asset("web_side/assets/js/fontawesome.min.js")}}"></script>
+    <script src="{{asset("web_side/assets/js/ripple.js")}}"></script>
+    <script src="{{asset("web_side/assets/js/owl.min.js")}}"></script>
+    <script src="{{asset("web_side/assets/js/slick-slider.min.js")}}"></script>
+    <script src="{{asset("web_side/assets/js/wow.min.js")}}"></script>
+    <!-- main js  -->
+    <script src="{{asset("web_side/assets/js/main.js")}}"></script>
     </body>
 </html>

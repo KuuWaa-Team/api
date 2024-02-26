@@ -1,0 +1,388 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}KuuWaa - Home{% endblock %}
+
+{% block body %}
+<!-- Banner Area Start-->
+    <section class="banner-area" style="background-image: url(web_side/assets/img/banner/1.png)">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-6 col-md-10 align-self-center">
+                    <div class="banner-inner text-lg-start text-center">
+                        <h6>Avec KuuWaa </h6>
+                        <h1>Faites de chaque évenement un moment extraordinaire</h1>
+                        <p class="me-5">Invitations électroniques - Partage automatique d'invitations - Livre d'or électronique - Gestion de boissons - Et autres</p>
+                        <div class="btn-area">
+                            <a class="btn btn-white" href="#"><svg class="svg-inline--fa fa-google-play fa-w-16" aria-hidden="true" focusable="false" data-prefix="fab" data-icon="google-play" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" data-fa-i2svg=""><path fill="currentColor" d="M325.3 234.3L104.6 13l280.8 161.2-60.1 60.1zM47 0C34 6.8 25.3 19.2 25.3 35.3v441.3c0 16.1 8.7 28.5 21.7 35.3l256.6-256L47 0zm425.2 225.6l-58.9-34.1-65.7 64.5 65.7 64.5 60.1-34.1c18-14.3 18-46.5-1.2-60.8zM104.6 499l280.8-161.2-60.1-60.1L104.6 499z"></path></svg><!-- <i class="fab fa-google-play"></i> Font Awesome fontawesome.com -->Google-play</a>
+                            <a class="btn btn-border-white" href="#"><i class="fab fa-apple"></i>App-Store</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-8">
+                    <div class="thumb text-end">
+                        <img class="animated phone-bounce" src="{{asset('web_side/assets/img/banner/01.png')}}" alt="img">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Banner Area End -->
+
+
+    <!--service-area start-->
+    <section class="service-area default-pd-top">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="section-title text-center">
+                        <h4 class="sub-title">Nos Serices</h4>
+                        <h2 class="title">Les meilleurs services offerts par KuuWaa</h2>
+                    </div>                    
+                </div>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-xl-4 col-md-6">
+                    <div class="single-service-inner">
+                        <div class="thumb">
+                            <img src="{{asset("web_side/assets/img/service/1.jpg")}}" alt="img">
+                        </div>
+                        <h4><a href="service-details.html">Gestion électronique des événements</a></h4>
+                        <p>L'application KuuWaa offre une solution complète de gestion électronique des événements. Que vous organisiez un mariage, un anniversaire, des conférences, des séminaires ou d'autres types d'événements, notre application vous permet de gérer facilement la gestion de vos invités et bien d'autres activités de l'évenement.</p>
+                    </div>
+                </div>
+                <div class="col-xl-4 col-md-6">
+                    <div class="single-service-inner">
+                        <div class="thumb">
+                            <img src="{{asset("web_side/assets/img/service/2.jpg")}}" alt="img">
+                        </div>
+                        <h4><a href="service-details.html">Billetterie électronique</a></h4>
+                        <p>Notre service de billetterie électronique simplifie l'achat et la gestion des billets pour vos événements. Que ce soit pour des concerts, des festivals, des spectacles ou d'autres types d'événements, notre plateforme vous permet de vendre et de distribuer facilement des billets électroniques, offrant ainsi une expérience pratique et sans tracas pour vos participants.</p>
+                    </div>
+                </div>
+                <div class="col-xl-4 col-md-6">
+                    <div class="single-service-inner">
+                        <div class="thumb">
+                            <img src="{{asset("web_side/assets/img/service/3.jpg")}}" alt="img">
+                        </div>
+                        <h4><a href="service-details.html">Promotion des événements</a></h4>
+                        <p>Notre service de promotion des événements vous aide à accroître la visibilité et la participation à vos événements. Grâce à des stratégies de marketing ciblées et à une diffusion efficace sur les médias sociaux, nous vous aidons à promouvoir vos événements auprès d'un large public. Que ce soit pour des conférences, des expositions, des festivals ou d'autres types d'événements, notre service de promotion vous permet d'atteindre votre public cible de manière efficace et percutante.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- service Area End -->
+
+    <!--featured-area start-->
+    <section class="featured-area pd-top-110">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-xl-6 col-lg-8 col-md-10">
+                    <div class="section-title text-center">
+                        <h2 class="title">Utilisez votre téléphone android ou iOS et bénéficiez de la belle expérience</h2>
+                    </div>                    
+                </div>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-lg-6 align-self-center">
+                    <div class="featured-accordion" id="accordionExample">
+                        <div class="accordion-item active">
+                            <h2 class="accordion-header" id="headingOne">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                <img src="{{asset('web_side/assets/img/featured/1i.png')}}" alt="img">App Development
+                                </button>
+                            </h2>
+                            <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                                <div class="accordion-body">
+                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quis ipsum suspendisse ultrices gravida. Risus commodo viverra maecenas accumsan lacus vel facilisisy.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingTwo">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                    <img src="{{asset('web_side/assets/img/featured/2i.png')}}" alt="img">User Interface Design
+                                </button>
+                            </h2>
+                            <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+                                <div class="accordion-body">
+                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quis ipsum suspendisse ultrices gravida. Risus commodo viverra maecenas accumsan lacus vel facilisis.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingThree">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                <img src="{{asset('web_side/assets/img/featured/3i.png')}}" alt="img">Cloud Storage
+                                </button>
+                            </h2>
+                            <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
+                                <div class="accordion-body">
+                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quis ipsum suspendisse ultrices gravida. Risus commodo viverra maecenas accumsan lacus vel facilisis.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingFour">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                                <img src="{{asset('web_side/assets/img/featured/4i.png')}}" alt="img">Customer Support
+                                </button>
+                            </h2>
+                            <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour" data-bs-parent="#accordionExample">
+                                <div class="accordion-body">
+                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quis ipsum suspendisse ultrices gravida. Risus commodo viverra maecenas accumsan lacus vel facilisis.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 d-none d-lg-block">
+                    <div class="thumb">
+                        <img src="{{asset('web_side/assets/img/featured/1.png')}}" alt="img">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!--featured-area end-->
+
+    <!--management-area start-->
+    <section class="management-area pd-top-110">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-6 align-self-center">
+                    <div class="thumb mb-lg-0 mb-5">
+                        <img src="{{asset('web_side/assets/img/other/1.png')}}" alt="img">
+                    </div>
+                </div>
+                <div class="col-xl-5 col-lg-6 col-md-10 offset-xl-1 align-self-center">
+                    <div class="section-title mb-0">
+                        <h2 class="title">Super fast project management system</h2>
+                        <p>Consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Quis ipsum suspendisse ultrices gravida. Risus commodo viverra maecenas accumsan lacus vel facilisis. </p>
+                        <ul class="nx-inner mt-4">
+                            <li><i class="far fa-check-circle"></i>Easy Installation Guide</li>
+                            <li><i class="far fa-check-circle"></i>Easy setup process with Nexas</li>
+                            <li><i class="far fa-check-circle"></i>24/7 Live call support</li>
+                        </ul>
+                        <a class="btn btn-border" href="about.html">View More</a>
+                    </div>   
+                </div>
+            </div>
+        </div>
+    </section>
+    <!--management-area end-->
+
+    <!--pricing-area start-->
+    <section class="pricing-area default-pd-top pd-bottom-120 text-center">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="section-title text-center">
+                        <h4 class="sub-title">PRICING PLAN</h4>
+                        <h2 class="title">No Hidden Charges! Choose Plan.</h2>
+                    </div>                    
+                </div>
+            </div>
+            <div class="pricing-tabs">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="switch-area text-start">
+                            <label class="toggler toggler--is-active ms-0" id="filt-monthly">Monthly</label>
+                            <div class="toggle">
+                                <input type="checkbox" id="switcher" class="check">
+                                <b class="b switch"></b>
+                            </div>
+                            <label class="toggler" id="filt-hourly">Annualy</label>
+                            <span class="tags">(Save 30%)</span>
+                        </div>
+                    </div>
+                    <div class="col-md-6 text-md-end text-start align-self-center">
+                        <div class="select-currency">
+                            <span>Select Currency</span>
+                            <select class="single-select right">
+                                <option data-display="USD" value="1">USD</option>
+                                <option value="1">EURO</option>
+                                <option value="2">TAKA</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div id="monthly" class="wrapper-full">
+                        <div class="row justify-content-center">
+                            <div class="col-lg-4 col-md-6">
+                                <div class="single-price">
+                                    <div class="thumb">
+                                        <img src="{{asset('web_side/assets/img/pricing/1.png')}}" alt="img">
+                                    </div>      
+                                    <h4 class="pricing-title">Free</h4>
+                                    <div class="price-details">
+                                        <span>$</span>
+                                        <span class="price">0</span>
+                                        <span class="category">/monthly</span>
+                                    </div>
+                                    <ul class="pricing-list">
+                                        <li>User Interface Design</li>
+                                        <li>Web developmet</li>
+                                        <li>Support Tools</li>
+                                        <li>Products management</li>
+                                    </ul>       
+                                    <a class="btn btn-border" href="index.html">Start Now</a>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-6">
+                                <div class="single-price">
+                                    <div class="thumb">
+                                        <img src="{{asset('web_side/assets/img/pricing/2.png')}}" alt="img">
+                                    </div>      
+                                    <h4 class="pricing-title">BASIC</h4>
+                                    <div class="price-details">
+                                        <span>$</span>
+                                        <span class="price">54</span>
+                                        <span class="category">/monthly</span>
+                                    </div>
+                                    <ul class="pricing-list">
+                                        <li>User Interface Design</li>
+                                        <li>Web developmet</li>
+                                        <li>Support Tools</li>
+                                        <li>Products management</li>
+                                    </ul>       
+                                    <a class="btn btn-base" href="index.html">Start Now</a>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-6">
+                                <div class="single-price">
+                                    <div class="thumb">
+                                        <img src="{{asset('web_side/assets/img/pricing/3.png')}}" alt="img">
+                                    </div>      
+                                    <h4 class="pricing-title">ADVANCED</h4>
+                                    <div class="price-details">
+                                        <span>$</span>
+                                        <span class="price">99</span>
+                                        <span class="category">/monthly</span>
+                                    </div>
+                                    <ul class="pricing-list">
+                                        <li>User Interface Design</li>
+                                        <li>Web developmet</li>
+                                        <li>Support Tools</li>
+                                        <li>Products management</li>
+                                    </ul>       
+                                    <a class="btn btn-border" href="index.html">Start Now</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="hourly" class="wrapper-full hide">
+                        <div class="row">
+                            <div class="col-lg-4 col-md-6">
+                                <div class="single-price">
+                                    <div class="thumb">
+                                        <img src="{{asset('web_side/assets/img/pricing/1.png')}}" alt="img">
+                                    </div>      
+                                    <h4 class="pricing-title">Free</h4>
+                                    <div class="price-details">
+                                        <span>$</span>
+                                        <span class="price">0</span>
+                                        <span class="category">/annualy</span>
+                                    </div>
+                                    <ul class="pricing-list">
+                                        <li> User Interface Design</li>
+                                        <li> Web developmet</li>
+                                        <li> Support Tools</li>
+                                        <li> Products management</li>
+                                    </ul>       
+                                    <a class="btn btn-border" href="index.html">Start Now</a>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-6">
+                                <div class="single-price">
+                                    <div class="thumb">
+                                        <img src="{{asset('web_side/assets/img/pricing/2.png')}}" alt="img">
+                                    </div>      
+                                    <h4 class="pricing-title">BASIC</h4>
+                                    <div class="price-details">
+                                        <span>$</span>
+                                        <span class="price">548</span>
+                                        <span class="category">/annualy</span>
+                                    </div>
+                                    <ul class="pricing-list">
+                                        <li> User Interface Design</li>
+                                        <li> Web developmet</li>
+                                        <li> Support Tools</li>
+                                        <li> Products management</li>
+                                    </ul>       
+                                    <a class="btn btn-base" href="index.html">Start Now</a>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-6">
+                                <div class="single-price">
+                                    <div class="thumb">
+                                        <img src="{{asset('web_side/assets/img/pricing/3.png')}}" alt="img">
+                                    </div>      
+                                    <h4 class="pricing-title">ADVANCED</h4>
+                                    <div class="price-details">
+                                        <span>$</span>
+                                        <span class="price">999</span>
+                                        <span class="category">/annualy</span>
+                                    </div>
+                                    <ul class="pricing-list">
+                                        <li> User Interface Design</li>
+                                        <li> Web developmet</li>
+                                        <li> Support Tools</li>
+                                        <li> Products management</li>
+                                    </ul>       
+                                    <a class="btn btn-border" href="index.html">Start Now</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>  
+            </div>
+        </div>
+    </section>
+    <!--pricing-area end-->
+
+    <!--app-Screen-area-->
+    <section class="app-screen-area" style="background-image: url(web_side/assets/img/other/3.png); background-size: contain">
+        <div class="bg-main-gradient"></div>
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-xl-4 col-lg-5 align-self-center">
+                    <div class="section-title mb-0 pb-4">
+                        <h2 class="title text-white">Join 63,000+ people connect with us</h2>
+                        <p class="text-white">Try our products free for 30 days</p>
+                    </div>
+                    <div class="btn-area">
+                        <a class="btn btn-white" href="#"><i class="fab fa-google-play"></i>Google-play</a>
+                        <a class="btn btn-border-white" href="#"><i class="fab fa-google-play"></i>App-Store</a>
+                    </div>
+                </div>
+                <div class="col-xl-8 col-lg-7">
+                    <div class="app-screen-inner">
+                        <div class="screenshot-slider owl-carousel">
+                            <div class="item">
+                                <div class="screenshot-thumb">
+                                    <img src="{{asset('web_side/assets/img/app-screen/1.png')}}" alt="app">
+                                </div>  
+                            </div>
+                            <div class="item">
+                                <div class="screenshot-thumb">
+                                    <img src="{{asset('web_side/assets/img/app-screen/2.png')}}" alt="app">
+                                </div>  
+                            </div>
+                            <div class="item">
+                                <div class="screenshot-thumb">
+                                    <img src="{{asset('web_side/assets/img/app-screen/3.png')}}" alt="app">
+                                </div>  
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!--app-Screen-area end-->
+
+{% endblock %}
