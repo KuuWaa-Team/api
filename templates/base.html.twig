@@ -78,7 +78,7 @@
                     </button>
                 </div>
                 <div class="logo">
-                    <a class="main-logo" href="index.html"><img style="width: 40px;" src="{{asset("web_side/assets/img/logo-2.png")}}" alt="img"></a>
+                    <a class="main-logo" href="/"><img style="width: 40px;" src="{{asset("web_side/assets/img/logo-2.png")}}" alt="img"></a>
                 </div>
                 <div class="nav-right-part nav-right-part-mobile">
                     <ul>
@@ -88,19 +88,19 @@
                 <div class="collapse navbar-collapse" id="themefie_main_menu">
                     <ul class="navbar-nav menu-open text-end">
                         <li class="current-menu-item">
-                            <a href="#">Accueil</a>
+                            <a href="/">Accueil</a>
                         </li>
                         <li>
-                            <a href="service.html">Nos services</a>
+                            <a href="{{url('app_service')}}">Nos services</a>
                         </li>
                         <li>
-                            <a href="about.html">A propos</a>
+                            <a href="{{url('app_about')}}">A propos</a>
                         </li>
                         <li>
-                            <a href="faq.html">FAQ</a>
+                            <a href="{{url('app_faq')}}">FAQ</a>
                         </li>
                         <li>
-                            <a href="contact.html">Nous contacter</a>
+                            <a href="{{url('app_contact')}}">Nous contacter</a>
                         </li>
                     </ul>
                 </div>
@@ -120,14 +120,14 @@
         {% block body %}{% endblock %}
 
     <!-- subscribe-Area Start-->
-    <section class="subscribe-area">
+    <section class="subscribe-area pd-top-150">
         <div class="container">
             <div class="row">
                 <div class="col-lg-12">
                     <div class="subscribe-inner">
                         <div class="row no-gutters">
                             <div class="col-xl-5 col-lg-6">
-                                <h2>Subscribe For Newsletter</h2>
+                                <h2>S'inscrire à notre newsletter</h2>
                                 <p class="pe-5">Subscribe to our newsletter and we will bring you the latest news. Roin tincidunt nisl et odio faucibus</p>
                             </div>
                             <div class="col-lg-6 offset-xl-1 align-self-center">
@@ -153,7 +153,7 @@
                         <div class="footer-widget widget">
                             <a class="logo" style="margin-bottom:0px;" href="index.html"><img style="width: 40px;" src="{{asset("web_side/assets/img/logo-2.png")}}" alt="#"></a>
                             <h6>(+1) 123-4567-8910 </h6>
-                            <p>New York, NY 256364, United States contact@example.com</p>
+                            <p>New York, NY 256364, United States contact@kuuwaa.com</p>
                             <ul class="social-area">
                                 <li><a href="#"><i class="fab fa-facebook-f"></i></a></li>
                                 <li><a href="#"><i class="fab fa-twitter"></i></a></li>
@@ -166,10 +166,10 @@
                         <div class="footer-widget widget widget_link">
                             <h6 class="widget-title">Menu</h6>
                             <ul>
-                                <li><a href="about.html"><i class="fas fa-angle-right"></i>About</a></li>
-                                <li><a href="service.html"><i class="fas fa-angle-right"></i>Service</a></li>
-                                <li><a href="team.html"><i class="fas fa-angle-right"></i>Team</a></li>
-                                <li><a href="blog.html"><i class="fas fa-angle-right"></i>Blog</a></li>
+                                <li><a href="{{url('app_about')}}"><i class="fas fa-angle-right"></i>A Propos</a></li>
+                                <li><a href="{{url('app_service')}}"><i class="fas fa-angle-right"></i>Services</a></li>
+                                <li><a href="{{url('app_faq')}}"><i class="fas fa-angle-right"></i>FAQ</a></li>
+                                <li><a href="{{url('app_contact')}}"><i class="fas fa-angle-right"></i>Contact</a></li>
                             </ul>
                         </div>
                     </div>
@@ -207,11 +207,11 @@
                             <p>© Copyright 2021 All rights reserved.</p>       
                         </div>
                     </div>
-                    <div class="col-md-6 align-self-center text-md-end">
+                    {# <div class="col-md-6 align-self-center text-md-end">
                         <div class="author-area">
                             <p>Made theme by <a href="https://themeforest.net/user/themefie">Themefie.</a></p>       
                         </div>
-                    </div>
+                    </div> #}
                 </div>                
             </div>
         </div>
