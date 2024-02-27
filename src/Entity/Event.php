@@ -224,7 +224,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
             description: 'Delete event',
             name: 'deleteEvent',
         ),
-        new Post(
+        new Get(
             uriTemplate: '/events/{id}/generate-book',
             controller: GenerateBookController::class,
             description: 'Generate book',
