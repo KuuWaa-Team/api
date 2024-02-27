@@ -21,7 +21,7 @@ class MyInvitationsController extends AbstractController
     public function __invoke(UserInterface $user)
     {
         $phone = $user->getPhoneNumber();
-        $invitations = $this->invitationRepository->findByPhoneNumber($phone);
+        $invitations = $this->invitationRepository->findByPhoneNumberAndStatus($phone, 'sent');
 
         $response = [
             'success'   => true,

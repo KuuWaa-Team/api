@@ -4,13 +4,20 @@ namespace App\Controller\Invitation;
 
 use App\Entity\Invitation;
 use App\Repository\InvitationRepository;
+use App\Service\DateService;
 use App\Service\PhoneService;
 use App\Service\SmsService;
+use App\Service\TelegramService;
+use App\Service\WhatsappService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Serializer\Exception\ExceptionInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
+use Twilio\Exceptions\ConfigurationException;
+use Twilio\Exceptions\TwilioException;
 
 class SendInvitationController extends AbstractController
 {
@@ -19,35 +26,68 @@ class SendInvitationController extends AbstractController
         private readonly SmsService $smsService,
         private readonly InvitationRepository $invitationRepository,
         private readonly NormalizerInterface $normalizer,
+        private readonly WhatsappService $whatsappService,
+        private readonly DateService $dateService,
     )
     {
     }
 
+    /**
+     * @throws ExceptionInterface
+     * @throws \JsonException
+     * @throws TransportExceptionInterface
+     */
     public function __invoke(Request $request, Invitation $invitation): JsonResponse
     {
         $content = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
         $method = $content["method"] ?? null;
 
-        $link = "http://localhost:8000/invitations/" . $invitation->getId();
+        if ($invitation->getEvent()->getPaymentStatus() === 'paid') {
+            $phoneNumber = $this->phoneService->format($invitation->getPhoneNumber());
+            if ($method === "sms") {
+                $message = "Bonjour " . $invitation->getCivility() . " " . $invitation->getName();
+                $message .= ",\nVous etes invite a l'evenement \"{$invitation->getEvent()->getName()}\" le " . $this->dateService->getFullDate($invitation->getEvent()->getDate(), true, true) . " a {$invitation->getEvent()->getDate()->format('H:i')}.";
+                $message .= "\n\nPour acceder e votre invitation, veuillez ouvrir le lien suivant.";
+                $message .= "\nhttp://localhost:8000/invitations/" . $invitation->getCode();
+                $message .= "\n\nSi vous rencontrez des difficultes pour ouvrir le lien ou pour acceder a l'application KuuWaa, veuillez retenir le code d'invitation a 6 chiffres ({$invitation->getCode()}) et présentez-le lors de la vérification a l'entree de l'evenement.";
+    
+                $body = "$message\n\nCeci est un message automatique, veuillez ne pas y repondre.";
+                $this->smsService->send($phoneNumber, $body);
+            } else if ($method === "wpp") {
+                $to = "whatsapp:+$phoneNumber";
+                $message = "Bonjour " . $invitation->getCivility() . " " . $invitation->getName();
+                $message .= ",\nVous êtes invité à l'évenement \"{$invitation->getEvent()->getCategory()->getName()} - {$invitation->getEvent()->getName()}\" le " . $this->dateService->getFullDate($invitation->getEvent()->getDate(), true, true)  . " à {$invitation->getEvent()->getDate()->format('H:i')}.";
+                $message .= "\n\nPour accéder à votre invitation, veuillez ouvrir le lien suivant.";
+                $message .= "\nhttp://localhost:8000/invitations/" . $invitation->getCode();
+                $message .= "\n\nSi vous rencontrez des difficultés pour ouvrir le lien ou pour accéder à l'application KuuWaa, veuillez retenir le code d'invitation à 6 chiffres ({$invitation->getCode()}) et présentez-le lors de la vérification à l'entrée de l'évenement.";
+    
+                $body = "$message\n\nCeci est un message automatique, veuillez ne pas y repondre.";
+                try {
+                    $messageSid = $this->whatsappService->sendWhatsAppMessage($to, $body);
+                } catch (ConfigurationException|TwilioException $e) {
 
-        $message = "Bonjour " . $invitation->getCivility() . " " . $invitation->getName();
-        $message .= "\n\nVous êtes invité pour un évenement pour au " . $invitation->getEvent()->getDate()->format('d/m/Y') . " (" . $invitation->getEvent()->getName() . ")";
-        $message .= "\n\nVeuillez cliquer sur le lien ci-dessous pour voir votre invitation";
-        $message .= "\n\n" . $link;
+                }
+            } else {
+                // error
+            }
 
-        $phoneNumber = $this->phoneService->format($invitation->getPhoneNumber());
-        if ($method === "sms") {
-            $this->smsService->send($phoneNumber, $message);
+            $invitation->setStatus("sent");
+            $this->invitationRepository->save($invitation, true);
+            $success = true;
+            $notpaid = false;
+            $message = "Invitation envoyée avec succès";
+        } else {
+            $success = false;
+            $notpaid = true;
+            $message = "Une erreur est survenue";
         }
-
-        $invitation->setStatus("sent");
-        $this->invitationRepository->save($invitation, true);
 
         $invitations = $this->invitationRepository->findByEvent($invitation->getEvent());
         $response = [
-            'success'   => true,
+            'success'   => $success,
+            'notpaid' => $notpaid,
             'invitations' => $this->normalizer->normalize($invitations, null, ['groups' => ['invitation:pRead']]),
-            'message'   => "Invitation envoyée avec succès",
+            'message'   => $message,
         ];
 
         return new JsonResponse($response, Response::HTTP_OK);

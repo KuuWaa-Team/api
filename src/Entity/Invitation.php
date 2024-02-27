@@ -8,13 +8,20 @@ use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
+use App\Controller\Beverage\SelectBeverageController;
 use App\Controller\Event\ActivePackEventController;
 use App\Controller\Event\CreateEventController;
 use App\Controller\Invitation\AddInvitationController;
+use App\Controller\Invitation\CheckByCodeController;
+use App\Controller\Invitation\EditInvitationController;
 use App\Controller\Invitation\MyInvitationsController;
 use App\Controller\Invitation\SendAllController;
 use App\Controller\Invitation\SendInvitationController;
+use App\Entity\Event\Book;
 use App\Repository\InvitationRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
@@ -64,6 +71,24 @@ use Symfony\Component\Serializer\Annotation\Groups;
             name: 'addInvitation',
         ),
         new Post(
+            uriTemplate: '/invitations/check-code',
+            controller: CheckByCodeController::class,
+            openapiContext: [
+                'summary' => 'check invitation code',
+                'requestBody' => [
+                    'content' => [
+                        'application/json' => [
+                            'schema' => [
+                                'type' => 'object',
+                            ]
+                        ]
+                    ]
+                ],
+            ],
+            description: 'check invitation code',
+            name: 'checkInvitationCode',
+        ),
+        new Post(
             uriTemplate: '/invitations/{id}/send',
             controller: SendInvitationController::class,
             openapiContext: [
@@ -80,6 +105,24 @@ use Symfony\Component\Serializer\Annotation\Groups;
             ],
             description: 'send invitation',
             name: 'sendInvitation',
+        ),
+        new Post(
+            uriTemplate: '/invitations/{id}/edit',
+            controller: EditInvitationController::class,
+            openapiContext: [
+                'summary' => 'edit invitation',
+                'requestBody' => [
+                    'content' => [
+                        'application/json' => [
+                            'schema' => [
+                                'type' => 'object',
+                            ]
+                        ]
+                    ]
+                ],
+            ],
+            description: 'edit invitation',
+            name: 'editInvitation',
         ),
         new Post(
             uriTemplate: '/invitations/send-all',
@@ -99,6 +142,24 @@ use Symfony\Component\Serializer\Annotation\Groups;
             description: 'send all invitation',
             name: 'sendAllInvitation',
         ),
+        new Post(
+            uriTemplate: '/invitations/{id}/beverage',
+            controller: SelectBeverageController::class,
+            openapiContext: [
+                'summary' => 'Select beverage',
+                'requestBody' => [
+                    'content' => [
+                        'application/json' => [
+                            'schema' => [
+                                'type' => 'object',
+                            ]
+                        ]
+                    ]
+                ],
+            ],
+            description: 'Select beverage',
+            name: 'selectInvitationBeverage',
+        ),
         new Put(),
         new Delete()
     ],
@@ -113,11 +174,11 @@ class Invitation
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(["invitation:pRead", 'table:pRead', 'invitation:fRead'])]
+    #[Groups(["invitation:pRead", 'table:pRead', 'invitation:fRead', 'event:pRead', 'event:fRead'])]
     private ?string $name = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(["invitation:pRead", 'table:pRead', 'invitation:fRead'])]
+    #[Groups(["invitation:pRead", 'table:pRead', 'invitation:fRead', 'event:pRead', 'event:fRead'])]
     private ?string $civility = null;
 
     #[ORM\Column(nullable: true)]
@@ -145,7 +206,32 @@ class Invitation
     private ?Beverage $beverage = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(["invitation:pRead", 'invitation:fRead'])]
     private ?string $codePath = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(["invitation:pRead", 'invitation:fRead'])]
+    private ?string $code = null;
+
+    #[ORM\OneToMany(mappedBy: 'invitation', targetEntity: Book::class)]
+    private Collection $books;
+
+    #[ORM\Column(nullable: true)]
+    #[Groups(["invitation:pRead", 'table:pRead', 'invitation:fRead', 'event:pRead', 'event:fRead'])]
+    private ?bool $bookSent = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Groups(["invitation:pRead", 'table:pRead', 'invitation:fRead', 'event:pRead', 'event:fRead'])]
+    private ?string $message = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(["invitation:pRead", 'table:pRead', 'invitation:fRead'])]
+    private ?string $decryptKey = null;
+
+    public function __construct()
+    {
+        $this->books = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -256,6 +342,84 @@ class Invitation
     public function setCodePath(?string $codePath): static
     {
         $this->codePath = $codePath;
+
+        return $this;
+    }
+
+    public function getCode(): ?string
+    {
+        return $this->code;
+    }
+
+    public function setCode(?string $code): static
+    {
+        $this->code = $code;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Book>
+     */
+    public function getBooks(): Collection
+    {
+        return $this->books;
+    }
+
+    public function addBook(Book $book): static
+    {
+        if (!$this->books->contains($book)) {
+            $this->books->add($book);
+            $book->setInvitation($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBook(Book $book): static
+    {
+        if ($this->books->removeElement($book)) {
+            // set the owning side to null (unless already changed)
+            if ($book->getInvitation() === $this) {
+                $book->setInvitation(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function isBookSent(): ?bool
+    {
+        return $this->bookSent;
+    }
+
+    public function setBookSent(?bool $bookSent): static
+    {
+        $this->bookSent = $bookSent;
+
+        return $this;
+    }
+
+    public function getMessage(): ?string
+    {
+        return $this->message;
+    }
+
+    public function setMessage(?string $message): static
+    {
+        $this->message = $message;
+
+        return $this;
+    }
+
+    public function getDecryptKey(): ?string
+    {
+        return $this->decryptKey;
+    }
+
+    public function setDecryptKey(?string $decryptKey): static
+    {
+        $this->decryptKey = $decryptKey;
 
         return $this;
     }

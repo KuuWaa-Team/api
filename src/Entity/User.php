@@ -63,6 +63,7 @@ class User implements UserInterface
     private ?string $address = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['user:pRead'])]
     private ?string $phoneId = null;
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Otp::class)]
@@ -70,6 +71,10 @@ class User implements UserInterface
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Event::class)]
     private Collection $events;
+
+    #[ORM\Column(nullable: true)]
+    #[Groups(['user:pRead'])]
+    private ?bool $completed = null;
 
     public function __construct()
     {
@@ -237,6 +242,18 @@ class User implements UserInterface
                 $event->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function isCompleted(): ?bool
+    {
+        return $this->completed;
+    }
+
+    public function setCompleted(?bool $completed): static
+    {
+        $this->completed = $completed;
 
         return $this;
     }

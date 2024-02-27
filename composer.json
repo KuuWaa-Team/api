@@ -9,6 +9,7 @@
         "ext-curl": "*",
         "ext-iconv": "*",
         "api-platform/core": "^3.2",
+        "defuse/php-encryption": "^2.4",
         "doctrine/doctrine-bundle": "^2.11",
         "doctrine/doctrine-migrations-bundle": "^3.3",
         "doctrine/orm": "^2.17",
@@ -22,7 +23,9 @@
         "symfony/dotenv": "7.0.*",
         "symfony/expression-language": "7.0.*",
         "symfony/flex": "^2",
+        "symfony/form": "7.0.*",
         "symfony/framework-bundle": "7.0.*",
+        "symfony/http-client": "7.0.*",
         "symfony/property-access": "7.0.*",
         "symfony/property-info": "7.0.*",
         "symfony/runtime": "7.0.*",
@@ -31,6 +34,7 @@
         "symfony/validator": "7.0.*",
         "symfony/workflow": "7.0.*",
         "symfony/yaml": "7.0.*",
+        "twilio/sdk": "^7.13",
         "vich/uploader-bundle": "^2.3"
     },
     "config": {

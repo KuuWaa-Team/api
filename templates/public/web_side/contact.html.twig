@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}KuuWaa - Contact{% endblock %}
+
+{% block body %}
+ <!-- breadcrumb Area Start-->
+    <section class="breadcrumb-area text-center"><!--style-overlay-->
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-6 align-self-center">
+                    <div class="breadcrumb-inner">
+                        <h1 class="page-title">Contact with Us</h1>
+                        <ul class="page-list breadcrumb">
+                            <li class="breadcrumb-item"><a href="/">Home</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Contact</li>
+                        </ul>                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- breadcrumb Area End -->
+
+    <!-- contact-Area Start-->
+    <div class="contact-area" style="background: var(--main-gradient);margin-bottom:12em;">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="contact-inner">
+                        <form class="contact-form">
+                            <div class="single-input-wrap mb-4">
+                                <input type="text" placeholder="Enter Your Full Name">
+                            </div>
+                            <div class="single-input-wrap mb-4">
+                                <input type="text" placeholder="Enter Your Email Address">
+                            </div>
+                            <div class="single-input-wrap mb-4">
+                                <textarea rows="5" placeholder="Enter Your Project Details...."></textarea>
+                            </div>                                    
+                            <button type="submit" class="btn btn-base w-100">Submit your project</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- contact-Area end-->
+{% endblock %}

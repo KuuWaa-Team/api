@@ -6,6 +6,7 @@ use App\Entity\Event;
 use App\Entity\Event\EventAdmin;
 use App\Entity\Invitation;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -44,11 +45,50 @@ class InvitationRepository extends ServiceEntityRepository
             ;
     }
 
-    public function InvitationExists(String $phone): bool
+    public function invitationExists(String $phone, Event $event): bool
     {
         $result = $this->createQueryBuilder('i')
             ->andWhere('i.phoneNumber = :phone')
+            ->andWhere('i.event = :ev')
             ->setParameter('phone', $phone)
+            ->setParameter('ev', $event)
+            ->getQuery()
+            ->getResult()
+        ;
+        return count($result) > 0;
+    }
+
+    public function invitationHasBook(String $phone, Event $event): bool
+    {
+        $result = $this->createQueryBuilder('i')
+            ->andWhere('i.event = :ev')
+            ->andWhere('ev.features = :f')
+            ->setParameter('f.', $phone)
+            ->setParameter('ev', $event)
+            ->getQuery()
+            ->getResult()
+        ;
+        return count($result) > 0;
+    }
+
+    /**
+     * @throws NonUniqueResultException
+     */
+    public function findByCode(String $code): ?Invitation
+    {
+        return $this->createQueryBuilder('i')
+            ->andWhere('i.code = :code')
+            ->setParameter('code', $code)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
+
+    public function invitationCodeExists(String $code): bool
+    {
+        $result = $this->createQueryBuilder('i')
+            ->andWhere('i.code = :code')
+            ->setParameter('code', $code)
             ->getQuery()
             ->getResult()
         ;
@@ -72,16 +112,18 @@ class InvitationRepository extends ServiceEntityRepository
     /**
      * @return Invitation[] Returns an array of Invitation objects
      */
-    public function findByPhoneNumber(String $phoneNumber): array
+    public function findByPhoneNumberAndStatus(String $phoneNumber, String $status): array
     {
         return $this->createQueryBuilder('i')
             ->andWhere('i.phoneNumber = :phone')
+            ->andWhere('i.status = :status')
             ->leftJoin('i.event', 'e')
             ->setParameter('phone', $phoneNumber)
+            ->setParameter('status', $status)
             ->orderBy('e.name', 'ASC')
             ->getQuery()
             ->getResult()
-            ;
+        ;
     }
 
     //    public function findOneBySomeField($value): ?Invitation

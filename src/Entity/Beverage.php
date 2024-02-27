@@ -49,7 +49,7 @@ class Beverage
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(["beverage:pRead", 'invitation:fRead'])]
+    #[Groups(["beverage:pRead", 'event:pRead', 'event:fRead', 'invitation:fRead', "invitation:pRead"])]
     private ?int $id = null;
 
     #[ORM\OneToMany(mappedBy: 'beverage', targetEntity: Invitation::class)]
@@ -57,11 +57,11 @@ class Beverage
     private Collection $invitations;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(["beverage:pRead", 'invitation:fRead'])]
+    #[Groups(["beverage:pRead", 'event:pRead', 'event:fRead', 'invitation:fRead', "invitation:pRead"])]
     private ?string $name = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(["beverage:pRead", 'invitation:fRead'])]
+    #[Groups(["beverage:pRead", 'invitation:fRead', 'event:fRead'])]
     private ?int $countTaken = null;
 
     #[ORM\ManyToOne(inversedBy: 'beverages')]

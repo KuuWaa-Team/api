@@ -22,7 +22,6 @@ class EventRepository extends ServiceEntityRepository
         parent::__construct($registry, Event::class);
     }
 
-
     public function save(Event $event, bool $flush = false):void {
         $this->getEntityManager()->persist($event);
         if ($flush) {
@@ -56,7 +55,7 @@ class EventRepository extends ServiceEntityRepository
             ->orWhere("a.phoneNumber = :p and a.status <> 'refused'")
             ->setParameter('p', $user->getPhoneNumber())
             ->setParameter('u', $user)
-            ->orderBy('e.name', 'ASC')
+            ->orderBy('e.date', 'ASC')
             ->getQuery()
             ->getResult()
         ;

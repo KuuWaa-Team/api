@@ -7,20 +7,24 @@ use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\Post;
+use App\Controller\Book\AddController;
 use App\Controller\Event\EditEventController;
 use App\Controller\Event\EditEventImageController;
 use App\Controller\Event\EventDetailController;
 use App\Controller\Event\ListingAdminsController;
 use App\Controller\Event\ListingEventBeveragesController;
+use App\Entity\Address\Address;
+use App\Entity\Event\Book;
 use App\Entity\Event\EventAdmin;
 use App\Entity\Payment\Payment;
-use Vich\UploaderBundle\Mapping\Annotation as Vich;
-use Symfony\Component\HttpFoundation\File\File;
 use ApiPlatform\Metadata\Put;
+use App\Controller\Billing\EventPaymentProcessController;
+use App\Controller\Billing\EventPaymentStatusController;
 use App\Controller\Event\ActivePackEventController;
 use App\Controller\Event\AddInvitationEventController;
 use App\Controller\Event\AddTableEventController;
 use App\Controller\Event\CreateEventController;
+use App\Controller\Event\DeleteEventController;
 use App\Controller\Event\ListingEventInvitationsController;
 use App\Controller\Event\ListingEventTablesController;
 use App\Controller\Event\ListingUserEventController;
@@ -31,7 +35,6 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
-#[Vich\Uploadable]
 #[ApiResource(
     operations: [
         new Get(
@@ -99,6 +102,24 @@ use Symfony\Component\Serializer\Annotation\Groups;
             name: 'activePack',
         ),
         new Post(
+            uriTemplate: '/events/{id}/book',
+            controller: AddController::class,
+            openapiContext: [
+                'summary' => 'add book',
+                'requestBody' => [
+                    'content' => [
+                        'application/json' => [
+                            'schema' => [
+                                'type' => 'object',
+                            ]
+                        ]
+                    ]
+                ],
+            ],
+            description: 'Active book',
+            name: 'addEventBook',
+        ),
+        new Post(
             uriTemplate: '/events/{id}/tables',
             controller: AddTableEventController::class,
             openapiContext: [
@@ -159,10 +180,48 @@ use Symfony\Component\Serializer\Annotation\Groups;
             name: 'addInvitation',
         ),
         new Post(
+            uriTemplate: '/events/{id}/pay-pack',
+            controller: EventPaymentProcessController::class,
+            openapiContext: [
+                'summary' => 'Add payment pack for event',
+                'requestBody' => [
+                    'content' => [
+                        'application/json' => [
+                            'schema' => [
+                                'type' => 'object',
+                                'properties' => [
+                                    'phoneNumber' => [
+                                        'type' => 'string',
+                                        'example' => '243XXXXXXXXX',
+                                    ],
+                                ]
+                            ]
+                        ]
+                    ]
+                ],
+            ],
+            description: 'Add invitation for event',
+            name: 'addPay',
+        ),
+        new Get(
+            uriTemplate: "/events/{id}/check-pay",
+            controller: EventPaymentStatusController::class,
+            normalizationContext: [
+                'groups' => ['event:fRead']
+            ],
+            name: "getEventPayStatus"
+        ),
+        new Post(
             uriTemplate: '/events/{id}',
             controller: EditEventController::class,
             description: 'Edit event',
             name: 'editEvent',
+        ),
+        new Post(
+            uriTemplate: '/events/{id}/delete',
+            controller: DeleteEventController::class,
+            description: 'Delete event',
+            name: 'deleteEvent',
         ),
         new GetCollection(
             controller: ListingUserEventController::class,
@@ -181,8 +240,16 @@ use Symfony\Component\Serializer\Annotation\Groups;
             controller: EditEventImageController::class,
             deserialize: false
         ),
+        new Post(
+            uriTemplate: '/events/{id}/import-invitations',
+            inputFormats: ['multipart' => ['multipart/form-data']],
+            deserialize: false
+        ),
+
         new Put(),
-        new Delete()
+        new Delete(
+            controller: DeleteEventController::class
+        )
     ]
 )]
 #[ORM\Entity(repositoryClass: EventRepository::class)]
@@ -200,10 +267,6 @@ class Event
     #[Groups(['event:pRead', 'event:fRead', 'invitation:fRead'])]
     private ?string $name = null;
 
-    #[ORM\Column(length: 255)]
-    #[Groups(['event:pRead', 'event:fRead', 'invitation:fRead'])]
-    private ?string $address = null;
-
     #[ORM\Column(length: 255, nullable: true)]
     #[Groups(['event:pRead', 'event:fRead', 'invitation:fRead'])]
     private ?string $details = null;
@@ -215,10 +278,10 @@ class Event
     #[ORM\ManyToOne(inversedBy: 'events')]
     private ?User $user = null;
 
-    #[ORM\OneToMany(mappedBy: 'event', targetEntity: Invitation::class)]
+    #[ORM\OneToMany(mappedBy: 'event', targetEntity: Invitation::class, cascade: ['remove'])]
     private Collection $invitations;
 
-    #[ORM\OneToMany(mappedBy: 'event', targetEntity: Table::class)]
+    #[ORM\OneToMany(mappedBy: 'event', targetEntity: Table::class, cascade: ['remove'])]
     private Collection $tables;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -234,7 +297,7 @@ class Event
     private ?bool $paidEvent = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['event:pRead', 'event:fRead'])]
+    #[Groups(['event:pRead', 'event:fRead', 'invitation:fRead'])]
     private ?string $paymentStatus = null;
 
     #[ORM\ManyToMany(targetEntity: Feature::class, inversedBy: 'events')]
@@ -261,18 +324,18 @@ class Event
     #[Groups(['event:pRead', 'event:fRead'])]
     private ?int $invitationsCount = null;
 
-    #[ORM\OneToMany(mappedBy: 'event', targetEntity: Beverage::class)]
+    #[ORM\OneToMany(mappedBy: 'event', targetEntity: Beverage::class, cascade: ['remove'])]
     #[Groups(['event:pRead', 'event:fRead', 'invitation:fRead'])]
     private Collection $beverages;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['event:pRead', 'event:fRead'])]
+    #[Groups(['event:pRead', 'event:fRead', 'invitation:fRead'])]
     private ?int $beveragesCount = null;
 
-    #[ORM\OneToMany(mappedBy: 'event', targetEntity: Payment::class)]
+    #[ORM\OneToMany(mappedBy: 'event', targetEntity: Payment::class, cascade: ['remove'])]
     private Collection $payments;
 
-    #[ORM\OneToMany(mappedBy: 'event', targetEntity: EventAdmin::class)]
+    #[ORM\OneToMany(mappedBy: 'event', targetEntity: EventAdmin::class, cascade: ['remove'])]
     #[Groups(['event:pRead', 'event:fRead'])]
     private Collection $eventAdmins;
 
@@ -288,6 +351,23 @@ class Event
 
     #[Groups(['event:pRead', 'event:fRead'])]
     private ?int $adminId = null;
+
+    #[ORM\OneToMany(mappedBy: 'event', targetEntity: Book::class, cascade: ['remove'])]
+    #[Groups(['event:pRead', 'event:fRead'])]
+    private Collection $books;
+
+    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    #[Groups(['event:pRead', 'event:fRead', 'invitation:fRead'])]
+    private ?Address $address = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['event:pRead', 'event:fRead', 'invitation:fRead'])]
+    private ?string $featureslugs = null;
+    #[ORM\OneToMany(mappedBy: 'event', targetEntity: TicketType::class, cascade: ['remove'])]
+    private Collection $ticketTypes;
+
+    #[ORM\OneToMany(mappedBy: 'event', targetEntity: Ticket::class, cascade: ['remove'])]
+    private Collection $tickets;
 
     public function getImagePath(): ?string
     {
@@ -311,6 +391,9 @@ class Event
         $this->beverages = new ArrayCollection();
         $this->payments = new ArrayCollection();
         $this->eventAdmins = new ArrayCollection();
+        $this->books = new ArrayCollection();
+        $this->ticketTypes = new ArrayCollection();
+        $this->tickets = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -330,12 +413,12 @@ class Event
         return $this;
     }
 
-    public function getAddress(): ?string
+    public function getAddress(): ?Address
     {
         return $this->address;
     }
 
-    public function setAddress(string $address): static
+    public function setAddress(?Address $address): static
     {
         $this->address = $address;
 
@@ -707,4 +790,104 @@ class Event
         return $this;
     }
 
+    /**
+     * @return Collection<int, Book>
+     */
+    public function getBooks(): Collection
+    {
+        return $this->books;
+    }
+
+    public function addBook(Book $book): static
+    {
+        if (!$this->books->contains($book)) {
+            $this->books->add($book);
+            $book->setEvent($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBook(Book $book): static
+    {
+        if ($this->books->removeElement($book)) {
+            // set the owning side to null (unless already changed)
+            if ($book->getEvent() === $this) {
+                $book->setEvent(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getFeatureslugs(): ?string
+    {
+        return $this->featureslugs;
+    }
+
+    public function setFeatureslugs(?string $featureslugs): static
+    {
+        $this->featureslugs = $featureslugs;
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, TicketType>
+     */
+    public function getTicketTypes(): Collection
+    {
+        return $this->ticketTypes;
+    }
+
+    public function addTicketType(TicketType $ticketType): static
+    {
+        if (!$this->ticketTypes->contains($ticketType)) {
+            $this->ticketTypes->add($ticketType);
+            $ticketType->setEvent($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTicketType(TicketType $ticketType): static
+    {
+        if ($this->ticketTypes->removeElement($ticketType)) {
+            // set the owning side to null (unless already changed)
+            if ($ticketType->getEvent() === $this) {
+                $ticketType->setEvent(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Ticket>
+     */
+    public function getTickets(): Collection
+    {
+        return $this->tickets;
+    }
+
+    public function addTicket(Ticket $ticket): static
+    {
+        if (!$this->tickets->contains($ticket)) {
+            $this->tickets->add($ticket);
+            $ticket->setEvent($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTicket(Ticket $ticket): static
+    {
+        if ($this->tickets->removeElement($ticket)) {
+            // set the owning side to null (unless already changed)
+            if ($ticket->getEvent() === $this) {
+                $ticket->setEvent(null);
+            }
+        }
+
+        return $this;
+    }
 }
