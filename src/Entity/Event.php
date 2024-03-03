@@ -8,7 +8,6 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\Post;
 use App\Controller\Book\AddController;
-use App\Controller\Event\DeleteEventController;
 use App\Controller\Event\EditEventController;
 use App\Controller\Event\EditEventImageController;
 use App\Controller\Event\EventDetailController;
@@ -26,6 +25,7 @@ use App\Controller\Event\ActivePackEventController;
 use App\Controller\Event\AddInvitationEventController;
 use App\Controller\Event\AddTableEventController;
 use App\Controller\Event\CreateEventController;
+use App\Controller\Event\DeleteEventController;
 use App\Controller\Event\ListingEventInvitationsController;
 use App\Controller\Event\ListingEventTablesController;
 use App\Controller\Event\ListingUserEventController;
@@ -247,9 +247,16 @@ use Symfony\Component\Serializer\Annotation\Groups;
             controller: EditEventImageController::class,
             deserialize: false
         ),
+        new Post(
+            uriTemplate: '/events/{id}/import-invitations',
+            inputFormats: ['multipart' => ['multipart/form-data']],
+            deserialize: false
+        ),
 
         new Put(),
-        new Delete()
+        new Delete(
+            controller: DeleteEventController::class
+        )
     ]
 )]
 #[ORM\Entity(repositoryClass: EventRepository::class)]
