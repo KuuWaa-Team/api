@@ -14,20 +14,20 @@ class MobilePaymentService
     }
 
     private $baseUrlFlexPay = 'https://backend.flexpay.cd/api/rest/v1/';
-    private $token = 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJIT3BxVjBzcXZReElDc2JpQjRXUSIsInJvbGVzIjpbIk1FUkNIQU5UIl0sImlzcyI6Ii9sb2dpbiIsImV4cCI6MTczNTY4NjAwMH0.rjTD5VKDb4PKemfAsV7jg7U5qUMYx9WqvKg8Qij1Mv0';
+    private $token = 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJcL2xvZ2luIiwicm9sZXMiOlsiTUVSQ0hBTlQiXSwiZXhwIjoxNzcwODE5NjExLCJzdWIiOiI2NjBmOWI0MGIzMmIzMjNhZjU2ZmMwYjFlMGI3OTc5NyJ9.0N2RaMA6SFdMqJVARUeVBSTxgEH9ru2G4VFGyVlhzD4.';
     /**
      * @throws \JsonException
      */
     public function pay(String $phoneNumber, String $ref, float $amount): array
     {
         $data = [
-            "merchant"      => "HEALTHC",
+            "merchant"      => "KUUWAA",
             "type"          => "1",
             "phone"         => $phoneNumber,
             "reference"     => $ref,
             "amount"        => $amount,
             "currency"      => "USD",
-            "callbackUrl"   => "https://healthcarology.org/callback",
+            "callbackUrl"   => "https://kuuwaa.com",
         ];
 
         $data = json_encode($data, JSON_THROW_ON_ERROR);
@@ -46,23 +46,22 @@ class MobilePaymentService
 
         $orderNumber = "";
         if (curl_errno($ch)) {
-            $error_message = 'Une erreur lors du traitement de votre requête';
+            $message = 'Une erreur lors du traitement de votre requête';
             $success = false;
         } else {
             curl_close($ch);
             $jsonRes = json_decode($response, false, 512, JSON_THROW_ON_ERROR);
             $code = $jsonRes->code;
+            $message = $jsonRes->message ?? 'Impossible de traiter la demande, veuillez réessayer';
             if ($code !== "0") {
                 $success = false;
-                $error_message = 'Impossible de traiter la demande, veuillez réessayer';
             } else {
                 $success = true;
-                $message = $jsonRes->message;
                 $orderNumber = $jsonRes->orderNumber;
             }
         }
 
-        return [$success, $orderNumber];
+        return [$success, $orderNumber, $message];
     }
 
     public function status(String $orderNumber): array

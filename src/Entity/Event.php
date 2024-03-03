@@ -11,6 +11,7 @@ use App\Controller\Book\AddController;
 use App\Controller\Event\EditEventController;
 use App\Controller\Event\EditEventImageController;
 use App\Controller\Event\EventDetailController;
+use App\Controller\Event\GenerateBookController;
 use App\Controller\Event\ListingAdminsController;
 use App\Controller\Event\ListingEventBeveragesController;
 use App\Entity\Address\Address;
@@ -222,6 +223,12 @@ use Symfony\Component\Serializer\Annotation\Groups;
             controller: DeleteEventController::class,
             description: 'Delete event',
             name: 'deleteEvent',
+        ),
+        new Get(
+            uriTemplate: '/events/{id}/generate-book',
+            controller: GenerateBookController::class,
+            description: 'Generate book',
+            name: 'generateBook',
         ),
         new GetCollection(
             controller: ListingUserEventController::class,

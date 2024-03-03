@@ -7,6 +7,7 @@ parameters:
   twilio_account_sid: 'ACff7a18d7bfc2825d8ad0de5719362d1c'
   twilio_auth_token: '9ca35716f6ad3526a908cf5131cd1a65'
   twilio_whatsapp_from: 'whatsapp:+13197748400'
+  project_root: '%kernel.project_dir%/public'
 
   telegram_bot_token: '6583205215:AAEzE7r52D34qYVJRZZYBWl62J7JiSLxj5c'
   telegram_chat_id: '5222905724'

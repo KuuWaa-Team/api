@@ -2,6 +2,7 @@
 
 namespace App\Repository\Event;
 
+use App\Entity\Event;
 use App\Entity\Event\Book;
 use App\Entity\Invitation;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -29,20 +30,21 @@ class BookRepository extends ServiceEntityRepository
             $this->getEntityManager()->flush();
         }
     }
-//    /**
-//     * @return Book[] Returns an array of Book objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('b')
-//            ->andWhere('b.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('b.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    /**
+     * @return Book[] Returns an array of Book objects
+     */
+    public function findByEvent(Event $event): array
+    {
+        return $this->createQueryBuilder('b')
+            ->leftJoin('b.invitation', 'i')
+            ->leftJoin('i.event', 'e')
+            ->andWhere('e = :event')
+            ->setParameter('event', $event)
+            ->orderBy('b.id', 'ASC')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
 
 //    public function findOneBySomeField($value): ?Book
 //    {
