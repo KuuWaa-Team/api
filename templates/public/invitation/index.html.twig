@@ -163,7 +163,7 @@
             </div>
             <div style="padding: 10px; ">
                 <img src="{{ asset("images/map.png") }}" width="25" alt="map">
-                <p style="margin: 0; color: #0b0b0b">{{ invitation.event.address.number ~ ", " ~ invitation.event.address.street ~ ". " ~ invitation.event.address.province.name }}</p>
+                <p style="margin: 0; color: #0b0b0b">{{ invitation.event.address.street ~ ". " ~ invitation.event.address.province.name }}</p>
                 {% if invitation.event.address.ref != null and invitation.event.address.ref != "null" and invitation.event.address.ref != "" %}
                     <p style="margin: 0; color: #0b0b0b; font-size: 15px;
                         background-color: lightblue;

@@ -1,27 +1,10 @@
 <?php
 
 namespace App\Entity;
-
-use ApiPlatform\Metadata\ApiResource;
-use ApiPlatform\Metadata\Get;
-use ApiPlatform\Metadata\GetCollection;
-use ApiPlatform\Metadata\Post;
-use App\Controller\Auth\OtpVerificationController;
-use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Uid\Uuid;
 
-#[ApiResource(
-    operations: [
-        new Get(),
-        new GetCollection(),
-        new Post(
-            uriTemplate: '/verification',
-            requirements: ['phoneNumber' => 'String', 'otp' => 'String'],
-            controller: OtpVerificationController::class,
-            description: "Verify OTP",
-        )
-    ]
-)]
 trait TimeStampTrait
 {
     #[ORM\Column(nullable: true)]
@@ -30,11 +13,9 @@ trait TimeStampTrait
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $updatedAt;
 
-    #[ORM\Column(nullable: true)]
-    private ?\DateTimeImmutable $deletedAt;
-
-    #[ORM\Column(type: 'datetime', nullable:true)]
-    private $deletedBy;
+    #[Groups(["invitation:pRead", 'table:pRead', 'invitation:fRead', 'event:pRead', 'event:fRead'])]
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private $slug;
 
     /**
      * Get the value of createdAt
@@ -45,9 +26,9 @@ trait TimeStampTrait
     }
 
     #[ORM\PrePersist()]
-    public function setCreatedAt(DateTimeImmutable $createdAt = new \DateTimeImmutable())
+    public function setCreatedAt(): static
     {
-        $this->createdAt = $createdAt;
+        $this->createdAt = new \DateTimeImmutable();
 
         return $this;
     }
@@ -69,39 +50,22 @@ trait TimeStampTrait
     }
 
     /**
-     * Get the value of deletedAt
+     * Get the value of slug
      */
-    public function getDeletedAt(): ?\DateTimeImmutable
+    public function getSlug()
     {
-        return $this->deletedAt;
-    }
-
-    #[ORM\PreRemove()]
-    public function setDeletedAt()
-    {
-        $this->deletedAt =  new \DateTimeImmutable();
-
-        return $this;
+        return $this->slug;
     }
 
     /**
-     * Get the value of deletedBy
+     * Set the value of slug
      */
-    public function getDeletedBy()
+    #[ORM\PrePersist()]
+    public function setSlug(): self
     {
-        return $this->deletedBy;
-    }
 
-    /**
-     * Set the value of previosId
-     *
-     * @return  self
-     */
-    public function setDeletedBy(Account $deletedBy)
-    {
-        $this->deletedBy = $deletedBy;
-
+        $uuid = Uuid::v4();
+        $this->slug = $uuid->toRfc4122();
         return $this;
     }
-
 }

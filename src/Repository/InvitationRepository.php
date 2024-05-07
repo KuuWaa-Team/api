@@ -81,7 +81,20 @@ class InvitationRepository extends ServiceEntityRepository
             ->setParameter('code', $code)
             ->getQuery()
             ->getOneOrNullResult()
-        ;
+            ;
+    }
+
+    /**
+     * @throws NonUniqueResultException
+     */
+    public function findBySlug(String $slug): ?Invitation
+    {
+        return $this->createQueryBuilder('i')
+            ->andWhere('i.slug = :slug')
+            ->setParameter('slug', $slug)
+            ->getQuery()
+            ->getOneOrNullResult()
+            ;
     }
 
     public function invitationCodeExists(String $code): bool

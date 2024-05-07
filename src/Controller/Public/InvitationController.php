@@ -22,10 +22,10 @@ class InvitationController extends AbstractController
     /**
      * @throws NonUniqueResultException
      */
-    #[Route('/invitations/{code}', name: 'app_public_invitation')]
-    public function index($code, Request $request, BeverageRepository $beverageRepository, BookRepository $bookRepository, InvitationRepository $invitationRepository, DateService $dateService, KernelInterface $kernel): Response
+    #[Route('/invitations/{slug}', name: 'app_public_invitation')]
+    public function index($slug, Request $request, BeverageRepository $beverageRepository, BookRepository $bookRepository, InvitationRepository $invitationRepository, DateService $dateService, KernelInterface $kernel): Response
     {
-        $invitation = $invitationRepository->findByCode($code);
+        $invitation = $invitationRepository->findBySlug($slug);
         $date = $dateService->getFullDate($invitation->getEvent()->getDate(), true, true) . " à " . $invitation->getEvent()->getDate()->format("H:i");
         $eventImage = $dateService->imageToBase64($kernel->getProjectDir() . $invitation->getEvent()->getImagePath());
         $codeImage = $dateService->imageToBase64($kernel->getProjectDir() . $invitation->getCodePath());

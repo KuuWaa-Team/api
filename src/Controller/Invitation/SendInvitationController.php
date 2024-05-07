@@ -49,21 +49,17 @@ class SendInvitationController extends AbstractController
                 $message .= ",\nVous etes invite a l'evenement \"{$invitation->getEvent()->getName()}\" le " . $this->dateService->getFullDate($invitation->getEvent()->getDate(), true, true) . " a {$invitation->getEvent()->getDate()->format('H:i')}.";
                 $message .= "\n\nPour acceder e votre invitation, veuillez ouvrir le lien suivant.";
                 $message .= "\nhttp://kuuwaa.com/invitations/" . $invitation->getCode();
-                $message .= "\n\nSi vous rencontrez des difficultes pour ouvrir le lien ou pour acceder a l'application KuuWaa, veuillez retenir le code d'invitation a 6 chiffres ({$invitation->getCode()}) et présentez-le lors de la vérification a l'entree de l'evenement.";
-    
-                $body = "$message\n\nCeci est un message automatique, veuillez ne pas y repondre.";
-                $this->smsService->send($phoneNumber, $body);
+                $message .= "\n\nSi vous rencontrez des difficultes pour ouvrir le lien, veuillez retenir le code d'invitation a 6 chiffres ({$invitation->getCode()}) et présentez-le lors de la vérification a l'entree de l'evenement.";
+                // $this->smsService->send($phoneNumber, $body);
             } else if ($method === "wpp") {
                 $to = "whatsapp:+$phoneNumber";
                 $message = "Bonjour " . $invitation->getCivility() . " " . $invitation->getName();
                 $message .= ",\nVous êtes invité à l'évenement \"{$invitation->getEvent()->getCategory()->getName()} - {$invitation->getEvent()->getName()}\" le " . $this->dateService->getFullDate($invitation->getEvent()->getDate(), true, true)  . " à {$invitation->getEvent()->getDate()->format('H:i')}.";
                 $message .= "\n\nPour accéder à votre invitation, veuillez ouvrir le lien suivant.";
                 $message .= "\nhttp://kuuwaa.com/invitations/" . $invitation->getCode();
-                $message .= "\n\nSi vous rencontrez des difficultés pour ouvrir le lien ou pour accéder à l'application KuuWaa, veuillez retenir le code d'invitation à 6 chiffres ({$invitation->getCode()}) et présentez-le lors de la vérification à l'entrée de l'évenement.";
-    
-                $body = "$message\n\nCeci est un message automatique, veuillez ne pas y repondre.";
+                $message .= "\n\nSi vous rencontrez des difficultés pour ouvrir le lien, veuillez retenir le code d'invitation à 6 chiffres ({$invitation->getCode()}) et présentez-le lors de la vérification à l'entrée de l'évenement.";
                 try {
-                    $messageSid = $this->whatsappService->sendWhatsAppMessage($to, $body);
+                    // $messageSid = $this->whatsappService->sendWhatsAppMessage($to, $body);
                 } catch (ConfigurationException|TwilioException $e) {
 
                 }

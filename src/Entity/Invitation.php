@@ -167,6 +167,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
 )]
 class Invitation
 {
+    use TimeStampTrait;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -189,7 +191,7 @@ class Invitation
     #[Groups(['invitation:fRead'])]
     private ?Event $event = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     #[Groups(["invitation:pRead", 'table:pRead', 'invitation:fRead'])]
     private ?string $phoneNumber = null;
 
@@ -291,7 +293,7 @@ class Invitation
         return $this->phoneNumber;
     }
 
-    public function setPhoneNumber(string $phoneNumber): static
+    public function setPhoneNumber(?string $phoneNumber): static
     {
         $this->phoneNumber = $phoneNumber;
 

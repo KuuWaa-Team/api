@@ -320,9 +320,6 @@ class Event
     #[Groups(['event:pRead', 'event:fRead', 'invitation:fRead'])]
     private ?\DateTimeInterface $date = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $slug = null;
-
     #[ORM\Column(nullable: true)]
     #[Groups(['event:pRead', 'event:fRead'])]
     private ?int $tablesCount = null;
@@ -619,18 +616,6 @@ class Event
     public function setInvitationsCount(?int $invitationsCount): static
     {
         $this->invitationsCount = $invitationsCount;
-
-        return $this;
-    }
-
-    public function getSlug(): ?string
-    {
-        return $this->slug;
-    }
-
-    public function setSlug(?string $slug): static
-    {
-        $this->slug = $slug;
 
         return $this;
     }
