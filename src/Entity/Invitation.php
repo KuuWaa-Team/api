@@ -17,6 +17,7 @@ use App\Controller\Invitation\EditInvitationController;
 use App\Controller\Invitation\MyInvitationsController;
 use App\Controller\Invitation\SendAllController;
 use App\Controller\Invitation\SendInvitationController;
+use App\Controller\Invitation\ValidateController;
 use App\Entity\Event\Book;
 use App\Repository\InvitationRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -159,6 +160,24 @@ use Symfony\Component\Serializer\Annotation\Groups;
             ],
             description: 'Select beverage',
             name: 'selectInvitationBeverage',
+        ),
+        new Post(
+            uriTemplate: '/invitations/{id}/validate',
+            controller: ValidateController::class,
+            openapiContext: [
+                'summary' => 'validate invitation',
+                'requestBody' => [
+                    'content' => [
+                        'application/json' => [
+                            'schema' => [
+                                'type' => 'object',
+                            ]
+                        ]
+                    ]
+                ],
+            ],
+            description: 'Validate invitation',
+            name: 'validateInvitation',
         ),
         new Put(),
         new Delete()

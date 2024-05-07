@@ -46,4 +46,10 @@ class WebSideController extends AbstractController
             'controller_name' => 'WebSideController',
         ]);
     }
+
+    #[Route('/privacy', name: 'app_contact')]
+    public function privacy(): Response
+    {
+        return $this->render('public/web_side/privacy.html.twig');
+    }
 }

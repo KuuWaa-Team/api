@@ -35,13 +35,13 @@ class EventPaymentStatusController extends AbstractController
         $message = '';
         if ($request->get('on') !== null) {
             $orderNumber = $request->get('on');
-//            try {
+            try {
                 $payment = $this->paymentRepository->findOneByOrderNumber($orderNumber);
                 if (
                     $payment !== null
                 ) {
                     do {
-                        $response = $this->mobilePaymentService->status($payment->getOrderNumber());
+                        $response = $this->mobilePaymentService->status($payment->getOrderNumber(), $payment->getPhoneNumber());
                         $waiting = $response['waiting'];
                         if (!$waiting) {
                             if ($response['success']) {
@@ -50,17 +50,16 @@ class EventPaymentStatusController extends AbstractController
                                 $this->eventRepository->save($event, false);
                                 $this->paymentRepository->save($payment, true);
                                 $success = true;
-                                $message = $response['message'];
                             } else {
                                 $success = false;
-                                $message = $response['message'];
                             }
+                            $message = $response['message'];
                         }
                     } while($waiting);
                 }
-//            } catch (\Throwable $e) {
-//                $message = "Une erreur est survenue";
-//            }
+            } catch (\Throwable $e) {
+                $message = "Une erreur est survenue";
+            }
         } else {
             $message = "Parametre orderNumber (on) manquant";
         }
