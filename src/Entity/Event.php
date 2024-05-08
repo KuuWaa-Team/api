@@ -373,6 +373,10 @@ class Event
     #[ORM\OneToMany(mappedBy: 'event', targetEntity: Ticket::class, cascade: ['remove'])]
     private Collection $tickets;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['event:pRead', 'event:fRead', 'invitation:fRead'])]
+    private ?string $thumbPath = null;
+
     public function getImagePath(): ?string
     {
         return $this->imagePath;
@@ -879,6 +883,18 @@ class Event
                 $ticket->setEvent(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getThumbPath(): ?string
+    {
+        return $this->thumbPath;
+    }
+
+    public function setThumbPath(?string $thumbPath): static
+    {
+        $this->thumbPath = $thumbPath;
 
         return $this;
     }

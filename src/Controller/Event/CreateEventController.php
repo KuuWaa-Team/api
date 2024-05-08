@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Controller\Event;
-
 use App\Entity\Address\Address;
 use App\Entity\Event;
 use App\Entity\EventCategory;
@@ -13,6 +12,11 @@ use App\Repository\EventCategoryRepository;
 use App\Repository\EventPackRepository;
 use App\Repository\EventRepository;
 use App\Repository\FeatureRepository;
+use Imagine\Gd\Imagine;
+use Imagine\Image\Box;
+use Imagine\Image\ImageInterface;
+use Imagine\Image\ManipulatorInterface;
+use Imagine\Image\Point;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -70,11 +74,22 @@ class CreateEventController extends AbstractController
             $category = $this->categoryRepository->find($category_id);
         }
 
-    $image = $request->files->get('image');
-    $fileName = uniqid('', true) . '.' . $image->guessExtension();
-    $destinationPath = $kernel->getProjectDir() . '/public/events/images';
-    $image->move($destinationPath, $fileName);
-    $imagePath = '/events/images/'.$fileName;
+        $image = $request->files->get('image');
+        $fileName = uniqid('', true) . '.' . $image->guessExtension();
+        $destinationPath = $kernel->getProjectDir() . '/public/events/images';
+        $image->move($destinationPath, $fileName);
+        $imagePath = '/events/images/'.$fileName;
+
+        // Génération de l'image miniature
+        $thumbnailPath = '/events/thumb/'.$fileName;
+        $thumbnailAbsolutePath = $kernel->getProjectDir() . '/public/events/thumb/' . $fileName;
+
+        $imagine = new Imagine();
+        $image = $imagine->open($destinationPath . '/' . $fileName);
+        $thumbnail = $image->thumbnail(new Box(375, 375), ManipulatorInterface::THUMBNAIL_OUTBOUND);
+        $thumbnail->resize(new Box(375, 375))
+            ->crop(new Point(0, 0), new Box(375, 375))
+            ->save($thumbnailAbsolutePath);
 
         $event = (new Event())
             ->setName($name)
@@ -89,6 +104,7 @@ class CreateEventController extends AbstractController
             ->setPaidEvent($paid)
             ->setPaymentStatus('waiting')
             ->setImagePath($imagePath)
+            ->setThumbPath($thumbnailPath)
         ;
 
         $address = (new Address())

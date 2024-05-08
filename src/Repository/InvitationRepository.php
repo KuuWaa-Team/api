@@ -80,8 +80,7 @@ class InvitationRepository extends ServiceEntityRepository
             ->andWhere('i.code = :code')
             ->setParameter('code', $code)
             ->getQuery()
-            ->getOneOrNullResult()
-            ;
+            ->getOneOrNullResult();
     }
 
     /**

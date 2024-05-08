@@ -42,7 +42,7 @@ class EventPaymentProcessController extends AbstractController
             $amount += $feature->getPrice();
         }
         $orderNumber = '';
-//        try {
+        try {
             $ref = "KW-" . uniqid('', true);
             $paymentSuccess = $this->mobilePaymentService->pay($formattedPhoneNumber, $ref, $amount);
             if ($paymentSuccess[0]) {
@@ -61,9 +61,9 @@ class EventPaymentProcessController extends AbstractController
                 $success = true;
                 $message = "Processus de paiement en cours...";
             }
-//        } catch (\Throwable $e) {
-//            $message = "Paiement échoué $e";
-//        }
+        } catch (\Throwable $e) {
+            $message = "Paiement échoué $e";
+        }
         $response = [
             'success'   => $success,
             'message'   => $message,
