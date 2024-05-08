@@ -9,8 +9,8 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class FormPaymentController extends AbstractController
 {
-    #[Route('/event/{id}/payment', name: 'app_event_payment')]
-    public function index(Event $event): Response
+    #[Route('/events/{id}/payment', name: 'app_event_payment')]
+    public function index(): Response
     {
         return $this->render('billing/form_payment/index.html.twig', []);
     }

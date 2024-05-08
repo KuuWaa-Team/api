@@ -7,70 +7,70 @@
     <!-- Ajoutez le lien vers le fichier CSS de Tailwind -->
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css" rel="stylesheet" />
-
+    <style>
+        body {
+            color: white;
+        }
+    </style>
 </head>
-<body class="bg-white">
-    <div class="container mt-5 mx-auto p-4">
+<body class="bg-white" style="width: 100vw; height: 100vh; overflow: hidden; background-color: #2F2644">
+    <div class="container mx-auto" style="width: 100vw; height: 100vh; display: flex; align-items: center; justify-content: center; flex-direction: column">
         <!-- Logo et produit -->
-        <div class="flex justify-center items-center my-5 space-x-4">
-            <img src="{{asset('web_side/assets/img/logo-2.png')}}" alt="Logo de votre entreprise" class="w-28 h-28">
-            <img src="https://placehold.co/100x100" alt="Logo de votre entreprise" class="w-28 h-28">
-            
+        <div class="flex justify-center items-center my-3 space-x-4">
+            <img src="{{asset('web_side/assets/img/logo-2.png')}}" alt="Logo de votre entreprise" style="width: 70px;">
+            <div style="width: 70px; height: 70px; background-image: url('https://placehold.co/100x100'); border-radius:50%; background-size: cover; background-position: center    "></div>
         </div>
-            <div class="text-center my-5">
-                <h1 class="text-xl font-semibold">Titre de l'événement</h1>
-                <p class="text-gray-600 mt-2 text-lg">Catégorie</p>
-            </div>
-            <br/>
-            <hr/>
-            <br/>
-        <!-- Formulaire de paiement -->
+        <div class="text-center my-3">
+            <h1 class="text-xl font-semibold" style="margin-bottom: 0">Titre de l'événement</h1>
+            <p class="text-gray-400 mt-2 text-sm" style="margin-top: 0">Catégorie</p>
+        </div>
+        <div style="width: 100%; border-bottom: 1px solid #fff; margin: 20px 0 5px 0"></div>
+            <!-- Formulaire de paiement -->
         <div class="p-4 my-5 text-center">
-            <h3 class="text-lg text-left font-normal mb-4">Comment souhaitez-vous faire le paiment ?</h3>
+            <h3 class="text-sm text-left font-bold mb-4">Comment souhaitez-vous faire le paiment ?</h3>
+            <p class="text-left pb-5" style="opacity: .7">Une fois le paiement effectue, votre evenement sera active et vous pourrez en suite partager vos invitations</p>
                 <!-- Bouton pour le paiement mobile -->
-                <button 
+                <button
                     data-modal-target="mobile-modal" data-modal-toggle="mobile-modal"
-                    type="button" 
+                    type="button"
                     class="
                     w-full
                     mb-3
-                    text-gray-900
                     p-3
                     border
-                    border-gray-300	
+                    border-gray-300
                     hover:bg-gray-200
                     focus:outline-none
-                    focus:ring-2
-                    focus:ring-gray-600">
-                    <div class="flex justify-between items-center">
+                    focus:ring-2" style="width: calc(100vw - 40px)">
+                    <div class="flex justify-between items-center" style="width: 100%;">
                         <p class="text-left font-semibold">Mobile Money </p>
                         <div class="text-right items-center flex space-x-1">
-                            <img src="{{asset('web_side/assets/img/payment/orangemoney.png')}}" alt="OrangeMoney"  class="h-10"/>
-                        <img src="{{asset('web_side/assets/img/payment/mpesa.png')}}" alt="Mpesa"  class="h-10"/>
-                        <img src="{{asset('web_side/assets/img/payment/airtelmoney.png')}}"  alt="AirtelMoney"  class="h-10"/>
+                            <img src="{{asset('web_side/assets/img/payment/orangemoney.png')}}" alt="OrangeMoney" style="width: 50px;"/>
+                        <img src="{{asset('web_side/assets/img/payment/mpesa.png')}}" alt="Mpesa" style="width: 50px;"/>
+                        <img src="{{asset('web_side/assets/img/payment/airtelmoney.png')}}"  alt="AirtelMoney" style="width: 50px;"/>
                         </div>
                     </div>
                  </button>
                  <br/>
-                <button 
+                <button
                 data-modal-target="card-modal" data-modal-toggle="card-modal"
-                    type="button" 
+                    type="button"
                     class="
                     w-full
                     mb-3
-                    text-gray-900
-                    p-3
+                    px-3
+                    py-1
                     border
-                    border-gray-300	
+                    border-gray-300
                     hover:bg-gray-200
                     focus:outline-none
                     focus:ring-2
-                    focus:ring-gray-600">
+                    focus:ring-gray-600" style="width: calc(100vw - 40px)">
                     <div class="flex justify-between items-center">
                         <p class="text-left font-semibold">Carte de crédit </p>
                         <div class="text-right flex space-x-2">
-                        <img src="{{asset('web_side/assets/img/payment/mastercard.png')}}"  alt="MasterCard"  class="w-10 h-10"/>
-                        <img src="{{asset('web_side/assets/img/payment/visa.png')}}"  alt="Visa"  class="w-10 h-10"/>
+                        <img src="{{asset('web_side/assets/img/payment/mastercard.png')}}"  alt="MasterCard" style="width: 40px;"/>
+                        <img src="{{asset('web_side/assets/img/payment/visa.png')}}"  alt="Visa" style="width: 40px;"/>
                         </div>
                     </div>
                  </button>
@@ -78,16 +78,16 @@
     </div>
 
     <!-- Main modal -->
-<div id="mobile-modal" data-modal-backdrop="static" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+    <div id="mobile-modal" data-modal-backdrop="static" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
     <div class="relative p-4 w-full max-w-2xl max-h-full">
         <!-- Modal content -->
         <div class="relative bg-white rounded-sm shadow dark:bg-gray-700">
             <!-- Modal header -->
             <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
-                <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+                <h3 class="text-xl font-semibold dark:text-white">
                     Payer avec Mobile Money
                 </h3>
-                <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="mobile-modal">
+                <button type="button" class="bg-transparent hover:bg-gray-200 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="mobile-modal">
                     <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
                     </svg>
@@ -97,19 +97,19 @@
             <!-- Modal body -->
             <div class="p-4 md:p-5 space-y-4">
                 <form class="max-w-sm mx-auto">
-            <label for="phone-input" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Entrez votre numéro de téléphone :</label>
+            <label for="phone-input" class="block mb-2 text-sm font-medium dark:text-white">Entrez votre numéro de téléphone :</label>
             <div class="relative mb-3 flex items-center space-x-1">
                 <span>(+243)</span>
-                <input type="text" id="phone-input" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-sm focus:ring-pink-500 focus:border-pink-500 block w-full py-3 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:border-pink-500" placeholder="8xxxxxxxx" required>
+                <input type="text" id="phone-input" class="bg-gray-50 border border-gray-300 text-sm rounded-sm focus:ring-pink-500 focus:border-pink-500 block w-full py-3 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:border-pink-500" placeholder="8xxxxxxxx" required>
             </div>
             <!-- Modal footer -->
             <div class="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600">
                 <button data-modal-hide="mobile-modal" type="button" class="text-white bg-pink-700 hover:bg-pink-800 focus:ring-4 focus:outline-none focus:ring-pink-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-pink-600 dark:hover:bg-pink-700 dark:focus:ring-pink-800">Payer</button>
-                <button data-modal-hide="mobile-modal" type="button" class="py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-pink-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Annuler</button>
+                <button data-modal-hide="mobile-modal" type="button" class="py-2.5 px-5 ms-3 text-sm font-medium focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-pink-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Annuler</button>
             </div>
         </form>
             </div>
-            
+
         </div>
     </div>
 </div>
@@ -120,7 +120,7 @@
         <div class="relative bg-white rounded-sm shadow dark:bg-gray-700">
             <!-- Modal header -->
             <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
-                <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+                <h3 class="text-xl font-semibold dark:text-white">
                     Payer par carte de crédit
                 </h3>
                 <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="card-modal">
