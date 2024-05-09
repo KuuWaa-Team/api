@@ -8,6 +8,7 @@ use App\Repository\EventRepository;
 use App\Repository\Payment\PaymentRepository;
 use App\Service\Billing\MobilePaymentService;
 use App\Service\PhoneService;
+use App\Service\SmsService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -22,6 +23,7 @@ class EventPaymentStatusController extends AbstractController
         private readonly MobilePaymentService $mobilePaymentService,
         private readonly EventRepository $eventRepository,
         private readonly PaymentRepository $paymentRepository,
+        private readonly SmsService $smsService,
     ) {
     }
 
@@ -49,6 +51,11 @@ class EventPaymentStatusController extends AbstractController
                                 $event->setPaymentStatus('paid');
                                 $this->eventRepository->save($event, false);
                                 $this->paymentRepository->save($payment, true);
+
+                                $this->smsService->send($payment->getPhoneNumber(), "Bonjour " . $event->getUser()->getFirstname() . ", \n"
+                                  . "Votre événement '" . $event->getCategory()->getName() . " - " . $event->getName() . "' vient d'être activé. Vous pouvez dès à présent partager vos invitations. \n\nMerci de faire confiance à KuuWaa."
+                                );
+
                                 $success = true;
                             } else {
                                 $success = false;

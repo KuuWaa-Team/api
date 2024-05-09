@@ -26,7 +26,7 @@ class EventPaymentProcessController extends AbstractController
     /**
      * @throws \JsonException
      */
-    public function __invoke(Request $request, Event $event)
+    public function __invoke(Request $request, Event $event): JsonResponse
     {
         $content = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
         $phoneNumber = $content["phoneNumber"];
