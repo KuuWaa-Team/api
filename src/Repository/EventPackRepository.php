@@ -21,20 +21,17 @@ class EventPackRepository extends ServiceEntityRepository
         parent::__construct($registry, EventPack::class);
     }
 
-//    /**
-//     * @return EventPack[] Returns an array of EventPack objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('e')
-//            ->andWhere('e.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('e.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    /**
+     * @return EventPack[] Returns an array of EventPack objects
+     */
+    public function findAllOrdered(): array
+    {
+        return $this->createQueryBuilder('e')
+            ->orderBy('e.price', 'ASC')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
 
 //    public function findOneBySomeField($value): ?EventPack
 //    {

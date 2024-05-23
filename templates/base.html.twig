@@ -87,21 +87,9 @@
                 </div>
                 <div class="collapse navbar-collapse" id="themefie_main_menu">
                     <ul class="navbar-nav menu-open text-end">
-                        <li class="current-menu-item">
-                            <a href="/">Accueil</a>
-                        </li>
-                        <li>
-                            <a href="{{url('app_service')}}">Nos services</a>
-                        </li>
-                        <li>
-                            <a href="{{url('app_about')}}">A propos</a>
-                        </li>
-                        <li>
-                            <a href="{{url('app_faq')}}">FAQ</a>
-                        </li>
-                        <li>
-                            <a href="{{url('app_contact')}}">Nous contacter</a>
-                        </li>
+{#                        <li class="current-menu-item">#}
+{#                            <a href="/">Accueil</a>#}
+{#                        </li>#}
                     </ul>
                 </div>
 <!--                <div class="nav-right-part nav-right-part-desktop">-->
@@ -127,14 +115,32 @@
                     <div class="subscribe-inner">
                         <div class="row no-gutters">
                             <div class="col-xl-5 col-lg-6">
-                                <h2>S'inscrire à notre newsletter</h2>
-                                <p class="pe-5">Subscribe to our newsletter and we will bring you the latest news. Roin tincidunt nisl et odio faucibus</p>
+                                <h2>Nous contacter</h2>
+                                <p class="pe-5">Laissez-nous votre message et notre équipe vous repondra dans un bref délai</p>
                             </div>
                             <div class="col-lg-6 offset-xl-1 align-self-center">
-                                <div class="single-input-wrap">
-                                    <input type="text" placeholder="Enter Your Email Address">
-                                    <button class="btn btn-base">Sign Up</button>
-                                </div>
+                                <form method="post">
+                                    {% for message in app.session.flashbag.get('success') %}
+
+                                        <div class="alert alert-success">{{ message }}</div>
+
+                                    {% endfor %}
+                                    {% for message in app.session.flashbag.get('error') %}
+
+                                        <div class="alert alert-danger">{{ message }}</div>
+
+                                    {% endfor %}
+                                    <div class="mb-3">
+                                        <input type="text" name="phone" class="form-control" placeholder="Entrez votre numéro de téléphone">
+                                    </div>
+                                    <div class="mb-3">
+                                        <input type="text" name="subject" class="form-control" placeholder="Entrez le sujet de votre message">
+                                    </div>
+                                    <div class="mb-3">
+                                        <textarea class="form-control" name="message" placeholder="Message"></textarea>
+                                    </div>
+                                    <button class="btn btn-base w-100" type="submit">Envoyer</button>
+                                </form>
                             </div>
                         </div>
                     </div>
@@ -152,46 +158,12 @@
                     <div class="col-xl-4 col-lg-4 col-sm-6">
                         <div class="footer-widget widget">
                             <a class="logo" style="margin-bottom:0px;" href="index.html"><img style="width: 40px;" src="{{asset("web_side/assets/img/logo-2.png")}}" alt="#"></a>
-                            <h6>(+1) 123-4567-8910 </h6>
-                            <p>New York, NY 256364, United States contact@kuuwaa.com</p>
+                            <h6>(+243) 820 793 972</h6>
                             <ul class="social-area">
-                                <li><a href="#"><i class="fab fa-facebook-f"></i></a></li>
-                                <li><a href="#"><i class="fab fa-twitter"></i></a></li>
-                                <li><a href="#"><i class="fab fa-linkedin-in"></i></a></li>
-                                <li><a href="#"><i class="fab fa-pinterest"></i></a></li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="col-xl-2 col-lg-2 col-6">
-                        <div class="footer-widget widget widget_link">
-                            <h6 class="widget-title">Menu</h6>
-                            <ul>
-                                <li><a href="{{url('app_about')}}"><i class="fas fa-angle-right"></i>A Propos</a></li>
-                                <li><a href="{{url('app_service')}}"><i class="fas fa-angle-right"></i>Services</a></li>
-                                <li><a href="{{url('app_faq')}}"><i class="fas fa-angle-right"></i>FAQ</a></li>
-                                <li><a href="{{url('app_contact')}}"><i class="fas fa-angle-right"></i>Contact</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="col-xl-2 offset-lg-1 col-lg-2 col-6">
-                        <div class="footer-widget widget widget_link">
-                            <h6 class="widget-title">Services</h6>
-                            <ul>
-                                <li><a href="service.html"><i class="fas fa-angle-right"></i>Graphics </a></li>
-                                <li><a href="service.html"><i class="fas fa-angle-right"></i>Web Design </a></li>
-                                <li><a href="service.html"><i class="fas fa-angle-right"></i>Web Development </a></li>
-                                <li><a href="service.html"><i class="fas fa-angle-right"></i>SEO</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="col-xl-2 offset-lg-1 col-lg-2 col-6">
-                        <div class="footer-widget widget widget_link">
-                            <h6 class="widget-title">Our Link</h6>
-                            <ul>
-                                <li><a href="contact.html"><i class="fas fa-angle-right"></i>Help </a></li>
-                                <li><a href="contact.html"><i class="fas fa-angle-right"></i>Support </a></li>
-                                <li><a href="contact.html"><i class="fas fa-angle-right"></i>Clients </a></li>
-                                <li><a href="contact.html"><i class="fas fa-angle-right"></i>Contacts</a></li>
+                                <li><a href="https://web.facebook.com/profile.php?id=61553935995126"><i class="fab fa-facebook-f"></i></a></li>
+{#                                <li><a href="#"><i class="fab fa-twitter"></i></a></li>#}
+{#                                <li><a href="#"><i class="fab fa-linkedin-in"></i></a></li>#}
+{#                                <li><a href="#"><i class="fab fa-pinterest"></i></a></li>#}
                             </ul>
                         </div>
                     </div>
@@ -204,7 +176,7 @@
                 <div class="row">
                     <div class="col-md-6 align-self-center">
                         <div class="copyright-area">
-                            <p>© Copyright 2021 All rights reserved.</p>       
+                            <p>© Copyright 2024 | KuuWaa | All rights reserved.</p>
                         </div>
                     </div>
                     {# <div class="col-md-6 align-self-center text-md-end">

@@ -2,17 +2,33 @@
 
 namespace App\Controller\Public;
 
+use App\Repository\EventPackRepository;
+use App\Service\SmsService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class WebSideController extends AbstractController
 {
     #[Route('/', name: 'app_home')]
-    public function index(): Response
+    public function index(EventPackRepository $packRepository, Request $request, SmsService $smsService): Response
     {
+        if ($request->isMethod(Request::METHOD_POST)) {
+            $phone = $request->request->get('phone');
+            $subject = $request->request->get('subject');
+            $message = $request->request->get('message');
+
+            if (empty($phone) || empty($subject) || empty($message)) {
+                $this->addFlash('error', 'Vous devez entrer tous les champs');
+            } else {
+                $smsService->send('243814063056', "Formulaire de contact\n-----------------------\n\nDestinateur : $phone\nSujet : $subject\nMessage : $message\n
+                ");
+                $this->addFlash('success', 'Message envoyé avec succès');
+            }
+        }
         return $this->render('public/web_side/index.html.twig', [
-            'controller_name' => 'WebSideController',
+            'packs' => $packRepository->findAllOrdered(),
         ]);
     }
 
