@@ -41,7 +41,7 @@
         ]
     },
     "lexik/jwt-authentication-bundle": {
-        "version": "2.20",
+        "version": "3.1",
         "recipe": {
             "repo": "github.com/symfony/recipes",
             "branch": "main",
@@ -49,7 +49,7 @@
             "ref": "e9481b233a11ef7e15fe055a2b21fd3ac1aa2bb7"
         },
         "files": [
-            "config/packages/lexik_jwt_authentication.yaml"
+            "./config/packages/lexik_jwt_authentication.yaml"
         ]
     },
     "nelmio/cors-bundle": {
@@ -138,8 +138,8 @@
             "ref": "2ae08430db28c8eb4476605894296c82a642028f"
         },
         "files": [
-            "config/packages/security.yaml",
-            "config/routes/security.yaml"
+            "./config/packages/security.yaml",
+            "./config/routes/security.yaml"
         ]
     },
     "symfony/twig-bundle": {
