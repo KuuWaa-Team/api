@@ -73,7 +73,7 @@ class LoginController extends AbstractController
 
             $this->userRepository->save($user, true);
 
-//            $token = $this->jWTTokenManager->create($user);
+            $token = $this->jWTTokenManager->create($user);
 
             if ($new) {
                 $welcomeMessage = "Bienvenue chez KuuWaa!\nLa meuilleur application de gestion d'evenement";
