@@ -21,8 +21,7 @@ class ListingEventBeveragesController extends AbstractController
     public function __construct(
         private readonly BeverageRepository $beverageRepository,
         private readonly NormalizerInterface $normalizer,
-    ) {
-    }
+    ) {}
 
     /**
      * @throws ExceptionInterface

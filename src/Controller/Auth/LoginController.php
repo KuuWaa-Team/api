@@ -4,7 +4,6 @@ namespace App\Controller\Auth;
 
 use App\Entity\User;
 use App\Repository\UserRepository;
-use Exception;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -12,85 +11,62 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Serializer\Exception\ExceptionInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
-use JsonException;
+use Symfony\Component\Uid\Uuid;
 
 class LoginController extends AbstractController
 {
-
     public function __construct(
-        private readonly NormalizerInterface         $normalizer,
-        private readonly JWTTokenManagerInterface    $jWTTokenManager,
-        private readonly UserRepository              $userRepository,
-    ) {
-    }
+        private readonly NormalizerInterface $normalizer,
+        private readonly JWTTokenManagerInterface $jWTTokenManager,
+        private readonly UserRepository $userRepository,
+    ) {}
 
     /**
      * @throws ExceptionInterface
-     * @throws JsonException
      */
     public function __invoke(Request $request): JsonResponse
     {
-        $content = json_decode(
-            $request->getContent(),
-            true,
-            512, JSON_THROW_ON_ERROR
-        );
+        $content = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
 
-        $success        = false;
-        /**
-         * @var null|User $user
-         */
-        $user           = null;
-        $token          = null;
-        $new            = false;
-        $message        = "";
+        $email       = $content['email'] ?? null;
+        $uid         = $content['uid'] ?? null;
+        $displayName = $content['displayName'] ?? 'Utilisateur';
+        $photoUrl    = $content['photoUrl'] ?? null;
+        $provider    = $content['provider'] ?? null;
+        $phoneId     = $content['phoneId'] ?? Uuid::v4(); // fallback si tu veux en générer un
 
-//        try {
-            $email       = $content['email'];
-            $uuid        = $content['uid'];
-            $displayName = $content['displayName'];
-            $photoUrl    = $content['photoURL'];
-            $provider    = $content['provider'];
-            $phoneId     = $content['phoneId'];
+        if (!$email || !$uid) {
+            return new JsonResponse([
+                'success' => false,
+                'message' => 'Email ou UID manquant',
+            ], Response::HTTP_BAD_REQUEST);
+        }
 
-            $user = $this->userRepository->findOneBy(['email' => $email]);
-            $success = true;
+        $user = $this->userRepository->findOneBy(['email' => $email]);
+        $new = false;
 
-            if ($user === null) {
-                $user = (new User())
-                    ->setSlug()
-                    ->setCreatedAt()
-                    ->setUpdatedAt()
-                    ->setEmail($email);
-                $new = true;
-            }
+        if (!$user) {
+            $user = (new User())
+                ->setEmail($email);
+            $new = true;
+        }
 
-            $user
-                ->setDisplayName($displayName)
-                ->setUid($uuid)
-                ->setPhotoUrl($photoUrl)
-                ->setProvider($provider);
+        $user
+            ->setDisplayName($displayName)
+            ->setUid($uid)
+            ->setPhotoUrl($photoUrl)
+            ->setProvider($provider);
 
-            $this->userRepository->save($user, true);
+        $this->userRepository->save($user, true);
 
-            $token = $this->jWTTokenManager->create($user);
+        $token = $this->jWTTokenManager->create($user);
 
-            if ($new) {
-                $welcomeMessage = "Bienvenue chez KuuWaa!\nLa meuilleur application de gestion d'evenement";
-                // ... send mail
-            }
-//        } catch (Exception $exception) {
-//            $message = "Une erreur est survenue. Veuillez ressayer";
-//        }
-        $return = [
-            'success'   => $success,
-            'message'   => $message,
-            'new'       => $new,
-            'user'      => $user,
-            'token'     => $token,
-        ];
-
-        $response = $this->normalizer->normalize($return, null, ['groups' => 'user:pRead']);
-        return new JsonResponse($response, Response::HTTP_OK);
+        return new JsonResponse($this->normalizer->normalize([
+            'success' => true,
+            'message' => '',
+            'new'     => $new,
+            'user'    => $user,
+            'token'   => $token,
+        ], null, ['groups' => ['u.pRead']]), Response::HTTP_OK);
     }
 }
