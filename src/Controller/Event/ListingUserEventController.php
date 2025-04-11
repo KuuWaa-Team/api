@@ -29,24 +29,23 @@ class ListingUserEventController extends AbstractController
      * @throws ExceptionInterface
      * @throws NonUniqueResultException
      */
-    public function __invoke(UserInterface $user): JsonResponse
+    public function __invoke(User $user): JsonResponse
     {
         $data = [];
         $success = true;
 
         if ($user instanceof User) {
-//            $data = $user->getEvents();
             $data = $this->eventRepository->findListableEvents($user);
-            foreach ($data as $event) {
-                if ($event->getUser() !== $user) {
-                    $eventAdmin = $this->eventAdminRepository->findByEventAndphoneNumber($event, $user->getPhoneNumber());
-                    if ($eventAdmin !== null && $eventAdmin->getStatus() !== 'refused') {
-                        $event->setShared(true);
-                        $event->setAdminStatus($eventAdmin->getStatus());
-                        $event->setAdminId($eventAdmin->getId());
-                    }
-                }
-            }
+            // foreach ($data as $event) {
+            //     if ($event->getUser() !== $user) {
+            //         $eventAdmin = $this->eventAdminRepository->findByEventAndphoneNumber($event, $user->getPhoneNumber());
+            //         if ($eventAdmin !== null && $eventAdmin->getStatus() !== 'refused') {
+            //             $event->setShared(true);
+            //             $event->setAdminStatus($eventAdmin->getStatus());
+            //             $event->setAdminId($eventAdmin->getId());
+            //         }
+            //     }
+            // }
         }
 
         $response = [

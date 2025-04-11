@@ -7,7 +7,13 @@ use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
 use App\Controller\Auth\LoginController;
+use App\Controller\Event\ListingUserEventController;
+use App\Controller\Wallet\ListingOperationsController;
+use App\Controller\Wallet\RechargeController;
+use App\Entity\Wallet\Operation;
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Attribute\Groups;
@@ -26,6 +32,28 @@ use Symfony\Component\Serializer\Attribute\Groups;
             controller: LoginController::class,
             description: "Login with google",
         ),
+        new GetCollection(
+            uriTemplate: '/users/{id}/events',
+            controller: ListingUserEventController::class,
+            normalizationContext: [
+                'groups' => ['read:events']
+            ]
+        ),
+        new GetCollection(
+            uriTemplate: '/users/{id}/operations',
+            controller: ListingOperationsController::class,
+            normalizationContext: [
+                'groups' => ['operation:pRead']
+            ]
+        ),
+        new Post(
+            uriTemplate: '/users/{id}/recharge',
+            requirements: [
+                'amount' => 'decimal', 'payment_method' => 'String'
+            ],
+            controller: RechargeController::class,
+            description: "Recharge credits",
+        ),
     ]
 )]
 class User implements UserInterface
@@ -35,12 +63,16 @@ class User implements UserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['u.pRead'])]
+    #[Groups(['user:pRead'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 180)]
-    #[Groups(['u.pRead'])]
+    #[Groups(['user:pRead'])]
     private ?string $email = null;
+
+    #[ORM\Column(nullable: true)]
+    #[Groups(['user:pRead'])]
+    private ?int $credits = null;
 
     /**
      * @var list<string> The user roles
@@ -49,19 +81,40 @@ class User implements UserInterface
     private array $roles = [];
 
     #[ORM\Column(length: 255)]
-    #[Groups(['u.pRead'])]
+    #[Groups(['user:pRead'])]
     private ?string $displayName = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['u.pRead'])]
+    #[Groups(['user:pRead'])]
     private ?string $photoUrl = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['u.pRead'])]
+    #[Groups(['user:pRead'])]
     private ?string $provider = null;
 
     #[ORM\Column(length: 255)]
     private ?string $uid = null;
+
+    /**
+     * @var Collection<int, Event>
+     */
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Event::class)]
+    private Collection $events;
+
+    /**
+     * @var Collection<int, Operation>
+     */
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Operation::class)]
+    private Collection $operations;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $phoneId = null;
+
+    public function __construct()
+    {
+        $this->events = new ArrayCollection();
+        $this->operations = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -76,6 +129,18 @@ class User implements UserInterface
     public function setEmail(string $email): static
     {
         $this->email = $email;
+
+        return $this;
+    }
+
+    public function getCredits(): ?int
+    {
+        return $this->credits;
+    }
+
+    public function setCredits(?int $credits): static
+    {
+        $this->credits = $credits;
 
         return $this;
     }
@@ -167,6 +232,78 @@ class User implements UserInterface
     public function setUid(string $uid): static
     {
         $this->uid = $uid;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Event>
+     */
+    public function getEvents(): Collection
+    {
+        return $this->events;
+    }
+
+    public function addEvent(Event $event): static
+    {
+        if (!$this->events->contains($event)) {
+            $this->events->add($event);
+            $event->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeEvent(Event $event): static
+    {
+        if ($this->events->removeElement($event)) {
+            // set the owning side to null (unless already changed)
+            if ($event->getUser() === $this) {
+                $event->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Operation>
+     */
+    public function getOperations(): Collection
+    {
+        return $this->operations;
+    }
+
+    public function addOperation(Operation $operation): static
+    {
+        if (!$this->operations->contains($operation)) {
+            $this->operations->add($operation);
+            $operation->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOperation(Operation $operation): static
+    {
+        if ($this->operations->removeElement($operation)) {
+            // set the owning side to null (unless already changed)
+            if ($operation->getUser() === $this) {
+                $operation->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getPhoneId(): ?string
+    {
+        return $this->phoneId;
+    }
+
+    public function setPhoneId(?string $phoneId): static
+    {
+        $this->phoneId = $phoneId;
 
         return $this;
     }

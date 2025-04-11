@@ -6,7 +6,7 @@ use App\Entity\Event;
 use App\Entity\Payment\Payment;
 use App\Repository\EventRepository;
 use App\Repository\Payment\PaymentRepository;
-use App\Service\Billing\MobilePaymentService;
+use App\Service\Billing\PaymentService;
 use App\Service\PhoneService;
 use App\Service\SmsService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -19,11 +19,11 @@ use Symfony\Component\Validator\Constraints\IsFalse;
 class EventPaymentStatusController extends AbstractController
 {
     public function __construct(
-        private readonly PhoneService $phoneService,
-        private readonly MobilePaymentService $mobilePaymentService,
-        private readonly EventRepository $eventRepository,
+        private readonly PhoneService      $phoneService,
+        private readonly PaymentService    $mobilePaymentService,
+        private readonly EventRepository   $eventRepository,
         private readonly PaymentRepository $paymentRepository,
-        private readonly SmsService $smsService,
+        private readonly SmsService        $smsService,
     ) {
     }
 

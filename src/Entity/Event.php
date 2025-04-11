@@ -230,12 +230,6 @@ use Symfony\Component\Serializer\Annotation\Groups;
             description: 'Generate book',
             name: 'generateBook',
         ),
-        new GetCollection(
-            controller: ListingUserEventController::class,
-            normalizationContext: [
-                'groups' => ['read:events']
-            ]
-        ),
         new Post(
             inputFormats: ['multipart' => ['multipart/form-data']],
             controller: CreateEventController::class,
@@ -281,9 +275,6 @@ class Event
     #[ORM\ManyToOne(inversedBy: 'events')]
     #[Groups(['event:pRead', 'event:fRead', 'invitation:fRead'])]
     private ?EventCategory $category = null;
-
-    #[ORM\ManyToOne(inversedBy: 'events')]
-    private ?User $user = null;
 
     #[ORM\OneToMany(mappedBy: 'event', targetEntity: Invitation::class, cascade: ['remove'])]
     private Collection $invitations;
@@ -377,6 +368,9 @@ class Event
     #[Groups(['event:pRead', 'event:fRead', 'invitation:fRead'])]
     private ?string $thumbPath = null;
 
+    #[ORM\ManyToOne(inversedBy: 'events')]
+    private ?User $user = null;
+
     public function getImagePath(): ?string
     {
         return $this->imagePath;
@@ -453,18 +447,6 @@ class Event
     public function setCategory(?EventCategory $category): static
     {
         $this->category = $category;
-
-        return $this;
-    }
-
-    public function getUser(): ?User
-    {
-        return $this->user;
-    }
-
-    public function setUser(?User $user): static
-    {
-        $this->user = $user;
 
         return $this;
     }
@@ -895,6 +877,18 @@ class Event
     public function setThumbPath(?string $thumbPath): static
     {
         $this->thumbPath = $thumbPath;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
 
         return $this;
     }

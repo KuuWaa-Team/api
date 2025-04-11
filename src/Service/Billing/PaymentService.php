@@ -2,14 +2,18 @@
 
 namespace App\Service\Billing;
 
-use Doctrine\ORM\EntityManagerInterface;
+use App\Entity\Wallet\Operation;
+use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
     
-class MobilePaymentService
+class PaymentService
 {
     public function __construct(
-        private readonly EntityManagerInterface $entityManager,
-        private HttpClientInterface $client,
+        private readonly HttpClientInterface $client,
     ) {
     }
 
@@ -18,14 +22,14 @@ class MobilePaymentService
     /**
      * @throws \JsonException
      */
-    public function pay(String $phoneNumber, String $ref, float $amount): array
+    public function mobilePayment(Operation $operation): array
     {
         $data = [
             "merchant"      => "KUUWAA",
             "type"          => "1",
-            "phone"         => $phoneNumber,
-            "reference"     => $ref,
-            "amount"        => $amount,
+            "phone"         => $operation->getPhoneNumber(),
+            "reference"     => $operation->getReference(),
+            "amount"        => $operation->getAmount(),
             "currency"      => "USD",
             "callbackUrl"   => "https://kuuwaa.com",
         ];
@@ -44,7 +48,7 @@ class MobilePaymentService
 
         $response = curl_exec($ch);
 
-        $orderNumber = "";
+        $orderNumber = "";  
         if (curl_errno($ch)) {
             $message = 'Une erreur lors du traitement de votre requête';
             $success = false;
@@ -61,14 +65,26 @@ class MobilePaymentService
             }
         }
 
-        return [$success, $orderNumber, $message];
+        return ["success" => $success, "orderNumber" => $orderNumber, "message" => $message];
     }
 
-    public function status(String $orderNumber, String $phoneNumber): array
+    public function cardPayment(Operation $operation): array {
+        // TODO : handle card payment
+        return [];
+    }
+
+    /**
+     * @throws TransportExceptionInterface
+     * @throws ServerExceptionInterface
+     * @throws RedirectionExceptionInterface
+     * @throws DecodingExceptionInterface
+     * @throws ClientExceptionInterface
+     */
+    public function checkPaymentStatus(Operation $operation): array
     {
         $response = $this->client->request(
             'GET',
-            $this->baseUrlFlexPay . 'check/' . $orderNumber,
+            $this->baseUrlFlexPay . 'check/' . $operation->getOrderNumber(),
             [
                 'headers' => [
                     'Accept: */*',
@@ -78,21 +94,18 @@ class MobilePaymentService
         );
         $message = '';
         $success = false;
-
-        //$content = $response->getContent();
         $content = $response->toArray();
         if ($content["transaction"]) {
-            if ($content["transaction"]["status"] === "0" || $phoneNumber === '243999999999') {
+            if ($content["transaction"]["status"] === "0" || $operation->getPhoneNumber() === '243999999999') {
                 $message = 'Paiement éffectué avec success';
                 $success = true;
             } else {
                 $message = $content["message"];
-                $success = false;
             }
         }
         return [
             'success' => $success,
-            'waiting' => $content["transaction"]["status"] == "2" && $phoneNumber !== '243999999999',
+            'waiting' => $content["transaction"]["status"] === "2" && $operation->getPhoneNumber() !== '243999999999',
             'message' => $message
         ];
     }

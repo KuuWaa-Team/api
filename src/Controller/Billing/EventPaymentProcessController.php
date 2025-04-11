@@ -6,7 +6,7 @@ use App\Entity\Event;
 use App\Entity\Payment\Payment;
 use App\Repository\EventRepository;
 use App\Repository\Payment\PaymentRepository;
-use App\Service\Billing\MobilePaymentService;
+use App\Service\Billing\PaymentService;
 use App\Service\PhoneService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -17,8 +17,8 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 class EventPaymentProcessController extends AbstractController
 {
     public function __construct(
-        private readonly PhoneService $phoneService,
-        private readonly MobilePaymentService $mobilePaymentService,
+        private readonly PhoneService      $phoneService,
+        private readonly PaymentService    $mobilePaymentService,
         private readonly PaymentRepository $paymentRepository,
     ) {
     }

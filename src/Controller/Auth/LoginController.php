@@ -5,7 +5,6 @@ namespace App\Controller\Auth;
 use App\Entity\User;
 use App\Repository\UserRepository;
 use Exception;
-use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -19,7 +18,6 @@ class LoginController extends AbstractController
 
     public function __construct(
         private readonly NormalizerInterface         $normalizer,
-        private readonly JWTTokenManagerInterface    $jWTTokenManager,
         private readonly UserRepository              $userRepository,
     ) {
     }
@@ -45,13 +43,14 @@ class LoginController extends AbstractController
         $new            = false;
         $message        = "";
 
-//        try {
+        try {
             $email       = $content['email'];
             $uuid        = $content['uid'];
             $displayName = $content['displayName'];
-            $photoUrl    = $content['photoURL'];
+            $photoUrl    = $content['photoUrl'] ?? '';
             $provider    = $content['provider'];
             $phoneId     = $content['phoneId'];
+            $token       = $content['firebase_token'];
 
             $user = $this->userRepository->findOneBy(['email' => $email]);
             $success = true;
@@ -61,27 +60,26 @@ class LoginController extends AbstractController
                     ->setSlug()
                     ->setCreatedAt()
                     ->setUpdatedAt()
+                    ->setCredits(0)
+                    ->setDisplayName($displayName)
+                    ->setUid($uuid)
+                    ->setPhotoUrl($photoUrl)
+                    ->setProvider($provider)
+                    ->setPhotoUrl($photoUrl)
                     ->setEmail($email);
                 $new = true;
             }
 
-            $user
-                ->setDisplayName($displayName)
-                ->setUid($uuid)
-                ->setPhotoUrl($photoUrl)
-                ->setProvider($provider);
-
+            $user->setPhoneId($phoneId);
             $this->userRepository->save($user, true);
-
-//            $token = $this->jWTTokenManager->create($user);
 
             if ($new) {
                 $welcomeMessage = "Bienvenue chez KuuWaa!\nLa meuilleur application de gestion d'evenement";
                 // ... send mail
             }
-//        } catch (Exception $exception) {
-//            $message = "Une erreur est survenue. Veuillez ressayer";
-//        }
+        } catch (Exception $exception) {
+            $message = "Une erreur est survenue. Veuillez ressayer";
+        }
         $return = [
             'success'   => $success,
             'message'   => $message,

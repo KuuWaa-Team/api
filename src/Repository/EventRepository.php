@@ -51,9 +51,9 @@ class EventRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('e')
             ->leftJoin('e.eventAdmins', 'a')
-            ->where('e.user = :u')
+            ->where(predicates: 'e.user = :u')
             ->orWhere("a.phoneNumber = :p and a.status <> 'refused'")
-            ->setParameter('p', $user->getPhoneNumber())
+            ->setParameter('p', $user->getEmail())
             ->setParameter('u', $user)
             ->orderBy('e.date', 'ASC')
             ->getQuery()
