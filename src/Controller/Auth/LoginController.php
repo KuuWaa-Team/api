@@ -11,11 +11,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Serializer\Exception\ExceptionInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
-use JsonException;
+use Symfony\Component\Uid\Uuid;
 
 class LoginController extends AbstractController
 {
-
     public function __construct(
         private readonly NormalizerInterface         $normalizer,
         private readonly UserRepository              $userRepository,
@@ -24,24 +23,17 @@ class LoginController extends AbstractController
 
     /**
      * @throws ExceptionInterface
-     * @throws JsonException
      */
     public function __invoke(Request $request): JsonResponse
     {
-        $content = json_decode(
-            $request->getContent(),
-            true,
-            512, JSON_THROW_ON_ERROR
-        );
+        $content = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
 
-        $success        = false;
-        /**
-         * @var null|User $user
-         */
-        $user           = null;
-        $token          = null;
-        $new            = false;
-        $message        = "";
+        $email       = $content['email'] ?? null;
+        $uid         = $content['uid'] ?? null;
+        $displayName = $content['displayName'] ?? 'Utilisateur';
+        $photoUrl    = $content['photoUrl'] ?? null;
+        $provider    = $content['provider'] ?? null;
+        $phoneId     = $content['phoneId'] ?? Uuid::v4(); // fallback si tu veux en générer un
 
         try {
             $email       = $content['email'];
@@ -53,6 +45,7 @@ class LoginController extends AbstractController
             $token       = $content['firebase_token'];
 
             $user = $this->userRepository->findOneBy(['email' => $email]);
+            $new = false;
             $success = true;
 
             if ($user === null) {
@@ -78,6 +71,7 @@ class LoginController extends AbstractController
                 // ... send mail
             }
         } catch (Exception $exception) {
+            $success = false;
             $message = "Une erreur est survenue. Veuillez ressayer";
         }
         $return = [
