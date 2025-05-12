@@ -76,9 +76,9 @@ class LoginController extends AbstractController
         }
         $return = [
             'success'   => $success,
-            'message'   => $message,
-            'new'       => $new,
-            'user'      => $user,
+            'message'   => $message ?? '',
+            'new'       => $new ?? false,
+            'user'      => $user ?? null,
             'token'     => $token,
         ];
 
