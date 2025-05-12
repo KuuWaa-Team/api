@@ -33,14 +33,13 @@ class WalletService
             $waiting = $response['waiting'];
             if (!$waiting) {
                 if ($response['success']) {
-                    $this->creditService->rechargeUser($operation->getUser(), $operation->getCredits());
                     $operation->setStatus(self::$STATUS_PAID);
-
+                    $this->creditService->rechargeUser($operation->getUser(), $operation->getCredits());
                     $this->notificationService->sendToOne(
                         deviceToken: $operation->getUser()?->getPhoneId() ?? '',
                         title: "Paiement validé",
                         body: "Votre recharge de " . $operation->getCredits() . " crédits a ete validé avec succès.",
-                        data: ["credits" => $operation->getUser()?->getCredits() ?? 0]
+                        data: ['credits' => (string) $operation->getUser()?->getCredits()]
                     );
                 } else {
                     $operation->setStatus(self::$STATUS_FAILED);

@@ -62,7 +62,15 @@ class NotificationService
         }
     }
 
-    private function sendNotification(array $tokens, string $title, string $body): void
+    /**
+     * @throws TransportExceptionInterface
+     * @throws GoogleException
+     * @throws Exception
+     * @throws ServerExceptionInterface
+     * @throws RedirectionExceptionInterface
+     * @throws ClientExceptionInterface
+     */
+    private function sendNotification(array $tokens, string $title, string $body, array $data = []): void
     {
         $accessToken = $this->getAccessToken();
 
@@ -73,6 +81,15 @@ class NotificationService
                     'notification' => [
                         'title' => $title,
                         'body' => $body,
+                    ],
+                    'data' => $data,
+                    'android' => [
+                        'priority' => 'high',
+                    ],
+                    'apns' => [
+                        'headers' => [
+                            'apns-priority' => '10',
+                        ],
                     ],
                 ],
             ];

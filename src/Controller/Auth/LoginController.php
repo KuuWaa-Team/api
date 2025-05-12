@@ -33,7 +33,11 @@ class LoginController extends AbstractController
         $displayName = $content['displayName'] ?? 'Utilisateur';
         $photoUrl    = $content['photoUrl'] ?? null;
         $provider    = $content['provider'] ?? null;
-        $phoneId     = $content['phoneId'] ?? Uuid::v4(); // fallback si tu veux en générer un
+        $phoneId     = $content['phoneId'] ?? Uuid::v4();
+
+        $new = false;
+        $user = null;
+        $message =  '';
 
         try {
             $email       = $content['email'];
@@ -45,7 +49,6 @@ class LoginController extends AbstractController
             $token       = $content['firebase_token'];
 
             $user = $this->userRepository->findOneBy(['email' => $email]);
-            $new = false;
             $success = true;
 
             if ($user === null) {
@@ -68,7 +71,6 @@ class LoginController extends AbstractController
 
             if ($new) {
                 $welcomeMessage = "Bienvenue chez KuuWaa!\nLa meuilleur application de gestion d'evenement";
-                // ... send mail
             }
         } catch (Exception $exception) {
             $success = false;
