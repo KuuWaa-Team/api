@@ -5,19 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d85cef78-04d8-47a1-8849-8f3c5d37079c" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/Controller/Template/GetAllController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/codeception.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/codeception.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/commandlinetools/Symfony_5_8_24__1_57_AM.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/commandlinetools/schemas/frameworkDescriptionVersion1.1.4.xsd" beforeDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/images/templates/momento.webp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/kuuwaa-api.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/kuuwaa-api.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/material_theme_project_new.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/php.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/php.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/phpspec.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/phpspec.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Controller/Auth/LoginController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/Auth/LoginController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Controller/Wallet/RechargeController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/Wallet/RechargeController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Service/NotificationService.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Service/NotificationService.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Service/WalletService.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Service/WalletService.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Controller/Template/GetAllController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/Template/GetAllController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Entity/Event/EventTemplate.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/Event/EventTemplate.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Entity/EventCategory.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/EventCategory.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -159,19 +152,20 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/public/images/templates" />
       <recent name="$PROJECT_DIR$/src/Controller" />
     </key>
   </component>
@@ -184,6 +178,8 @@
       <option name="presentableId" value="Default" />
       <updated>1744435364404</updated>
       <workItem from="1744435366020" duration="5897000" />
+      <workItem from="1747076199978" duration="1257000" />
+      <workItem from="1747124830424" duration="5782000" />
     </task>
     <servers />
   </component>
