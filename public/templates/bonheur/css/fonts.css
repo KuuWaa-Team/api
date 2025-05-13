@@ -1,0 +1,27 @@
+@font-face {
+    font-family: 'Primary';
+    src: url('../fonts/poppins/Poppins-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Primary';
+    src: url('../fonts/poppins/Poppins-Bold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Primary';
+    src: url('../fonts/poppins/Poppins-SemiBold.ttf') format('truetype');
+    font-weight: 500;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Script';
+    src: url('../fonts/dancing-script/Dancing\ Script.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
