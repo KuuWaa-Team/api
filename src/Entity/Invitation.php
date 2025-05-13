@@ -249,9 +249,19 @@ class Invitation
     #[Groups(["invitation:pRead", 'table:pRead', 'invitation:fRead'])]
     private ?string $decryptKey = null;
 
+    #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'invitations')]
+    private ?self $eventTemplate = null;
+
+    /**
+     * @var Collection<int, self>
+     */
+    #[ORM\OneToMany(mappedBy: 'eventTemplate', targetEntity: self::class)]
+    private Collection $invitations;
+
     public function __construct()
     {
         $this->books = new ArrayCollection();
+        $this->invitations = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -441,6 +451,48 @@ class Invitation
     public function setDecryptKey(?string $decryptKey): static
     {
         $this->decryptKey = $decryptKey;
+
+        return $this;
+    }
+
+    public function getEventTemplate(): ?self
+    {
+        return $this->eventTemplate;
+    }
+
+    public function setEventTemplate(?self $eventTemplate): static
+    {
+        $this->eventTemplate = $eventTemplate;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, self>
+     */
+    public function getInvitations(): Collection
+    {
+        return $this->invitations;
+    }
+
+    public function addInvitation(self $invitation): static
+    {
+        if (!$this->invitations->contains($invitation)) {
+            $this->invitations->add($invitation);
+            $invitation->setEventTemplate($this);
+        }
+
+        return $this;
+    }
+
+    public function removeInvitation(self $invitation): static
+    {
+        if ($this->invitations->removeElement($invitation)) {
+            // set the owning side to null (unless already changed)
+            if ($invitation->getEventTemplate() === $this) {
+                $invitation->setEventTemplate(null);
+            }
+        }
 
         return $this;
     }

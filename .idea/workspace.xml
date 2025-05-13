@@ -5,12 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d85cef78-04d8-47a1-8849-8f3c5d37079c" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/public/images/templates/momento.webp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/kuuwaa-api.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/kuuwaa-api.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Controller/Template/GetAllController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/Template/GetAllController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Entity/Event/EventTemplate.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/Event/EventTemplate.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Entity/EventCategory.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/EventCategory.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Entity/Invitation.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/Invitation.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -179,7 +175,8 @@
       <updated>1744435364404</updated>
       <workItem from="1744435366020" duration="5897000" />
       <workItem from="1747076199978" duration="1257000" />
-      <workItem from="1747124830424" duration="5782000" />
+      <workItem from="1747124830424" duration="6694000" />
+      <workItem from="1747135986526" duration="3197000" />
     </task>
     <servers />
   </component>
