@@ -201,7 +201,6 @@ class Operation
     public function setOrderNumber(?string $orderNumber): static
     {
         $this->orderNumber = $orderNumber;
-
         return $this;
     }
 

@@ -59,9 +59,6 @@ class EventCategory
     private Collection $events;
 
     #[ORM\Column(nullable: true)]
-    private ?bool $paid = null;
-
-    #[ORM\Column(nullable: true)]
     private ?bool $validated = null;
 
     /**
@@ -162,18 +159,6 @@ class EventCategory
                 $event->setCategory(null);
             }
         }
-
-        return $this;
-    }
-
-    public function isPaid(): ?bool
-    {
-        return $this->paid;
-    }
-
-    public function setPaid(?bool $paid): static
-    {
-        $this->paid = $paid;
 
         return $this;
     }

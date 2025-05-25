@@ -93,6 +93,7 @@ class User implements UserInterface
     private ?string $provider = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['user:pRead'])]
     private ?string $uid = null;
 
     /**
