@@ -61,6 +61,8 @@ class CreateEventController extends AbstractController
 
         $address = $content['address'];
         $placeName = $content['place_name'];
+        $placeLongitude = $content['place_longitude'];
+        $placeLatitude = $content['place_latitude'];
 
         $specifications = json_decode($content['specifications'], true, 512, JSON_THROW_ON_ERROR);
 
@@ -106,6 +108,8 @@ class CreateEventController extends AbstractController
             ->setPlaceName($placeName)
             ->setOwner($user)
             ->setTemplate($template)
+            ->setPlaceLongitude($placeLongitude)
+            ->setPlaceLatitude($placeLatitude)
             ->setImagePath($imagePath)
             ->setThumbPath($thumbnailPath)
         ;

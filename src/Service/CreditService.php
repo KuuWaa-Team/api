@@ -7,12 +7,11 @@ use App\Repository\UserRepository;
 
 class CreditService
 {
-    private float $creditPrice = 1 / 1.2;
+    private float $creditPrice = 1 / 0.8;
 
     public function __construct(
         private readonly UserRepository $userRepository
-    )
-    {}
+    ){}
 
     public function getCreditPrice(): float
     {
@@ -35,5 +34,3 @@ class CreditService
         $this->userRepository->save($user);
     }
 }
-
-// 1 SMS = 0,099 USD

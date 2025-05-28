@@ -13,6 +13,9 @@ use App\Controller\Event\EventDetailController;
 use App\Controller\Event\GenerateBookController;
 use App\Controller\Event\ListingAdminsController;
 use App\Controller\Event\ListingEventBeveragesController;
+use App\Controller\Event\OpenBeverageController;
+use App\Controller\Event\OpenBookController;
+use App\Controller\Event\OpenTablesController;
 use App\Entity\Event\Book;
 use App\Entity\Event\EventAdmin;
 use App\Entity\Event\EventSpecification;
@@ -117,6 +120,60 @@ use Symfony\Component\Serializer\Annotation\Groups;
             ],
             description: 'Active book',
             name: 'addEventBook',
+        ),
+        new Post(
+            uriTemplate: '/events/{id}/open-tables',
+            controller: OpenTablesController::class,
+            openapiContext: [
+                'summary' => 'Allow table management',
+                'requestBody' => [
+                    'content' => [
+                        'application/json' => [
+                            'schema' => [
+                                'type' => 'object',
+                            ]
+                        ]
+                    ]
+                ],
+            ],
+            description: 'open tables',
+            name: 'openEventTables',
+        ),
+        new Post(
+            uriTemplate: '/events/{id}/open-beverage',
+            controller: OpenBeverageController::class,
+            openapiContext: [
+                'summary' => 'Allow beverage management',
+                'requestBody' => [
+                    'content' => [
+                        'application/json' => [
+                            'schema' => [
+                                'type' => 'object',
+                            ]
+                        ]
+                    ]
+                ],
+            ],
+            description: 'open beverage',
+            name: 'openEventBeverage',
+        ),
+        new Post(
+            uriTemplate: '/events/{id}/open-book',
+            controller: OpenBookController::class,
+            openapiContext: [
+                'summary' => 'Allow book management',
+                'requestBody' => [
+                    'content' => [
+                        'application/json' => [
+                            'schema' => [
+                                'type' => 'object',
+                            ]
+                        ]
+                    ]
+                ],
+            ],
+            description: 'open book',
+            name: 'openEventBook',
         ),
         new Post(
             uriTemplate: '/events/{id}/tables',
@@ -308,6 +365,17 @@ class Event
     private ?bool $shared = null;
 
     #[Groups(['event:pRead', 'event:fRead'])]
+    private ?bool $canSendInvitations = null;
+
+    /**
+     * @return bool|null
+     */
+    public function getCanSendInvitations(): ?bool
+    {
+        return $this->getUser()->getCredits() >= $this->getTemplate()->getPrice();
+    }
+
+    #[Groups(['event:pRead', 'event:fRead'])]
     private ?string $adminStatus = null;
 
     #[Groups(['event:pRead', 'event:fRead'])]
@@ -367,6 +435,14 @@ class Event
     #[ORM\Column(nullable: true)]
     #[Groups(['event:pRead', 'event:fRead', 'invitation:fRead'])]
     private ?bool $hasBook = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['event:pRead', 'event:fRead', 'invitation:fRead'])]
+    private ?string $placeLongitude = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['event:pRead', 'event:fRead', 'invitation:fRead'])]
+    private ?string $placeLatitude = null;
 
     public function getImagePath(): ?string
     {
@@ -780,7 +856,22 @@ class Event
         return $this;
     }
 
-    public function hasTables(): ?bool
+    public function getHasTables(): ?bool
+    {
+        return $this->hasTables;
+    }
+
+    public function getHasBeverage(): ?bool
+    {
+        return $this->hasBeverage;
+    }
+
+    public function getHasBook(): ?bool
+    {
+        return $this->hasBook;
+    }
+
+    public function hetasTables(): ?bool
     {
         return $this->hasTables;
     }
@@ -812,6 +903,30 @@ class Event
     public function setHasBook(?bool $hasBook): static
     {
         $this->hasBook = $hasBook;
+
+        return $this;
+    }
+
+    public function getPlaceLongitude(): ?string
+    {
+        return $this->placeLongitude;
+    }
+
+    public function setPlaceLongitude(?string $placeLongitude): static
+    {
+        $this->placeLongitude = $placeLongitude;
+
+        return $this;
+    }
+
+    public function getPlaceLatitude(): ?string
+    {
+        return $this->placeLatitude;
+    }
+
+    public function setPlaceLatitude(?string $placeLatitude): static
+    {
+        $this->placeLatitude = $placeLatitude;
 
         return $this;
     }

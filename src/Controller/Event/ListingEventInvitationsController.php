@@ -3,15 +3,10 @@
 namespace App\Controller\Event;
 
 use App\Entity\Event;
-use App\Entity\EventCategory;
-use App\Entity\User;
-use App\Repository\EventRepository;
 use App\Repository\InvitationRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Exception\ExceptionInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
@@ -26,7 +21,7 @@ class ListingEventInvitationsController extends AbstractController
     /**
      * @throws ExceptionInterface
      */
-    public function __invoke(Event $event, UserInterface $user): JsonResponse
+    public function __invoke(Event $event): JsonResponse
     {
         $invitations = $this->invitationRepository->findByEvent($event);
 
