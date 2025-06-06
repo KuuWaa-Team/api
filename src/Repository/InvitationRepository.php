@@ -24,7 +24,7 @@ class InvitationRepository extends ServiceEntityRepository
         parent::__construct($registry, Invitation::class);
     }
 
-    public function save(Invitation $invitation, bool $flush): void
+    public function save(Invitation $invitation, bool $flush = true): void
     {
         $this->getEntityManager()->persist($invitation);
         if ($flush) {

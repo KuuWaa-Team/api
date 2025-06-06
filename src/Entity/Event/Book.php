@@ -63,6 +63,9 @@ class Book
     #[Groups(['event:pRead', 'event:fRead'])]
     private ?Invitation $invitation = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?bool $public = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -100,6 +103,18 @@ class Book
     public function setInvitation(?Invitation $invitation): static
     {
         $this->invitation = $invitation;
+
+        return $this;
+    }
+
+    public function isPublic(): ?bool
+    {
+        return $this->public;
+    }
+
+    public function setPublic(?bool $public): static
+    {
+        $this->public = $public;
 
         return $this;
     }

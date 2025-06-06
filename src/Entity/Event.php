@@ -17,6 +17,7 @@ use App\Controller\Event\ListingEventBeveragesController;
 use App\Entity\Address\Address;
 use App\Entity\Event\Book;
 use App\Entity\Event\EventAdmin;
+use App\Entity\Event\Gift;
 use App\Entity\Payment\Payment;
 use ApiPlatform\Metadata\Put;
 use App\Controller\Billing\EventPaymentProcessController;
@@ -29,6 +30,7 @@ use App\Controller\Event\DeleteEventController;
 use App\Controller\Event\ListingEventInvitationsController;
 use App\Controller\Event\ListingEventTablesController;
 use App\Controller\Event\ListingUserEventController;
+use App\Entity\Question\Question;
 use App\Repository\EventRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -371,6 +373,18 @@ class Event
     #[ORM\ManyToOne(inversedBy: 'events')]
     private ?User $user = null;
 
+    /**
+     * @var Collection<int, Question>
+     */
+    #[ORM\OneToMany(mappedBy: 'event', targetEntity: Question::class)]
+    private Collection $questions;
+
+    /**
+     * @var Collection<int, Gift>
+     */
+    #[ORM\OneToMany(mappedBy: 'event', targetEntity: Gift::class)]
+    private Collection $gifts;
+
     public function getImagePath(): ?string
     {
         return $this->imagePath;
@@ -396,6 +410,8 @@ class Event
         $this->books = new ArrayCollection();
         $this->ticketTypes = new ArrayCollection();
         $this->tickets = new ArrayCollection();
+        $this->questions = new ArrayCollection();
+        $this->gifts = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -889,6 +905,66 @@ class Event
     public function setUser(?User $user): static
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Question>
+     */
+    public function getQuestions(): Collection
+    {
+        return $this->questions;
+    }
+
+    public function addQuestion(Question $question): static
+    {
+        if (!$this->questions->contains($question)) {
+            $this->questions->add($question);
+            $question->setEvent($this);
+        }
+
+        return $this;
+    }
+
+    public function removeQuestion(Question $question): static
+    {
+        if ($this->questions->removeElement($question)) {
+            // set the owning side to null (unless already changed)
+            if ($question->getEvent() === $this) {
+                $question->setEvent(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Gift>
+     */
+    public function getGifts(): Collection
+    {
+        return $this->gifts;
+    }
+
+    public function addGift(Gift $gift): static
+    {
+        if (!$this->gifts->contains($gift)) {
+            $this->gifts->add($gift);
+            $gift->setEvent($this);
+        }
+
+        return $this;
+    }
+
+    public function removeGift(Gift $gift): static
+    {
+        if ($this->gifts->removeElement($gift)) {
+            // set the owning side to null (unless already changed)
+            if ($gift->getEvent() === $this) {
+                $gift->setEvent(null);
+            }
+        }
 
         return $this;
     }
