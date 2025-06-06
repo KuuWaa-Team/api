@@ -19,14 +19,14 @@
     <img src="{{ asset('templates/bonheur/images/bottom.png') }}" class="design-bottom" alt="bottom">
     <div class="container-bordered">
         <div class="container-bordered">
-            <div id="img-section" class="">
-                <img src="{{ asset('templates/bonheur/images/photo.jpg') }}" class="mask-photo" alt="photo">
-                <img src="{{ asset('templates/bonheur/images/photoshape2.png') }}" alt="shape">
+            <div id="img-section" class="" style="display: flex; align-items: center; justify-content: center">
+                <img src="{{ asset(imagePath) }}" style="margin: 5px auto auto;border-radius: 50%; width: 200px" alt="photo">
+{#                <img src="{{ asset('templates/bonheur/images/photoshape2.png') }}" alt="shape">#}
             </div>
-            <p class="category">MARIAGE RELIGIEUX</p>
-            <p class="name">Olivia & Benjamin</p>
-            <p class="message">Vous invitent à célébrer leur mariage religieux qui aura lieu à la salle les retrouvailles à 9h00.</p>
-            <p class="message date">20 Juillet 2024<br>Salle de fete les retrouvailles<br>10 Ingende, Kindele</p>
+            <p class="category">{{ category.name }}</p>
+            <p class="name">{{ title }}</p>
+            <p class="message">{{ details }}</p>
+            <p class="message date">{{ startDate|date('d-m-Y-H-i-s') }}<br>{{ placeName }}<br>{{ address }}</p>
             <div class="action">
                 <div class="icon mb-2"><i class="fa-solid fa-arrow-down fa-2xl"></i></div>
                 <small>CLIQUEZ ICI</small>

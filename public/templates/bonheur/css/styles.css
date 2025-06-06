@@ -2,7 +2,7 @@
     --primary-color: #b09175;
     --secondary-color: #6e5942;
     --font-size: 1rem;
-    --bg-image: url('../img/bg.png');
+    --bg-image: url('../images/bg.png');
 }
 
 body {
@@ -53,8 +53,8 @@ body, .cover-container {
 }
 
 #img-section .mask-photo {
-    -webkit-mask-image: url(../img/photoshape.png);
-    mask-image: url(../img/photoshape.png);
+    -webkit-mask-image: url(../images/photoshape.png);
+    mask-image: url(../images/photoshape.png);
     mask-position: center;
     mask-repeat: no-repeat;
     mask-size: contain;
@@ -134,7 +134,7 @@ body, .cover-container {
 
 .date .divider {
     height: 100%;
-    width: .5px;
+    width: 1px;
     background-color: var(--primary-color);
 }
 
@@ -184,8 +184,7 @@ body, .cover-container {
 #interactions .code-container {
     width: 200px;
     border: 1px solid #eee;
-    margin: auto;
-    margin-top: 20px;
+    margin: 20px auto auto;
     border-radius: 5px;
 }
 
@@ -272,13 +271,13 @@ body, .cover-container {
 
 @keyframes moveBackground {
     0% {
-        background-position: 0% 100%;
+        background-position: 0 100%;
     }
     50% {
-        background-position: 100% 0%;
+        background-position: 100% 0;
     }
     100% {
-        background-position: 0% 100%;
+        background-position: 0 100%;
     }
 }
 

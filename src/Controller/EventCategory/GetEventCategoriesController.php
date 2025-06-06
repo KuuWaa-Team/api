@@ -22,27 +22,14 @@ class GetEventCategoriesController extends AbstractController
 
     public function __invoke(Request $request): JsonResponse
     {
-        $success = false;
         $errorType = null;
-        $data = null;
 
-        $paid = $request->query->all()['paid'] ?? null;
-
-        if ($paid !== null) {
-            $paid = (bool) $paid;
-            $data = $this->categoryRepository->findBy([
-                'paid'      => $paid,
-                'validated' => true
-            ]);
-        } else {
-            $data = $this->categoryRepository->findBy([
-                'validated' => true
-            ]);
-        }
-        $success = true;
+        $data = $this->categoryRepository->findBy([
+            'validated' => true
+        ]);
 
         $return = [
-            'success'   => $success,
+            'success'   => true,
             'message'   => null,
             'errorType' => $errorType,
             'data'      => $data,

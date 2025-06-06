@@ -45,44 +45,17 @@ class AddInvitationController extends AbstractController
         $content = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
         $civility = $content["civility"] ?? null;
         $name = $content["name"] ?? null;
-        $phoneNumber = $content["phoneNumber"] ?? null;
         $count = $content["count"] ?? null;
         $eventId = $content["eventId"] ?? null;
         $tableId = $content["tableId"] ?? null;
-        $invitMessage = "";
 
         $event = $this->eventRepository->find($eventId);
-
-        if ($event->getInvitations()->count() >= $event->getEventPack()->getMaxTickets()) {
-            $invitations = $this->invitationRepository->findByEvent($event);
-            $response = [
-                'success' => false,
-                'full' => true,
-                'invitations' => $this->normalizer->normalize($invitations, null, ['groups' => ['invitation:pRead']]),
-                'message'   => "Vous avez atteint la limite de votre pack et vous ne pouvez plus ajouter des invitation. Pour ajouter plus d'invitations, vous devez élargir votre abonnement.",
-            ];
-
-            return new JsonResponse($response, Response::HTTP_OK);
-        }
-
-//        if ($this->invitationRepository->invitationExists($phoneNumber, $event)) {
-//            $invitations = $this->invitationRepository->findByEvent($event);
-//            $response = [
-//                'success'   => false,
-//                'invitations' => $this->normalizer->normalize($invitations, null, ['groups' => ['invitation:pRead']]),
-//                'message'   => "Un invité est déjà enrégistré avec ce numéro de téléphone",
-//            ];
-//
-//            return new JsonResponse($response, Response::HTTP_OK);
-//        }
-
         do {
             $code = $this->OTPService->generate(6);
         } while ($this->invitationRepository->invitationCodeExists($code));
 
         $invitation = (new Invitation())
             ->setName($name)
-            ->setPhoneNumber($phoneNumber)
             ->setEvent($event)
             ->setCivility($civility)
             ->setStatus("created")
@@ -150,7 +123,7 @@ class AddInvitationController extends AbstractController
         $invitation->setCodePath("/events/invitations/qr_code/" . $fileName);
 
         $invitMessage = "Bonjour " . $civility . " " . $name;
-        $invitMessage .= ",\nVous êtes invité à l'évenement \"{$event->getCategory()->getName()} - {$event->getName()}\" le " . $this->dateService->getFullDate($event->getDate(), true, true)  . " à {$event->getDate()->format('H:i')}.";
+        $invitMessage .= ",\nVous êtes invité à l'évenement \"{$event->getCategory()->getName()} - {$event->getTitle()}\" le " . $this->dateService->getFullDate($event->getStartDate(), true, true)  . " à {$event->getStartDate()->format('H:i')}.";
         $invitMessage .= "\n\nPour accéder à votre invitation, veuillez ouvrir le lien suivant.";
         $invitMessage .= "\nhttps://kuuwaa.com/invitations/" . $invitation->getSlug();
         $invitMessage .= "\n\nSi vous rencontrez des difficultés pour ouvrir le lien, veuillez retenir le code d'invitation à 6 chiffres ({$invitation->getCode()}) et présentez-le lors de la vérification à l'entrée de l'évenement.";
