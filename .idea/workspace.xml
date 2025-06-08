@@ -6,6 +6,18 @@
   <component name="ChangeListManager">
     <list default="true" id="d85cef78-04d8-47a1-8849-8f3c5d37079c" name="Changes" comment="">
 <<<<<<< HEAD
+      <change afterPath="$PROJECT_DIR$/src/Controller/Gift/AddController.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Controller/Gift/DeleteController.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Controller/Gift/SelectController.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/Controller/Invitation/PresenceConfirmationController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Controller/Book/AddController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/Book/AddController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Entity/Event.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/Event.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Entity/Event/Book.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/Event/Book.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Entity/Invitation.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/Invitation.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Repository/InvitationRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Repository/InvitationRepository.php" afterDir="false" />
+=======
+<<<<<<< HEAD
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
 =======
       <change afterPath="$PROJECT_DIR$/public/templates/bonheur/css/fonts.css" afterDir="false" />
@@ -52,6 +64,7 @@
       <change beforePath="$PROJECT_DIR$/src/Entity/Wallet/Operation.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/Wallet/Operation.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/template/preview/bonheur.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/templates/template/preview/bonheur.html.twig" afterDir="false" />
 >>>>>>> becaf5c8c4b9be55cd88034ccdc81cf9e8d5e83a
+>>>>>>> 9b83605908c55d3b47c5fc26c14b702bc5d59463
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -65,7 +78,7 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="PhpWorkspaceProjectConfiguration" interpreter_name="C:\xampp\php\php.exe">
+  <component name="PhpWorkspaceProjectConfiguration" interpreter_name="$PROJECT_DIR$/../../../../xampp/php/php.exe">
     <include_path>
       <path value="$PROJECT_DIR$/vendor/symfony/maker-bundle" />
       <path value="$PROJECT_DIR$/vendor/symfony/polyfill-mbstring" />
@@ -192,9 +205,9 @@
       <path value="$PROJECT_DIR$/vendor/namshi/jose" />
     </include_path>
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 8
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 8
+}</component>
   <component name="ProjectId" id="2vcDFQOjuc3NG65XK1Tod6Nerlm" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -203,9 +216,11 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
     "WebServerToolWindowFactoryState": "false",
     "git-widget-placeholder": "develop",
-    "last_opened_file_path": "C:/d/dev/kuuwaa-team/Rest-Api/api/public/templates/bonheur",
+    "junie.onboarding.icon.badge.shown": "true",
+    "last_opened_file_path": "C:/d/kuuwaa-team/Rest-Api/api/src/Controller/Invitation",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -216,6 +231,7 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\d\kuuwaa-team\Rest-Api\api\src\Controller\Invitation" />
       <recent name="C:\d\dev\kuuwaa-team\Rest-Api\api\public\templates\bonheur" />
       <recent name="C:\d\dev\kuuwaa-team\Rest-Api\api\public\templates\bonheur\images" />
     </key>
@@ -228,8 +244,8 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-js-predefined-1d06a55b98c1-74d2a5396914-JavaScript-PS-241.14494.237" />
-        <option value="bundled-php-predefined-ba97393d7c68-8f0632a2a215-com.jetbrains.php.sharedIndexes-PS-241.14494.237" />
+        <option value="bundled-js-predefined-d6986cc7102b-6a121458b545-JavaScript-PS-251.25410.148" />
+        <option value="bundled-php-predefined-a98d8de5180a-c5828cf854d9-com.jetbrains.php.sharedIndexes-PS-251.25410.148" />
       </set>
     </attachedChunks>
   </component>
@@ -248,8 +264,16 @@
       <workItem from="1747135986526" duration="4069000" />
 =======
       <workItem from="1747135986526" duration="3455000" />
+<<<<<<< HEAD
+      <workItem from="1747170476201" duration="1728000" />
+      <workItem from="1747238179442" duration="38000" />
+      <workItem from="1747238421665" duration="83000" />
+      <workItem from="1748958317545" duration="1497000" />
+      <workItem from="1749197444344" duration="5173000" />
+=======
       <workItem from="1747170476201" duration="846000" />
 >>>>>>> becaf5c8c4b9be55cd88034ccdc81cf9e8d5e83a
+>>>>>>> 9b83605908c55d3b47c5fc26c14b702bc5d59463
     </task>
     <servers />
   </component>

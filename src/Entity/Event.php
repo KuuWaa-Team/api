@@ -18,6 +18,7 @@ use App\Controller\Event\OpenBookController;
 use App\Controller\Event\OpenTablesController;
 use App\Entity\Event\Book;
 use App\Entity\Event\EventAdmin;
+use App\Entity\Event\Gift;
 use App\Entity\Event\EventSpecification;
 use App\Entity\Event\EventTemplate;
 use ApiPlatform\Metadata\Put;
@@ -30,6 +31,7 @@ use App\Controller\Event\CreateEventController;
 use App\Controller\Event\DeleteEventController;
 use App\Controller\Event\ListingEventInvitationsController;
 use App\Controller\Event\ListingEventTablesController;
+use App\Entity\Question\Question;
 use App\Repository\EventRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -444,6 +446,18 @@ class Event
     #[Groups(['event:pRead', 'event:fRead', 'invitation:fRead'])]
     private ?string $placeLatitude = null;
 
+    /**
+     * @var Collection<int, Question>
+     */
+    #[ORM\OneToMany(mappedBy: 'event', targetEntity: Question::class)]
+    private Collection $questions;
+
+    /**
+     * @var Collection<int, Gift>
+     */
+    #[ORM\OneToMany(mappedBy: 'event', targetEntity: Gift::class)]
+    private Collection $gifts;
+
     public function getImagePath(): ?string
     {
         return $this->imagePath;
@@ -464,6 +478,8 @@ class Event
         $this->beverages = new ArrayCollection();
         $this->eventAdmins = new ArrayCollection();
         $this->books = new ArrayCollection();
+        $this->questions = new ArrayCollection();
+        $this->gifts = new ArrayCollection();
         $this->eventSpecifications = new ArrayCollection();
     }
 
@@ -927,6 +943,66 @@ class Event
     public function setPlaceLatitude(?string $placeLatitude): static
     {
         $this->placeLatitude = $placeLatitude;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Question>
+     */
+    public function getQuestions(): Collection
+    {
+        return $this->questions;
+    }
+
+    public function addQuestion(Question $question): static
+    {
+        if (!$this->questions->contains($question)) {
+            $this->questions->add($question);
+            $question->setEvent($this);
+        }
+
+        return $this;
+    }
+
+    public function removeQuestion(Question $question): static
+    {
+        if ($this->questions->removeElement($question)) {
+            // set the owning side to null (unless already changed)
+            if ($question->getEvent() === $this) {
+                $question->setEvent(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Gift>
+     */
+    public function getGifts(): Collection
+    {
+        return $this->gifts;
+    }
+
+    public function addGift(Gift $gift): static
+    {
+        if (!$this->gifts->contains($gift)) {
+            $this->gifts->add($gift);
+            $gift->setEvent($this);
+        }
+
+        return $this;
+    }
+
+    public function removeGift(Gift $gift): static
+    {
+        if ($this->gifts->removeElement($gift)) {
+            // set the owning side to null (unless already changed)
+            if ($gift->getEvent() === $this) {
+                $gift->setEvent(null);
+            }
+        }
 
         return $this;
     }
