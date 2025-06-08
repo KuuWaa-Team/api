@@ -16,19 +16,20 @@ final class PreviewController extends AbstractController
         private readonly EventCategoryRepository $categoryRepository
     ) {}
 
-    #[Route('/{id}', name: 'preview', methods: ['POST'])]
+    #[Route('/{id}', name: 'preview', methods: ['POST', 'GET'])]
     public function preview(Request $request, EventTemplate $template): Response
     {
         $title = $request->request->get('title');
         $address = $request->request->get('address');
         $placeName = $request->request->get('placeName');
         $details = $request->request->get('details');
-        $categoryId = $request->request->get('category_id');
+        $categoryId = $request->request->get('category_id') ?? 1;
         $startDate = $request->request->get('start_date');
         $endDate = $request->request->get('end_date');
 
         $imageBase64 = $request->request->get('image_base64');
         $imageName = $request->request->get('image_name');
+        $imagePath = '';
         if ($imageBase64 && $imageName) {
             $imageContent = base64_decode($imageBase64);
             $publicDir = $this->getParameter('kernel.project_dir') . '/public/uploads/previews/';
