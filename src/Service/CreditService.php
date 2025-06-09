@@ -7,7 +7,7 @@ use App\Repository\UserRepository;
 
 class CreditService
 {
-    private float $creditPrice = 1 / 0.8;
+    private float $creditPrice = 4;
 
     public function __construct(
         private readonly UserRepository $userRepository

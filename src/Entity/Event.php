@@ -458,6 +458,9 @@ class Event
     #[ORM\OneToMany(mappedBy: 'event', targetEntity: Gift::class)]
     private Collection $gifts;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $templateImage = null;
+
     public function getImagePath(): ?string
     {
         return $this->imagePath;
@@ -1003,6 +1006,18 @@ class Event
                 $gift->setEvent(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getTemplateImage(): ?string
+    {
+        return $this->templateImage;
+    }
+
+    public function setTemplateImage(?string $templateImage): static
+    {
+        $this->templateImage = $templateImage;
 
         return $this;
     }

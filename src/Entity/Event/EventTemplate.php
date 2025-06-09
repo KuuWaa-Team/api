@@ -70,6 +70,15 @@ class EventTemplate
     #[ORM\OneToMany(mappedBy: 'template', targetEntity: Event::class)]
     private Collection $events;
 
+    #[ORM\Column(nullable: true)]
+    private ?bool $imageRequired = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $primaryColor = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $secondaryColor = null;
+
     public function __construct()
     {
         $this->events = new ArrayCollection();
@@ -178,6 +187,42 @@ class EventTemplate
                 $event->setTemplate(null);
             }
         }
+
+        return $this;
+    }
+
+    public function isImageRequired(): ?bool
+    {
+        return $this->imageRequired;
+    }
+
+    public function setImageRequired(?bool $imageRequired): static
+    {
+        $this->imageRequired = $imageRequired;
+
+        return $this;
+    }
+
+    public function getPrimaryColor(): ?string
+    {
+        return $this->primaryColor;
+    }
+
+    public function setPrimaryColor(string $primaryColor): static
+    {
+        $this->primaryColor = $primaryColor;
+
+        return $this;
+    }
+
+    public function getSecondaryColor(): ?string
+    {
+        return $this->secondaryColor;
+    }
+
+    public function setSecondaryColor(string $secondaryColor): static
+    {
+        $this->secondaryColor = $secondaryColor;
 
         return $this;
     }
