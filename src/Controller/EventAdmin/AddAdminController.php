@@ -74,7 +74,7 @@ class AddAdminController extends AbstractController
 
         $message = "Salut " . $name . "\n" . $user->getFirstname() . " " . $user->getLastname() . " vous invite à être protocoleur à son évenement ". '"' . $event->getName() .  '"'
             . " prévu pour le " . $event->getDate()->format("d/m/Y") . " \n\nVeuillez lancer ou télécharger l'application KuuWaa pour accépter l'invitation\n\nPour télécharger l'application KuuWaa, cliquez sur l'un de liens suivant : "
-            . "\n\nPour iOS\nhttps://apple.com\n\nPour android\nhttps://google.com"
+            . "\n\nPour iOS\nhttps://apps.apple.com/ca/app/kuuwaa/id6476254390?l=fr-CA\n\nPour android\nhttps://play.google.com/store/apps/details?id=com.app.kuuwaa"
         ;
 
         $this->smsService->send($this->phoneService->format($phone), $message);

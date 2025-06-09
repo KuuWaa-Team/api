@@ -27,6 +27,10 @@ services:
       # - '../src/Entity/'
       - "../src/Kernel.php"
 
+  App\Service\NotificationService:
+    arguments:
+      $serviceAccountPath: '%kernel.project_dir%/config/firebase/firebase-service-account.json'
+
   # add more service definitions when explicit configuration is needed
   # please note that last definitions always *replace* previous ones
   App\Service\WhatsappService:

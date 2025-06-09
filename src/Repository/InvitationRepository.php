@@ -24,7 +24,7 @@ class InvitationRepository extends ServiceEntityRepository
         parent::__construct($registry, Invitation::class);
     }
 
-    public function save(Invitation $invitation, bool $flush): void
+    public function save(Invitation $invitation, bool $flush = true): void
     {
         $this->getEntityManager()->persist($invitation);
         if ($flush) {
@@ -80,8 +80,20 @@ class InvitationRepository extends ServiceEntityRepository
             ->andWhere('i.code = :code')
             ->setParameter('code', $code)
             ->getQuery()
+            ->getOneOrNullResult();
+    }
+
+    /**
+     * @throws NonUniqueResultException
+     */
+    public function findBySlug(String $slug): ?Invitation
+    {
+        return $this->createQueryBuilder('i')
+            ->andWhere('i.slug = :slug')
+            ->setParameter('slug', $slug)
+            ->getQuery()
             ->getOneOrNullResult()
-        ;
+            ;
     }
 
     public function invitationCodeExists(String $code): bool

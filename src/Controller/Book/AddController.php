@@ -24,6 +24,7 @@ class AddController extends AbstractController
     {
         $content = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
         $message = $content['message'];
+        $isPublic = $content['public'] ?? false;
         $invitationId = $content['invitationId'];
         $invitation = $this->invitationRepository->find($invitationId);
 
@@ -31,6 +32,7 @@ class AddController extends AbstractController
             ->setEvent($event)
             ->setInvitation($invitation)
             ->setMessage($message)
+            ->setPublic($isPublic);
         ;
         $this->bookRepository->save($book, true);
 

@@ -6,80 +6,115 @@ use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
-use App\Controller\Auth\CompleteProfileController;
 use App\Controller\Auth\LoginController;
+use App\Controller\Event\ListingUserEventController;
+use App\Controller\Wallet\ListingOperationsController;
+use App\Controller\Wallet\RechargeController;
+use App\Entity\Wallet\Operation;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-#[ORM\Table(name: '`user`')]
+#[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
 #[ApiResource(
     operations: [
         new Get(),
         new GetCollection(),
         new Post(
             uriTemplate: '/login',
-            requirements: ['phoneNumber' => 'String', 'phoneId' => 'String'],
+            requirements: [
+                'email' => 'String', 'phoneId' => 'String', 'displayName' => 'String', 'provider' => 'String'
+            ],
             controller: LoginController::class,
-            description: "Login with phone number",
+            description: "Login with google",
+        ),
+        new GetCollection(
+            uriTemplate: '/users/{id}/events',
+            controller: ListingUserEventController::class,
+            normalizationContext: [
+                'groups' => ['read:events']
+            ]
+        ),
+        new GetCollection(
+            uriTemplate: '/users/{id}/operations',
+            controller: ListingOperationsController::class,
+            normalizationContext: [
+                'groups' => ['operation:pRead']
+            ]
         ),
         new Post(
-            uriTemplate: '/users/{id}/complete-profile',
-            requirements: ['firstname' => 'String', 'lastname' => 'String', 'address' => 'String'],
-            controller: CompleteProfileController::class,
-            description: "Complete profile informations",
+            uriTemplate: '/users/{id}/recharge',
+            requirements: [
+                'amount' => 'decimal', 'payment_method' => 'String'
+            ],
+            controller: RechargeController::class,
+            description: "Recharge credits",
         ),
     ]
 )]
 class User implements UserInterface
 {
+    use TimeStampTrait;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     #[Groups(['user:pRead'])]
     private ?int $id = null;
 
+    #[ORM\Column(length: 180)]
     #[Groups(['user:pRead'])]
-    #[ORM\Column(length: 180, unique: true)]
-    private ?string $phoneNumber = null;
-
-    #[ORM\Column]
-    private array $roles = [];
-
-    #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['user:pRead'])]
-    private ?string $firstname = null;
-
-    #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['user:pRead'])]
-    private ?string $lastname = null;
-
-    #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['user:pRead'])]
-    private ?string $address = null;
-
-    #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['user:pRead'])]
-    private ?string $phoneId = null;
-
-    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Otp::class)]
-    private Collection $otps;
-
-    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Event::class)]
-    private Collection $events;
+    private ?string $email = null;
 
     #[ORM\Column(nullable: true)]
     #[Groups(['user:pRead'])]
-    private ?bool $completed = null;
+    private ?int $credits = null;
+
+    /**
+     * @var list<string> The user roles
+     */
+    #[ORM\Column]
+    private array $roles = [];
+
+    #[ORM\Column(length: 255)]
+    #[Groups(['user:pRead'])]
+    private ?string $displayName = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['user:pRead'])]
+    private ?string $photoUrl = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['user:pRead'])]
+    private ?string $provider = null;
+
+    #[ORM\Column(length: 255)]
+    #[Groups(['user:pRead'])]
+    private ?string $uid = null;
+
+    /**
+     * @var Collection<int, Event>
+     */
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Event::class)]
+    private Collection $events;
+
+    /**
+     * @var Collection<int, Operation>
+     */
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Operation::class)]
+    private Collection $operations;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $phoneId = null;
 
     public function __construct()
     {
-        $this->otps = new ArrayCollection();
         $this->events = new ArrayCollection();
+        $this->operations = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -87,14 +122,26 @@ class User implements UserInterface
         return $this->id;
     }
 
-    public function getPhoneNumber(): ?string
+    public function getEmail(): ?string
     {
-        return $this->phoneNumber;
+        return $this->email;
     }
 
-    public function setPhoneNumber(string $phoneNumber): static
+    public function setEmail(string $email): static
     {
-        $this->phoneNumber = $phoneNumber;
+        $this->email = $email;
+
+        return $this;
+    }
+
+    public function getCredits(): ?int
+    {
+        return $this->credits;
+    }
+
+    public function setCredits(?int $credits): static
+    {
+        $this->credits = $credits;
 
         return $this;
     }
@@ -106,11 +153,13 @@ class User implements UserInterface
      */
     public function getUserIdentifier(): string
     {
-        return (string) $this->phoneNumber;
+        return (string) $this->email;
     }
 
     /**
      * @see UserInterface
+     *
+     * @return list<string>
      */
     public function getRoles(): array
     {
@@ -121,6 +170,9 @@ class User implements UserInterface
         return array_unique($roles);
     }
 
+    /**
+     * @param list<string> $roles
+     */
     public function setRoles(array $roles): static
     {
         $this->roles = $roles;
@@ -137,81 +189,50 @@ class User implements UserInterface
         // $this->plainPassword = null;
     }
 
-
-    public function getFirstname(): ?string
+    public function getDisplayName(): ?string
     {
-        return $this->firstname;
+        return $this->displayName;
     }
 
-    public function setFirstname(?string $firstname): static
+    public function setDisplayName(string $displayName): static
     {
-        $this->firstname = $firstname;
+        $this->displayName = $displayName;
 
         return $this;
     }
 
-    public function getLastname(): ?string
+    public function getPhotoUrl(): ?string
     {
-        return $this->lastname;
+        return $this->photoUrl;
     }
 
-    public function setLastname(?string $lastname): static
+    public function setPhotoUrl(?string $photoUrl): static
     {
-        $this->lastname = $lastname;
+        $this->photoUrl = $photoUrl;
 
         return $this;
     }
 
-    public function getAddress(): ?string
+    public function getProvider(): ?string
     {
-        return $this->address;
+        return $this->provider;
     }
 
-    public function setAddress(?string $address): static
+    public function setProvider(?string $provider): static
     {
-        $this->address = $address;
+        $this->provider = $provider;
 
         return $this;
     }
 
-    public function getPhoneId(): ?string
+    public function getUid(): ?string
     {
-        return $this->phoneId;
+        return $this->uid;
     }
 
-    public function setPhoneId(?string $phoneId): static
+    public function setUid(string $uid): static
     {
-        $this->phoneId = $phoneId;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Otp>
-     */
-    public function getOtps(): Collection
-    {
-        return $this->otps;
-    }
-
-    public function addOtp(Otp $otp): static
-    {
-        if (!$this->otps->contains($otp)) {
-            $this->otps->add($otp);
-            $otp->setUser($this);
-        }
-
-        return $this;
-    }
-
-    public function removeOtp(Otp $otp): static
-    {
-        if ($this->otps->removeElement($otp)) {
-            // set the owning side to null (unless already changed)
-            if ($otp->getUser() === $this) {
-                $otp->setUser(null);
-            }
-        }
+        $this->uid = $uid;
 
         return $this;
     }
@@ -246,14 +267,44 @@ class User implements UserInterface
         return $this;
     }
 
-    public function isCompleted(): ?bool
+    /**
+     * @return Collection<int, Operation>
+     */
+    public function getOperations(): Collection
     {
-        return $this->completed;
+        return $this->operations;
     }
 
-    public function setCompleted(?bool $completed): static
+    public function addOperation(Operation $operation): static
     {
-        $this->completed = $completed;
+        if (!$this->operations->contains($operation)) {
+            $this->operations->add($operation);
+            $operation->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOperation(Operation $operation): static
+    {
+        if ($this->operations->removeElement($operation)) {
+            // set the owning side to null (unless already changed)
+            if ($operation->getUser() === $this) {
+                $operation->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getPhoneId(): ?string
+    {
+        return $this->phoneId;
+    }
+
+    public function setPhoneId(?string $phoneId): static
+    {
+        $this->phoneId = $phoneId;
 
         return $this;
     }

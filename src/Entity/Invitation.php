@@ -15,9 +15,13 @@ use App\Controller\Invitation\AddInvitationController;
 use App\Controller\Invitation\CheckByCodeController;
 use App\Controller\Invitation\EditInvitationController;
 use App\Controller\Invitation\MyInvitationsController;
+use App\Controller\Invitation\PresenceConfirmationController;
 use App\Controller\Invitation\SendAllController;
 use App\Controller\Invitation\SendInvitationController;
+use App\Controller\Invitation\ValidateController;
 use App\Entity\Event\Book;
+use App\Entity\Event\Gift;
+use App\Entity\Question\Answer;
 use App\Repository\InvitationRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -160,6 +164,42 @@ use Symfony\Component\Serializer\Annotation\Groups;
             description: 'Select beverage',
             name: 'selectInvitationBeverage',
         ),
+        new Post(
+            uriTemplate: '/invitations/{id}/validate',
+            controller: ValidateController::class,
+            openapiContext: [
+                'summary' => 'validate invitation',
+                'requestBody' => [
+                    'content' => [
+                        'application/json' => [
+                            'schema' => [
+                                'type' => 'object',
+                            ]
+                        ]
+                    ]
+                ],
+            ],
+            description: 'Validate invitation',
+            name: 'validateInvitation',
+        ),
+        new Post(
+            uriTemplate: '/invitations/{id}/presence',
+            controller: PresenceConfirmationController::class,
+            openapiContext: [
+                'summary' => 'Set presence status',
+                'requestBody' => [
+                    'content' => [
+                        'application/json' => [
+                            'schema' => [
+                                'type' => 'object',
+                            ]
+                        ]
+                    ]
+                ],
+            ],
+            description: 'Set Presence Status',
+            name: 'setPresenceStatus',
+        ),
         new Put(),
         new Delete()
     ],
@@ -167,6 +207,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
 )]
 class Invitation
 {
+    use TimeStampTrait;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -189,7 +231,7 @@ class Invitation
     #[Groups(['invitation:fRead'])]
     private ?Event $event = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     #[Groups(["invitation:pRead", 'table:pRead', 'invitation:fRead'])]
     private ?string $phoneNumber = null;
 
@@ -228,9 +270,36 @@ class Invitation
     #[Groups(["invitation:pRead", 'table:pRead', 'invitation:fRead'])]
     private ?string $decryptKey = null;
 
+    #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'invitations')]
+    private ?self $eventTemplate = null;
+
+    /**
+     * @var Collection<int, self>
+     */
+    #[ORM\OneToMany(mappedBy: 'eventTemplate', targetEntity: self::class)]
+    private Collection $invitations;
+
+    /**
+     * @var Collection<int, Answer>
+     */
+    #[ORM\OneToMany(mappedBy: 'invitation', targetEntity: Answer::class)]
+    private Collection $answers;
+
+    #[ORM\Column(nullable: true)]
+    private ?bool $willBePresent = null;
+
+    /**
+     * @var Collection<int, Gift>
+     */
+    #[ORM\ManyToMany(targetEntity: Gift::class, inversedBy: 'invitations')]
+    private Collection $gifts;
+
     public function __construct()
     {
         $this->books = new ArrayCollection();
+        $this->invitations = new ArrayCollection();
+        $this->answers = new ArrayCollection();
+        $this->gifts = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -291,7 +360,7 @@ class Invitation
         return $this->phoneNumber;
     }
 
-    public function setPhoneNumber(string $phoneNumber): static
+    public function setPhoneNumber(?string $phoneNumber): static
     {
         $this->phoneNumber = $phoneNumber;
 
@@ -420,6 +489,114 @@ class Invitation
     public function setDecryptKey(?string $decryptKey): static
     {
         $this->decryptKey = $decryptKey;
+
+        return $this;
+    }
+
+    public function getEventTemplate(): ?self
+    {
+        return $this->eventTemplate;
+    }
+
+    public function setEventTemplate(?self $eventTemplate): static
+    {
+        $this->eventTemplate = $eventTemplate;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, self>
+     */
+    public function getInvitations(): Collection
+    {
+        return $this->invitations;
+    }
+
+    public function addInvitation(self $invitation): static
+    {
+        if (!$this->invitations->contains($invitation)) {
+            $this->invitations->add($invitation);
+            $invitation->setEventTemplate($this);
+        }
+
+        return $this;
+    }
+
+    public function removeInvitation(self $invitation): static
+    {
+        if ($this->invitations->removeElement($invitation)) {
+            // set the owning side to null (unless already changed)
+            if ($invitation->getEventTemplate() === $this) {
+                $invitation->setEventTemplate(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Answer>
+     */
+    public function getAnswers(): Collection
+    {
+        return $this->answers;
+    }
+
+    public function addAnswer(Answer $answer): static
+    {
+        if (!$this->answers->contains($answer)) {
+            $this->answers->add($answer);
+            $answer->setInvitation($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAnswer(Answer $answer): static
+    {
+        if ($this->answers->removeElement($answer)) {
+            // set the owning side to null (unless already changed)
+            if ($answer->getInvitation() === $this) {
+                $answer->setInvitation(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function isWillBePresent(): ?bool
+    {
+        return $this->willBePresent;
+    }
+
+    public function setWillBePresent(?bool $willBePresent): static
+    {
+        $this->willBePresent = $willBePresent;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Gift>
+     */
+    public function getGifts(): Collection
+    {
+        return $this->gifts;
+    }
+
+    public function addGift(Gift $gift): static
+    {
+        if (!$this->gifts->contains($gift)) {
+            $this->gifts->add($gift);
+        }
+
+        return $this;
+    }
+
+    public function removeGift(Gift $gift): static
+    {
+        $this->gifts->removeElement($gift);
 
         return $this;
     }

@@ -6,8 +6,9 @@ use App\Entity\Event;
 use App\Entity\Payment\Payment;
 use App\Repository\EventRepository;
 use App\Repository\Payment\PaymentRepository;
-use App\Service\Billing\MobilePaymentService;
+use App\Service\Billing\PaymentService;
 use App\Service\PhoneService;
+use App\Service\SmsService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -18,10 +19,11 @@ use Symfony\Component\Validator\Constraints\IsFalse;
 class EventPaymentStatusController extends AbstractController
 {
     public function __construct(
-        private readonly PhoneService $phoneService,
-        private readonly MobilePaymentService $mobilePaymentService,
-        private readonly EventRepository $eventRepository,
+        private readonly PhoneService      $phoneService,
+        private readonly PaymentService    $mobilePaymentService,
+        private readonly EventRepository   $eventRepository,
         private readonly PaymentRepository $paymentRepository,
+        private readonly SmsService        $smsService,
     ) {
     }
 
@@ -35,13 +37,13 @@ class EventPaymentStatusController extends AbstractController
         $message = '';
         if ($request->get('on') !== null) {
             $orderNumber = $request->get('on');
-//            try {
+            try {
                 $payment = $this->paymentRepository->findOneByOrderNumber($orderNumber);
                 if (
                     $payment !== null
                 ) {
                     do {
-                        $response = $this->mobilePaymentService->status($payment->getOrderNumber());
+                        $response = $this->mobilePaymentService->status($payment->getOrderNumber(), $payment->getPhoneNumber());
                         $waiting = $response['waiting'];
                         if (!$waiting) {
                             if ($response['success']) {
@@ -49,18 +51,22 @@ class EventPaymentStatusController extends AbstractController
                                 $event->setPaymentStatus('paid');
                                 $this->eventRepository->save($event, false);
                                 $this->paymentRepository->save($payment, true);
+
+                                $this->smsService->send($payment->getPhoneNumber(), "Bonjour " . $event->getUser()->getFirstname() . ", \n"
+                                  . "Votre événement '" . $event->getCategory()->getName() . " - " . $event->getName() . "' vient d'être activé. Vous pouvez dès à présent partager vos invitations. \n\nMerci de faire confiance à KuuWaa."
+                                );
+
                                 $success = true;
-                                $message = $response['message'];
                             } else {
                                 $success = false;
-                                $message = $response['message'];
                             }
+                            $message = $response['message'];
                         }
                     } while($waiting);
                 }
-//            } catch (\Throwable $e) {
-//                $message = "Une erreur est survenue";
-//            }
+            } catch (\Throwable $e) {
+                $message = "Une erreur est survenue";
+            }
         } else {
             $message = "Parametre orderNumber (on) manquant";
         }

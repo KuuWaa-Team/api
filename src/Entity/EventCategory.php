@@ -16,6 +16,7 @@ use App\Controller\Event\ListingEventInvitationsController;
 use App\Controller\Event\ListingEventTablesController;
 use App\Controller\Event\ListingUserEventController;
 use App\Controller\EventCategory\GetEventCategoriesController;
+use App\Entity\Event\EventTemplate;
 use App\Repository\EventCategoryRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -58,15 +59,19 @@ class EventCategory
     private Collection $events;
 
     #[ORM\Column(nullable: true)]
-    private ?bool $paid = null;
-
-    #[ORM\Column(nullable: true)]
     private ?bool $validated = null;
+
+    /**
+     * @var Collection<int, EventTemplate>
+     */
+    #[ORM\ManyToMany(targetEntity: EventTemplate::class, mappedBy: 'eventCategory')]
+    private Collection $eventTemplates;
 
     public function __construct()
     {
         $this->children = new ArrayCollection();
         $this->events = new ArrayCollection();
+        $this->eventTemplates = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -158,18 +163,6 @@ class EventCategory
         return $this;
     }
 
-    public function isPaid(): ?bool
-    {
-        return $this->paid;
-    }
-
-    public function setPaid(?bool $paid): static
-    {
-        $this->paid = $paid;
-
-        return $this;
-    }
-
     public function isValidated(): ?bool
     {
         return $this->validated;
@@ -178,6 +171,33 @@ class EventCategory
     public function setValidated(?bool $validated): static
     {
         $this->validated = $validated;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, EventTemplate>
+     */
+    public function getEventTemplates(): Collection
+    {
+        return $this->eventTemplates;
+    }
+
+    public function addEventTemplate(EventTemplate $eventTemplate): static
+    {
+        if (!$this->eventTemplates->contains($eventTemplate)) {
+            $this->eventTemplates->add($eventTemplate);
+            $eventTemplate->addEventCategory($this);
+        }
+
+        return $this;
+    }
+
+    public function removeEventTemplate(EventTemplate $eventTemplate): static
+    {
+        if ($this->eventTemplates->removeElement($eventTemplate)) {
+            $eventTemplate->removeEventCategory($this);
+        }
 
         return $this;
     }

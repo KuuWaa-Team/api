@@ -4,7 +4,6 @@ namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
-use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\Post;
 use App\Controller\Book\AddController;
@@ -14,10 +13,14 @@ use App\Controller\Event\EventDetailController;
 use App\Controller\Event\GenerateBookController;
 use App\Controller\Event\ListingAdminsController;
 use App\Controller\Event\ListingEventBeveragesController;
-use App\Entity\Address\Address;
+use App\Controller\Event\OpenBeverageController;
+use App\Controller\Event\OpenBookController;
+use App\Controller\Event\OpenTablesController;
 use App\Entity\Event\Book;
 use App\Entity\Event\EventAdmin;
-use App\Entity\Payment\Payment;
+use App\Entity\Event\Gift;
+use App\Entity\Event\EventSpecification;
+use App\Entity\Event\EventTemplate;
 use ApiPlatform\Metadata\Put;
 use App\Controller\Billing\EventPaymentProcessController;
 use App\Controller\Billing\EventPaymentStatusController;
@@ -28,7 +31,7 @@ use App\Controller\Event\CreateEventController;
 use App\Controller\Event\DeleteEventController;
 use App\Controller\Event\ListingEventInvitationsController;
 use App\Controller\Event\ListingEventTablesController;
-use App\Controller\Event\ListingUserEventController;
+use App\Entity\Question\Question;
 use App\Repository\EventRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -119,6 +122,60 @@ use Symfony\Component\Serializer\Annotation\Groups;
             ],
             description: 'Active book',
             name: 'addEventBook',
+        ),
+        new Post(
+            uriTemplate: '/events/{id}/open-tables',
+            controller: OpenTablesController::class,
+            openapiContext: [
+                'summary' => 'Allow table management',
+                'requestBody' => [
+                    'content' => [
+                        'application/json' => [
+                            'schema' => [
+                                'type' => 'object',
+                            ]
+                        ]
+                    ]
+                ],
+            ],
+            description: 'open tables',
+            name: 'openEventTables',
+        ),
+        new Post(
+            uriTemplate: '/events/{id}/open-beverage',
+            controller: OpenBeverageController::class,
+            openapiContext: [
+                'summary' => 'Allow beverage management',
+                'requestBody' => [
+                    'content' => [
+                        'application/json' => [
+                            'schema' => [
+                                'type' => 'object',
+                            ]
+                        ]
+                    ]
+                ],
+            ],
+            description: 'open beverage',
+            name: 'openEventBeverage',
+        ),
+        new Post(
+            uriTemplate: '/events/{id}/open-book',
+            controller: OpenBookController::class,
+            openapiContext: [
+                'summary' => 'Allow book management',
+                'requestBody' => [
+                    'content' => [
+                        'application/json' => [
+                            'schema' => [
+                                'type' => 'object',
+                            ]
+                        ]
+                    ]
+                ],
+            ],
+            description: 'open book',
+            name: 'openEventBook',
         ),
         new Post(
             uriTemplate: '/events/{id}/tables',
@@ -230,12 +287,6 @@ use Symfony\Component\Serializer\Annotation\Groups;
             description: 'Generate book',
             name: 'generateBook',
         ),
-        new GetCollection(
-            controller: ListingUserEventController::class,
-            normalizationContext: [
-                'groups' => ['read:events']
-            ]
-        ),
         new Post(
             inputFormats: ['multipart' => ['multipart/form-data']],
             controller: CreateEventController::class,
@@ -272,18 +323,11 @@ class Event
 
     #[ORM\Column(length: 255)]
     #[Groups(['event:pRead', 'event:fRead', 'invitation:fRead'])]
-    private ?string $name = null;
-
-    #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['event:pRead', 'event:fRead', 'invitation:fRead'])]
-    private ?string $details = null;
+    private ?string $title = null;
 
     #[ORM\ManyToOne(inversedBy: 'events')]
     #[Groups(['event:pRead', 'event:fRead', 'invitation:fRead'])]
     private ?EventCategory $category = null;
-
-    #[ORM\ManyToOne(inversedBy: 'events')]
-    private ?User $user = null;
 
     #[ORM\OneToMany(mappedBy: 'event', targetEntity: Invitation::class, cascade: ['remove'])]
     private Collection $invitations;
@@ -292,36 +336,8 @@ class Event
     private Collection $tables;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['event:pRead', 'event:fRead'])]
-    private ?string $status = null;
-
-    #[ORM\ManyToOne(inversedBy: 'events')]
-    #[Groups(['event:pRead', 'event:fRead'])]
-    private ?EventPack $eventPack = null;
-
-    #[ORM\Column(nullable: true)]
-    #[Groups(['event:pRead', 'event:fRead'])]
-    private ?bool $paidEvent = null;
-
-    #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['event:pRead', 'event:fRead', 'invitation:fRead'])]
-    private ?string $paymentStatus = null;
-
-    #[ORM\ManyToMany(targetEntity: Feature::class, inversedBy: 'events')]
-    #[Groups(['event:fRead'])]
-    private Collection $features;
-
-
-    #[ORM\Column(length: 255, nullable: true)]
     #[Groups(['event:pRead', 'event:fRead', 'invitation:fRead'])]
     private ?string $imagePath = null;
-
-    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    #[Groups(['event:pRead', 'event:fRead', 'invitation:fRead'])]
-    private ?\DateTimeInterface $date = null;
-
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $slug = null;
 
     #[ORM\Column(nullable: true)]
     #[Groups(['event:pRead', 'event:fRead'])]
@@ -339,9 +355,6 @@ class Event
     #[Groups(['event:pRead', 'event:fRead', 'invitation:fRead'])]
     private ?int $beveragesCount = null;
 
-    #[ORM\OneToMany(mappedBy: 'event', targetEntity: Payment::class, cascade: ['remove'])]
-    private Collection $payments;
-
     #[ORM\OneToMany(mappedBy: 'event', targetEntity: EventAdmin::class, cascade: ['remove'])]
     #[Groups(['event:pRead', 'event:fRead'])]
     private Collection $eventAdmins;
@@ -354,6 +367,17 @@ class Event
     private ?bool $shared = null;
 
     #[Groups(['event:pRead', 'event:fRead'])]
+    private ?bool $canSendInvitations = null;
+
+    /**
+     * @return bool|null
+     */
+    public function getCanSendInvitations(): ?bool
+    {
+        return $this->getUser()->getCredits() >= $this->getTemplate()->getPrice();
+    }
+
+    #[Groups(['event:pRead', 'event:fRead'])]
     private ?string $adminStatus = null;
 
     #[Groups(['event:pRead', 'event:fRead'])]
@@ -363,18 +387,79 @@ class Event
     #[Groups(['event:pRead', 'event:fRead'])]
     private Collection $books;
 
-    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    #[ORM\Column(length: 255, nullable: true)]
     #[Groups(['event:pRead', 'event:fRead', 'invitation:fRead'])]
-    private ?Address $address = null;
+    private ?string $thumbPath = null;
+
+    #[ORM\ManyToOne(inversedBy: 'events')]
+    #[Groups(['event:pRead', 'event:fRead', 'invitation:fRead'])]
+    private ?User $owner = null;
+
+    /**
+     * @var Collection<int, EventSpecification>
+     */
+    #[ORM\OneToMany(mappedBy: 'event', targetEntity: EventSpecification::class, cascade: ['persist', 'remove'])]
+    #[Groups(['event:pRead', 'event:fRead', 'invitation:fRead'])]
+    private Collection $eventSpecifications;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    #[Groups(['event:pRead', 'event:fRead', 'invitation:fRead'])]
+    private ?\DateTimeInterface $startDate = null;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    #[Groups(['event:pRead', 'event:fRead', 'invitation:fRead'])]
+    private ?\DateTimeInterface $endDate = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     #[Groups(['event:pRead', 'event:fRead', 'invitation:fRead'])]
-    private ?string $featureslugs = null;
-    #[ORM\OneToMany(mappedBy: 'event', targetEntity: TicketType::class, cascade: ['remove'])]
-    private Collection $ticketTypes;
+    private ?string $placeName = null;
 
-    #[ORM\OneToMany(mappedBy: 'event', targetEntity: Ticket::class, cascade: ['remove'])]
-    private Collection $tickets;
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['event:pRead', 'event:fRead', 'invitation:fRead'])]
+    private ?string $address = null;
+
+    #[ORM\ManyToOne(inversedBy: 'events')]
+    #[Groups(['event:pRead', 'event:fRead', 'invitation:fRead'])]
+    private ?EventTemplate $template = null;
+
+    #[ORM\Column(type: Types::TEXT)]
+    #[Groups(['event:pRead', 'event:fRead', 'invitation:fRead'])]
+    private ?string $details = null;
+
+    #[ORM\Column(nullable: true)]
+    #[Groups(['event:pRead', 'event:fRead', 'invitation:fRead'])]
+    private ?bool $hasTables = null;
+
+    #[ORM\Column(nullable: true)]
+    #[Groups(['event:pRead', 'event:fRead', 'invitation:fRead'])]
+    private ?bool $hasBeverage = null;
+
+    #[ORM\Column(nullable: true)]
+    #[Groups(['event:pRead', 'event:fRead', 'invitation:fRead'])]
+    private ?bool $hasBook = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['event:pRead', 'event:fRead', 'invitation:fRead'])]
+    private ?string $placeLongitude = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['event:pRead', 'event:fRead', 'invitation:fRead'])]
+    private ?string $placeLatitude = null;
+
+    /**
+     * @var Collection<int, Question>
+     */
+    #[ORM\OneToMany(mappedBy: 'event', targetEntity: Question::class)]
+    private Collection $questions;
+
+    /**
+     * @var Collection<int, Gift>
+     */
+    #[ORM\OneToMany(mappedBy: 'event', targetEntity: Gift::class)]
+    private Collection $gifts;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $templateImage = null;
 
     public function getImagePath(): ?string
     {
@@ -392,15 +477,13 @@ class Event
     {
         $this->invitations = new ArrayCollection();
         $this->tables = new ArrayCollection();
-        $this->setStatus("pending");
-        $this->features = new ArrayCollection();
         $this->invitationsCount = $this->invitations->count();
         $this->beverages = new ArrayCollection();
-        $this->payments = new ArrayCollection();
         $this->eventAdmins = new ArrayCollection();
         $this->books = new ArrayCollection();
-        $this->ticketTypes = new ArrayCollection();
-        $this->tickets = new ArrayCollection();
+        $this->questions = new ArrayCollection();
+        $this->gifts = new ArrayCollection();
+        $this->eventSpecifications = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -408,38 +491,14 @@ class Event
         return $this->id;
     }
 
-    public function getName(): ?string
+    public function getTitle(): ?string
     {
-        return $this->name;
+        return $this->title;
     }
 
-    public function setName(string $name): static
+    public function setTitle(string $title): static
     {
-        $this->name = $name;
-
-        return $this;
-    }
-
-    public function getAddress(): ?Address
-    {
-        return $this->address;
-    }
-
-    public function setAddress(?Address $address): static
-    {
-        $this->address = $address;
-
-        return $this;
-    }
-
-    public function getDetails(): ?string
-    {
-        return $this->details;
-    }
-
-    public function setDetails(?string $details): static
-    {
-        $this->details = $details;
+        $this->title = $title;
 
         return $this;
     }
@@ -452,18 +511,6 @@ class Event
     public function setCategory(?EventCategory $category): static
     {
         $this->category = $category;
-
-        return $this;
-    }
-
-    public function getUser(): ?User
-    {
-        return $this->user;
-    }
-
-    public function setUser(?User $user): static
-    {
-        $this->user = $user;
 
         return $this;
     }
@@ -528,89 +575,6 @@ class Event
         return $this;
     }
 
-    public function getStatus(): ?string
-    {
-        return $this->status;
-    }
-
-    public function setStatus(?string $status): static
-    {
-        $this->status = $status;
-
-        return $this;
-    }
-
-    public function getEventPack(): ?EventPack
-    {
-        return $this->eventPack;
-    }
-
-    public function setEventPack(?EventPack $eventPack): static
-    {
-        $this->eventPack = $eventPack;
-
-        return $this;
-    }
-
-    public function isPaidEvent(): ?bool
-    {
-        return $this->paidEvent;
-    }
-
-    public function setPaidEvent(?bool $paidEvent): static
-    {
-        $this->paidEvent = $paidEvent;
-        return $this;
-    }
-
-    public function getPaymentStatus(): ?string
-    {
-        return $this->paymentStatus;
-    }
-
-    public function setPaymentStatus(?string $paymentStatus): static
-    {
-        $this->paymentStatus = $paymentStatus;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Feature>
-     */
-    public function getFeatures(): Collection
-    {
-        return $this->features;
-    }
-
-    public function addFeature(Feature $feature): static
-    {
-        if (!$this->features->contains($feature)) {
-            $this->features->add($feature);
-        }
-
-        return $this;
-    }
-
-    public function removeFeature(Feature $feature): static
-    {
-        $this->features->removeElement($feature);
-
-        return $this;
-    }
-
-    public function getDate(): ?\DateTimeInterface
-    {
-        return $this->date;
-    }
-
-    public function setDate(?\DateTimeInterface $date): static
-    {
-        $this->date = $date;
-
-        return $this;
-    }
-
     public function getInvitationsCount(): ?int
     {
         return $this->invitationsCount;
@@ -619,18 +583,6 @@ class Event
     public function setInvitationsCount(?int $invitationsCount): static
     {
         $this->invitationsCount = $invitationsCount;
-
-        return $this;
-    }
-
-    public function getSlug(): ?string
-    {
-        return $this->slug;
-    }
-
-    public function setSlug(?string $slug): static
-    {
-        $this->slug = $slug;
 
         return $this;
     }
@@ -685,36 +637,6 @@ class Event
     public function setBeveragesCount(?int $beveragesCount): static
     {
         $this->beveragesCount = $beveragesCount;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Payment>
-     */
-    public function getPayments(): Collection
-    {
-        return $this->payments;
-    }
-
-    public function addPayment(Payment $payment): static
-    {
-        if (!$this->payments->contains($payment)) {
-            $this->payments->add($payment);
-            $payment->setEvent($this);
-        }
-
-        return $this;
-    }
-
-    public function removePayment(Payment $payment): static
-    {
-        if ($this->payments->removeElement($payment)) {
-            // set the owning side to null (unless already changed)
-            if ($payment->getEvent() === $this) {
-                $payment->setEvent(null);
-            }
-        }
 
         return $this;
     }
@@ -827,41 +749,231 @@ class Event
         return $this;
     }
 
-    public function getFeatureslugs(): ?string
+    public function getThumbPath(): ?string
     {
-        return $this->featureslugs;
+        return $this->thumbPath;
     }
 
-    public function setFeatureslugs(?string $featureslugs): static
+    public function setThumbPath(?string $thumbPath): static
     {
-        $this->featureslugs = $featureslugs;
+        $this->thumbPath = $thumbPath;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->owner;
+    }
+
+    public function setOwner(?User $owner): static
+    {
+        $this->owner = $owner;
+
         return $this;
     }
 
     /**
-     * @return Collection<int, TicketType>
+     * @return Collection<int, EventSpecification>
      */
-    public function getTicketTypes(): Collection
+    public function getEventSpecifications(): Collection
     {
-        return $this->ticketTypes;
+        return $this->eventSpecifications;
     }
 
-    public function addTicketType(TicketType $ticketType): static
+    public function addEventSpecification(EventSpecification $eventSpecification): static
     {
-        if (!$this->ticketTypes->contains($ticketType)) {
-            $this->ticketTypes->add($ticketType);
-            $ticketType->setEvent($this);
+        if (!$this->eventSpecifications->contains($eventSpecification)) {
+            $this->eventSpecifications->add($eventSpecification);
+            $eventSpecification->setEvent($this);
         }
 
         return $this;
     }
 
-    public function removeTicketType(TicketType $ticketType): static
+    public function removeEventSpecification(EventSpecification $eventSpecification): static
     {
-        if ($this->ticketTypes->removeElement($ticketType)) {
+        if ($this->eventSpecifications->removeElement($eventSpecification)) {
             // set the owning side to null (unless already changed)
-            if ($ticketType->getEvent() === $this) {
-                $ticketType->setEvent(null);
+            if ($eventSpecification->getEvent() === $this) {
+                $eventSpecification->setEvent(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getStartDate(): ?\DateTimeInterface
+    {
+        return $this->startDate;
+    }
+
+    public function setStartDate(?\DateTimeInterface $startDate): static
+    {
+        $this->startDate = $startDate;
+
+        return $this;
+    }
+
+    public function getEndDate(): ?\DateTimeInterface
+    {
+        return $this->endDate;
+    }
+
+    public function setEndDate(?\DateTimeInterface $endDate): static
+    {
+        $this->endDate = $endDate;
+
+        return $this;
+    }
+
+    public function getPlaceName(): ?string
+    {
+        return $this->placeName;
+    }
+
+    public function setPlaceName(?string $placeName): static
+    {
+        $this->placeName = $placeName;
+
+        return $this;
+    }
+
+    public function getAddress(): ?string
+    {
+        return $this->address;
+    }
+
+    public function setAddress(?string $address): static
+    {
+        $this->address = $address;
+
+        return $this;
+    }
+
+    public function getTemplate(): ?EventTemplate
+    {
+        return $this->template;
+    }
+
+    public function setTemplate(?EventTemplate $template): static
+    {
+        $this->template = $template;
+
+        return $this;
+    }
+
+    public function getDetails(): ?string
+    {
+        return $this->details;
+    }
+
+    public function setDetails(string $details): static
+    {
+        $this->details = $details;
+
+        return $this;
+    }
+
+    public function getHasTables(): ?bool
+    {
+        return $this->hasTables;
+    }
+
+    public function getHasBeverage(): ?bool
+    {
+        return $this->hasBeverage;
+    }
+
+    public function getHasBook(): ?bool
+    {
+        return $this->hasBook;
+    }
+
+    public function hetasTables(): ?bool
+    {
+        return $this->hasTables;
+    }
+
+    public function setHasTables(?bool $hasTables): static
+    {
+        $this->hasTables = $hasTables;
+
+        return $this;
+    }
+
+    public function hasBeverage(): ?bool
+    {
+        return $this->hasBeverage;
+    }
+
+    public function setHasBeverage(?bool $hasBeverage): static
+    {
+        $this->hasBeverage = $hasBeverage;
+
+        return $this;
+    }
+
+    public function hasBook(): ?bool
+    {
+        return $this->hasBook;
+    }
+
+    public function setHasBook(?bool $hasBook): static
+    {
+        $this->hasBook = $hasBook;
+
+        return $this;
+    }
+
+    public function getPlaceLongitude(): ?string
+    {
+        return $this->placeLongitude;
+    }
+
+    public function setPlaceLongitude(?string $placeLongitude): static
+    {
+        $this->placeLongitude = $placeLongitude;
+
+        return $this;
+    }
+
+    public function getPlaceLatitude(): ?string
+    {
+        return $this->placeLatitude;
+    }
+
+    public function setPlaceLatitude(?string $placeLatitude): static
+    {
+        $this->placeLatitude = $placeLatitude;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Question>
+     */
+    public function getQuestions(): Collection
+    {
+        return $this->questions;
+    }
+
+    public function addQuestion(Question $question): static
+    {
+        if (!$this->questions->contains($question)) {
+            $this->questions->add($question);
+            $question->setEvent($this);
+        }
+
+        return $this;
+    }
+
+    public function removeQuestion(Question $question): static
+    {
+        if ($this->questions->removeElement($question)) {
+            // set the owning side to null (unless already changed)
+            if ($question->getEvent() === $this) {
+                $question->setEvent(null);
             }
         }
 
@@ -869,31 +981,43 @@ class Event
     }
 
     /**
-     * @return Collection<int, Ticket>
+     * @return Collection<int, Gift>
      */
-    public function getTickets(): Collection
+    public function getGifts(): Collection
     {
-        return $this->tickets;
+        return $this->gifts;
     }
 
-    public function addTicket(Ticket $ticket): static
+    public function addGift(Gift $gift): static
     {
-        if (!$this->tickets->contains($ticket)) {
-            $this->tickets->add($ticket);
-            $ticket->setEvent($this);
+        if (!$this->gifts->contains($gift)) {
+            $this->gifts->add($gift);
+            $gift->setEvent($this);
         }
 
         return $this;
     }
 
-    public function removeTicket(Ticket $ticket): static
+    public function removeGift(Gift $gift): static
     {
-        if ($this->tickets->removeElement($ticket)) {
+        if ($this->gifts->removeElement($gift)) {
             // set the owning side to null (unless already changed)
-            if ($ticket->getEvent() === $this) {
-                $ticket->setEvent(null);
+            if ($gift->getEvent() === $this) {
+                $gift->setEvent(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getTemplateImage(): ?string
+    {
+        return $this->templateImage;
+    }
+
+    public function setTemplateImage(?string $templateImage): static
+    {
+        $this->templateImage = $templateImage;
 
         return $this;
     }

@@ -20,7 +20,6 @@ class ListingUserEventController extends AbstractController
 {
     public function __construct(
         private readonly EventRepository $eventRepository,
-        private readonly EventAdminRepository $eventAdminRepository,
         private readonly NormalizerInterface $normalizerInterface,
     ) {
     }
@@ -29,28 +28,12 @@ class ListingUserEventController extends AbstractController
      * @throws ExceptionInterface
      * @throws NonUniqueResultException
      */
-    public function __invoke(UserInterface $user): JsonResponse
+    public function __invoke(User $user): JsonResponse
     {
-        $data = [];
-        $success = true;
-
-        if ($user instanceof User) {
-//            $data = $user->getEvents();
-            $data = $this->eventRepository->findListableEvents($user);
-            foreach ($data as $event) {
-                if ($event->getUser() !== $user) {
-                    $eventAdmin = $this->eventAdminRepository->findByEventAndphoneNumber($event, $user->getPhoneNumber());
-                    if ($eventAdmin !== null && $eventAdmin->getStatus() !== 'refused') {
-                        $event->setShared(true);
-                        $event->setAdminStatus($eventAdmin->getStatus());
-                        $event->setAdminId($eventAdmin->getId());
-                    }
-                }
-            }
-        }
+        $data = $this->eventRepository->findListableEvents($user);
 
         $response = [
-            'success' => $success,
+            'success' => true,
             'data'    => $this->normalizerInterface->normalize($data, null, ['groups' => ['event:pRead']])
         ];
 

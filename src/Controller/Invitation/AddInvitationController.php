@@ -3,6 +3,7 @@
 namespace App\Controller\Invitation;
 
 use App\Entity\Invitation;
+use App\Entity\Table;
 use App\Repository\EventRepository;
 use App\Repository\InvitationRepository;
 use App\Repository\TableRepository;
@@ -30,7 +31,7 @@ class AddInvitationController extends AbstractController
         private readonly InvitationRepository $invitationRepository,
         private readonly NormalizerInterface $normalizer,
         private readonly OTPService $OTPService,
-        private readonly DateService $dateService
+        private readonly DateService $dateService,
     )
     {
     }
@@ -44,67 +45,44 @@ class AddInvitationController extends AbstractController
         $content = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
         $civility = $content["civility"] ?? null;
         $name = $content["name"] ?? null;
-        $phoneNumber = $content["phoneNumber"] ?? null;
         $count = $content["count"] ?? null;
         $eventId = $content["eventId"] ?? null;
         $tableId = $content["tableId"] ?? null;
 
         $event = $this->eventRepository->find($eventId);
-
-        if ($event->getInvitations()->count() >= $event->getEventPack()->getMaxTickets()) {
-            $invitations = $this->invitationRepository->findByEvent($event);
-            $response = [
-                'success' => false,
-                'full' => true,
-                'invitations' => $this->normalizer->normalize($invitations, null, ['groups' => ['invitation:pRead']]),
-                'message'   => "Vous avez atteint la limite de votre pack et vous ne pouvez plus ajouter des invitation. Pour ajouter plus d'invitations, vous devez élargir votre abonnement.",
-            ];
-
-            return new JsonResponse($response, Response::HTTP_OK);
-        }
-
-        if ($this->invitationRepository->invitationExists($phoneNumber, $event)) {
-            $invitations = $this->invitationRepository->findByEvent($event);
-            $response = [
-                'success'   => false,
-                'invitations' => $this->normalizer->normalize($invitations, null, ['groups' => ['invitation:pRead']]),
-                'message'   => "Un invité est déjà enrégistré avec ce numéro de téléphone",
-            ];
-
-            return new JsonResponse($response, Response::HTTP_OK);
-        }
-
         do {
             $code = $this->OTPService->generate(6);
         } while ($this->invitationRepository->invitationCodeExists($code));
 
         $invitation = (new Invitation())
             ->setName($name)
-            ->setPhoneNumber($phoneNumber)
             ->setEvent($event)
             ->setCivility($civility)
             ->setStatus("created")
             ->setCount($count)
             ->setCode($code)
+            ->setSlug()
         ;
 
         if ($tableId !== null) {
             $table = $this->tableRepository->find($tableId);
-            $countTable = $table->getCount() ?? 0;
-            $countTableTaken = $table->getCountTaken() ?? 0;
+            if ($table instanceof Table) {
+                $countTable = $table->getCount() ?? 0;
+                $countTableTaken = $table->getCountTaken() ?? 0;
 
-            if ($countTable < $countTableTaken + $count) {
-                $response = [
-                    'success'   => false,
-                    'message'   => "Pas assez de place à la table {$table->getName()} pour cette invitation",
-                ];
+                if ($countTable < $countTableTaken + $count) {
+                    $response = [
+                        'success'   => false,
+                        'message'   => "Pas assez de place à la table {$table->getName()} pour cette invitation",
+                    ];
 
-                return new JsonResponse($response, Response::HTTP_OK);
+                    return new JsonResponse($response, Response::HTTP_OK);
+                }
+
+                $invitation->setInvitationTable($table);
+                $table->setCountTaken($countTableTaken + $count);
+                $this->tableRepository->save($table, true);
             }
-
-            $invitation->setInvitationTable($table);
-            $table->setCountTaken($countTableTaken + $count);
-            $this->tableRepository->save($table, true);
         }
 
         $this->invitationRepository->save($invitation, true);
@@ -142,17 +120,15 @@ class AddInvitationController extends AbstractController
             ->build();
 
         $result->saveToFile($destinationPath . "/" . $fileName);
-
-        $message = "Bonjour " . $invitation->getCivility() . " " . $invitation->getName();
-        $message .= ",\nVous êtes invité à l'évenement \"{$invitation->getEvent()->getCategory()->getName()} - {$invitation->getEvent()->getName()}\" le " . $this->dateService->getFullDate($invitation->getEvent()->getDate(), true, true)  . " à {$invitation->getEvent()->getDate()->format('h:i')}.";
-        $message .= "\n\nPour accéder à votre invitation, veuillez ouvrir le lien suivant.";
-        $message .= "\nhttp://kuuwaa.com/invitations/" . $invitation->getCode();
-        $message .= "\n\nSi vous rencontrez des difficultés pour ouvrir le lien ou pour accéder à l'application KuuWaa, veuillez retenir le code d'invitation à 6 chiffres ({$invitation->getCode()}) et présentez-le lors de la vérification à l'entrée de l'événement.";
-
-        $body = "$message\n\nCeci est un message automatique, veuillez ne pas y repondre.";
-
         $invitation->setCodePath("/events/invitations/qr_code/" . $fileName);
-        $invitation->setMessage($body);
+
+        $invitMessage = "Bonjour " . $civility . " " . $name;
+        $invitMessage .= ",\nVous êtes invité à l'évenement \"{$event->getCategory()->getName()} - {$event->getTitle()}\" le " . $this->dateService->getFullDate($event->getStartDate(), true, true)  . " à {$event->getStartDate()->format('H:i')}.";
+        $invitMessage .= "\n\nPour accéder à votre invitation, veuillez ouvrir le lien suivant.";
+        $invitMessage .= "\nhttps://kuuwaa.com/invitations/" . $invitation->getSlug();
+        $invitMessage .= "\n\nSi vous rencontrez des difficultés pour ouvrir le lien, veuillez retenir le code d'invitation à 6 chiffres ({$invitation->getCode()}) et présentez-le lors de la vérification à l'entrée de l'évenement.";
+
+        $invitation->setMessage($invitMessage);
 
         $this->invitationRepository->save($invitation, true);
 

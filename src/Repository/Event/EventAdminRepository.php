@@ -38,22 +38,22 @@ class EventAdminRepository extends ServiceEntityRepository
             ;
     }
 
-    /**
-     * @return ?EventAdmin Returns an array of EventAdmin objects
-     * @throws NonUniqueResultException
-     */
-    public function findByEventAndphoneNumber(Event $event, String $phone): ?EventAdmin
-    {
-        return $this->createQueryBuilder('e')
-            ->andWhere('e.event = :ev')
-            ->andWhere('e.phoneNumber = :phone')
-            ->setParameter('ev', $event)
-            ->setParameter('phone', $phone)
-            ->orderBy('e.name', 'ASC')
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
+    // /**
+    //  * @return ?EventAdmin Returns an array of EventAdmin objects
+    //  * @throws NonUniqueResultException
+    //  */
+    // public function findByEventAndphoneNumber(Event $event, String $phone): ?EventAdmin
+    // {
+    //     return $this->createQueryBuilder('e')
+    //         ->andWhere('e.event = :ev')
+    //         ->andWhere('e.phoneNumber = :phone')
+    //         ->setParameter('ev', $event)
+    //         ->setParameter('phone', $phone)
+    //         ->orderBy('e.name', 'ASC')
+    //         ->getQuery()
+    //         ->getOneOrNullResult()
+    //     ;
+    // }
 
     public function adminExists(String $phone): bool
     {

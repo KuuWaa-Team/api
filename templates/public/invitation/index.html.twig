@@ -11,9 +11,9 @@
     <title> KuuWaa === 🏷 INVITATION</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
     <meta name="description" content="{{ invitation.event.name }}" />
-    <meta property="og:image" itemprop="image" content="{{ 'http://kuuwaa.com' ~ invitation.event.imagePath }}" />
+    <meta property="og:image" itemprop="image" content="{{ 'http://kuuwaa.com' ~ invitation.event.thumbPath }}" />
     <meta name="MobileOptimized" content="320" />
-    <link itemprop="thumbnailUrl" href="{{ 'http://kuuwaa.com' ~ invitation.event.imagePath }}">
+    <link itemprop="thumbnailUrl" href="{{ 'http://kuuwaa.com' ~ invitation.event.thumbPath }}">
 
     <!--style -->
     <link rel="stylesheet" type="text/css" href="{{ asset('css/animate.css') }}" />
@@ -163,7 +163,7 @@
             </div>
             <div style="padding: 10px; ">
                 <img src="{{ asset("images/map.png") }}" width="25" alt="map">
-                <p style="margin: 0; color: #0b0b0b">{{ invitation.event.address.number ~ ", " ~ invitation.event.address.street ~ ". " ~ invitation.event.address.province.name }}</p>
+                <p style="margin: 0; color: #0b0b0b">{{ invitation.event.address.street ~ ". " ~ invitation.event.address.province.name }}</p>
                 {% if invitation.event.address.ref != null and invitation.event.address.ref != "null" and invitation.event.address.ref != "" %}
                     <p style="margin: 0; color: #0b0b0b; font-size: 15px;
                         background-color: lightblue;
@@ -336,7 +336,7 @@
                     <li>...</li>
                 </ul>
                 <div style="display: flex; flex-wrap: wrap; justify-content: center">
-                    <a href="#" style="display: inline-block; background-color: #392F51; padding: 10px 15px; border-radius: 5px; margin-right: 10px">
+                    <a href="https://apps.apple.com/ca/app/kuuwaa/id6476254390?l=fr-CA" target="_blank" style="display: inline-block; background-color: #392F51; padding: 10px 15px; border-radius: 5px; margin-right: 10px">
                         <div style="display: flex; align-items: center">
                             <img src="{{ asset("images/apple.png") }}" style="width: 25px; margin-right: 10px; margin-top: 0; align-items: center" alt="app store">
                             <div style="text-align: left">
@@ -345,7 +345,7 @@
                             </div>
                         </div>
                     </a>
-                    <a href="#" style="display: inline-block; background-color: #392F51; padding: 10px 15px; border-radius: 5px">
+                    <a href="https://play.google.com/store/apps/details?id=com.app.kuuwaa" target="_blank" style="display: inline-block; background-color: #392F51; padding: 10px 15px; border-radius: 5px">
                         <div style="display: flex; align-items: center">
                             <img src="{{ asset("images/google.png") }}" style="width: 25px; margin-right: 10px; margin-top: 0; align-items: center" alt="app store">
                             <div style="text-align: left">
