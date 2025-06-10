@@ -8,22 +8,6 @@
     <meta name="description" content="Created with v0">
     <meta name="generator" content="v0.dev">
     <style type="text/css" data-styled-jsx="">
-        @keyframes spin {
-            from {
-                transform: rotate(0deg);
-            }
-            to {
-                transform: rotate(360deg);
-            }
-        }
-        @keyframes spin-reverse {
-            from {
-                transform: rotate(360deg);
-            }
-            to {
-                transform: rotate(0deg);
-            }
-        }
 
         .bg-primary {
             --tw-bg-opacity: 1;
@@ -226,6 +210,37 @@
         }
         {% endfor %}
 
+        .quote-container {
+            position: relative;
+            padding: 40px 20px;
+            text-align: center;
+            font-size: 1.2rem;
+            padding-left: 20px;
+            padding-right: 20px;
+        }
+
+        .quote-container::before {
+            content: "“";
+            position: absolute;
+            top: -35px;
+            left: 70px;
+            transform: translateX(-50%);
+            font-size: 20rem;
+            line-height: 1;
+            color: var(--quote-color, #ccc);
+            opacity: 0.1    ;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .quote-text {
+            position: relative;
+            font-family: 'FairDisplay', sans-serif;
+            letter-spacing: 1px;
+            color: var(--quote-color, #000);
+            z-index: 1;
+        }
+
         @-webkit-keyframes float {
             0%,
             100% {
@@ -236,6 +251,21 @@
             50% {
                 -webkit-transform: translatey(-10px);
                 transform: translatey(-10px)
+            }
+        }
+
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            25% {
+                transform: translateY(-20px);
+            }
+            50% {
+                transform: translateY(-5px);
+            }
+            75% {
+                transform: translateY(-15px);
             }
         }
 
@@ -414,6 +444,7 @@
     </style>
     <script src="https://cdn.jsdelivr.net/npm/@tsparticles/confetti@3.0.3/tsparticles.confetti.bundle.min.js"></script>
     <script>
+
         const defaults = {
             spread: 360,
             ticks: 100,
@@ -448,7 +479,7 @@
 </head>
 
 <body cz-shortcut-listen="true">
-<div class="jsx-d0ada46de86ca64b min-h-screen bg-gradient-to-br from-[{{ template.primaryColor }}]/10 to-purple-50 overflow-x-hidden">
+<div class="jsx-d0ada46de86ca64b min-h-screen bg-gradient-to-br from-[{{ template.primaryColor }}]/10 overflow-x-hidden">
     <div class="jsx-d0ada46de86ca64b fixed inset-0 z-40 pointer-events-none">
         <div
                 class="jsx-d0ada46de86ca64b absolute inset-0 transition-all duration-2000 ease-out opacity-0 scale-150 rotate-180">
@@ -661,7 +692,7 @@
                     </div>
                 </div>
                 <div class="jsx-d0ada46de86ca64b space-y-4 animate-fade-in delay-1500">
-                    <button
+                    <button id="start-experience"
                             class="jsx-d0ada46de86ca64b group inline-flex items-center space-x-2 bg-gradient-to-r from-[{{ template.primaryColor }}] to-[{{ template.primaryColor }}] text-white px-8 py-4 rounded-full font-semibold text-lg hover:shadow-2xl transition-all duration-300 hover:scale-105"><span
                                 class="jsx-d0ada46de86ca64b">Commencer l'expérience</span><svg
                                 xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
@@ -692,7 +723,7 @@
                     class="jsx-d0ada46de86ca64b absolute top-10 left-10 w-72 h-72 bg-gradient-to-br from-[{{ template.primaryColor }}]/20 to-[{{ template.primaryColor }}]/20 rounded-full blur-3xl animate-pulse">
             </div>
             <div
-                    class="jsx-d0ada46de86ca64b absolute bottom-10 right-10 w-96 h-96 bg-gradient-to-br from-[{{ template.secondaryColor }}]/15 to-purple-400/15 rounded-full blur-3xl animate-pulse delay-1000">
+                    class="jsx-d0ada46de86ca64b absolute bottom-10 right-10 w-96 h-96 bg-gradient-to-br from-[{{ template.primaryColor }}]/15 rounded-full blur-3xl animate-pulse delay-1000">
             </div>
             <div
                     class="jsx-d0ada46de86ca64b absolute top-1/2 left-1/4 w-48 h-48 bg-gradient-to-br from-[{{ template.primaryColor }}]/10 to-rose-300/10 rounded-full blur-2xl animate-pulse delay-500">
@@ -708,26 +739,27 @@
                 </div>
             </div>
         </div>
-        <div class="jsx-d0ada46de86ca64b absolute bottom-6 left-1/2 transform -translate-x-1/2 z-20"><button
-                    class="jsx-d0ada46de86ca64b group">
-                <div
-                        class="jsx-d0ada46de86ca64b bg-white/90 backdrop-blur-md rounded-full p-3 shadow-xl hover:shadow-2xl transition-all duration-300 group-hover:bg-white border border-[{{ template.primaryColor }}]/20">
+        <div class="jsx-d0ada46de86ca64b absolute bottom-6 left-1/2 transform -translate-x-1/2 z-20">
+            <button class="group animated-button" style="animation: bounce 2s infinite; transition: animation 2s ease;" id="scroll-button">
+                <div class="bg-white/90 backdrop-blur-md rounded-full p-3 shadow-xl hover:shadow-2xl transition-all duration-300 group-hover:bg-white border border-[{{ template.primaryColor }}]/20">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                          class="lucide lucide-chevron-down w-5 h-5 text-[{{ template.primaryColor }}] group-hover:animate-bounce">
                         <path d="m6 9 6 6 6-6"></path>
                     </svg></div>
-                <div
-                        class="jsx-d0ada46de86ca64b absolute -bottom-1 left-1/2 transform -translate-x-1/2 text-xs text-[{{ template.secondaryColor }}]/60 whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity">
-                    Voir les interactions</div>
-            </button></div>
-    </section><section id="interactive-content" class="jsx-d0ada46de86ca64b py-16 px-4">
+            </button>
+        </div>
+    </section>
+    <section id="interactive-content" class="jsx-d0ada46de86ca64b py-4 px-4">
         <div class="jsx-d0ada46de86ca64b max-w-4xl mx-auto space-y-8">
-            <div
-                    class="rounded-lg border bg-card text-card-foreground border-[{{ template.primaryColor }}]/20 shadow-lg overflow-hidden">
+            <div class="quote-container" style="--quote-color: {{ template.primaryColor }};">
+                <p class="quote-text">
+                    Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.
+                </p>
+            </div>
+            <div class="rounded-lg border bg-card text-card-foreground border-[{{ template.primaryColor }}]/20 shadow-lg overflow-hidden">
                 <div class="flex flex-col space-y-1.5 p-6 text-center">
-                    <div
-                            class="font-semibold tracking-tight text-2xl text-[{{ template.secondaryColor }}] flex items-center justify-center gap-2">
+                    <div class="font-semibold tracking-tight text-2xl text-[{{ template.secondaryColor }}] flex items-center justify-center gap-2">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                              fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                              stroke-linejoin="round" class="lucide lucide-map-pin w-6 h-6 text-[{{ template.primaryColor }}]">
@@ -1503,6 +1535,27 @@
             </div>
         </div>
     </section>
+
+    <script>
+        window.addEventListener("DOMContentLoaded", (event) => {
+            document.getElementById('start-experience').addEventListener('click', function (e) {
+                e.preventDefault();
+                window.scrollBy({
+                    top: window.innerHeight,
+                    left: 0,
+                    behavior: 'smooth'
+                });
+            });
+            document.getElementById("scroll-button").addEventListener("click", function (e) {
+                e.preventDefault();
+                window.scrollBy({
+                    top: window.innerHeight,
+                    left: 0,
+                    behavior: 'smooth'
+                });
+            });
+        })
+    </script>
 </div>
 </body>
 
