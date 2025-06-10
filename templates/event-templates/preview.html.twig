@@ -8,6 +8,23 @@
     <meta name="description" content="Created with v0">
     <meta name="generator" content="v0.dev">
     <style type="text/css" data-styled-jsx="">
+        @keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+        @keyframes spin-reverse {
+            from {
+                transform: rotate(360deg);
+            }
+            to {
+                transform: rotate(0deg);
+            }
+        }
+
         .bg-primary {
             --tw-bg-opacity: 1;
             background-color: {{ template.primaryColor }} !important;
@@ -100,7 +117,7 @@
         }
 
         /* Classes avec opacités dynamiques */
-        {% for opacity in [5,10,20,30,40,90] %}
+        {% for opacity in [5,10,20,30,40,50,60,70,80,90] %}
         .bg-\[\#{{ primaryHex }}\]\/{{ opacity }} {
             background-color: rgba({{ primaryR }} {{ primaryG }} {{ primaryB }}/{{ (opacity/100) }});
         }
@@ -177,7 +194,7 @@
         }
 
         /* Opacités dynamiques */
-        {% for opacity in [5,10,20,30,40,90] %}
+        {% for opacity in [5,10,20,30,40,50,60,70,80,90] %}
         .bg-\[\#{{ secondaryHex }}\]\/{{ opacity }} {
             background-color: rgba({{ secondaryR }} {{ secondaryG }} {{ secondaryB }}/{{ (opacity/100) }});
         }
@@ -431,7 +448,7 @@
 </head>
 
 <body cz-shortcut-listen="true">
-<div class="jsx-d0ada46de86ca64b min-h-screen bg-gradient-to-br from-[{{ template.primaryColor }}]/50 to-purple-50 overflow-x-hidden">
+<div class="jsx-d0ada46de86ca64b min-h-screen bg-gradient-to-br from-[{{ template.primaryColor }}]/10 to-purple-50 overflow-x-hidden">
     <div class="jsx-d0ada46de86ca64b fixed inset-0 z-40 pointer-events-none">
         <div
                 class="jsx-d0ada46de86ca64b absolute inset-0 transition-all duration-2000 ease-out opacity-0 scale-150 rotate-180">
@@ -685,18 +702,8 @@
             </div>
         </div>
         <div class="jsx-d0ada46de86ca64b flex-1 flex items-center justify-center p-4 pt-10">
-            <div class="jsx-d0ada46de86ca64b relative z-10 w-full max-w-4xl">
-                <div
-                        class="jsx-d0ada46de86ca64b bg-gradient-to-br from-white via-[{{ template.primaryColor }}]/50 to-purple-50/30 backdrop-blur-sm shadow-[0_10px_50px_-12px_rgba(242,65,115,0.25),0_30px_60px_-30px_rgba(47,38,68,0.3)] border border-white/20 relative overflow-hidden transform transition-all hover:shadow-[0_20px_70px_-15px_rgba(242,65,115,0.3),0_35px_75px_-35px_rgba(47,38,68,0.4)] hover:translate-y-[-2px]">
-                    <div
-                            class="jsx-d0ada46de86ca64b absolute inset-0 bg-gradient-to-br from-[{{ template.primaryColor }}]/5 via-transparent to-[{{ template.secondaryColor }}]/5">
-                    </div>
-                    <div
-                            class="jsx-d0ada46de86ca64b absolute inset-[1px] bg-gradient-to-br from-[{{ template.primaryColor }}]/60">
-                    </div>
-                    <div
-                            class="jsx-d0ada46de86ca64b absolute inset-0 opacity-10 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNTAiIGhlaWdodD0iMTUwIiB2aWV3Qm94PSIwIDAgMTUwIDE1MCI+CiAgPGZpbHRlciBpZD0ibm9pc2UiIHg9IjAiIHk9IjAiPgogICAgPGZlVHVyYnVsZW5jZSB0eXBlPSJmcmFjdGFsTm9pc2UiIGJhc2VGcmVxdWVuY3k9IjAuNyIgbnVtT2N0YXZlcz0iMyIgc3RpdGNoVGlsZXM9InN0aXRjaCIgc2VlZD0iMSIgcmVzdWx0PSJub2lzZSI+PC9mZVR1cmJ1bGVuY2U+CiAgICA8ZmVDb2xvck1hdHJpeCB0eXBlPSJtYXRyaXgiIHZhbHVlcz0iMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMC4wNSAwIj48L2ZlQ29sb3JNYXRyaXg+CiAgPC9maWx0ZXI+CiAgPHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsdGVyPSJ1cmwoI25vaXNlKSI+PC9yZWN0Pgo8L3N2Zz4=')]">
-                    </div>
+            <div class="jsx-d0ada46de86ca64b z-10 w-full max-w-4xl">
+                <div class="jsx-d0ada46de86ca64b overflow-hidden transform transition-all">
                     {% include 'event-templates/data/_' ~ template.code ~ '.html.twig' %}
                 </div>
             </div>
@@ -1033,26 +1040,8 @@
                             </div>
                             <div
                                     class="jsx-d0ada46de86ca64b bg-white/60 backdrop-blur-sm rounded-lg p-6 max-w-md mx-auto">
-                                <p class="jsx-d0ada46de86ca64b text-[{{ template.secondaryColor }}] font-medium mb-4">Testez vos
+                                <p class="jsx-d0ada46de86ca64b text-[{{ template.secondaryColor }}] font-medium mb-0">Testez vos
                                     connaissances sur notre histoire d'amour !</p>
-                                <div class="jsx-d0ada46de86ca64b grid grid-cols-2 gap-4 text-sm text-[{{ template.secondaryColor }}]/70">
-                                    <div class="jsx-d0ada46de86ca64b flex items-center gap-2">
-                                        <div class="jsx-d0ada46de86ca64b w-2 h-2 bg-[{{ template.primaryColor }}] rounded-full"></div>
-                                        <span class="jsx-d0ada46de86ca64b">5 questions</span>
-                                    </div>
-                                    <div class="jsx-d0ada46de86ca64b flex items-center gap-2">
-                                        <div class="jsx-d0ada46de86ca64b w-2 h-2 bg-[{{ template.primaryColor }}] rounded-full"></div>
-                                        <span class="jsx-d0ada46de86ca64b">Anecdotes exclusives</span>
-                                    </div>
-                                    <div class="jsx-d0ada46de86ca64b flex items-center gap-2">
-                                        <div class="jsx-d0ada46de86ca64b w-2 h-2 bg-[{{ template.primaryColor }}] rounded-full"></div>
-                                        <span class="jsx-d0ada46de86ca64b">Surprise garantie</span>
-                                    </div>
-                                    <div class="jsx-d0ada46de86ca64b flex items-center gap-2">
-                                        <div class="jsx-d0ada46de86ca64b w-2 h-2 bg-[{{ template.primaryColor }}] rounded-full"></div>
-                                        <span class="jsx-d0ada46de86ca64b">Moments fun</span>
-                                    </div>
-                                </div>
                             </div>
                             <div class="jsx-d0ada46de86ca64b space-y-4"><button
                                         class="inline-flex items-center justify-center gap-2 whitespace-nowrap ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 bg-primary hover:bg-primary/90 h-10 bg-gradient-to-r from-[{{ template.primaryColor }}] to-[{{ template.secondaryColor }}] hover:from-[{{ template.primaryColor }}]/90 hover:to-[{{ template.secondaryColor }}]/90 text-white px-8 py-4 text-lg font-semibold rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"><svg
