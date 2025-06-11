@@ -867,7 +867,7 @@
                 <div class="flex flex-col space-y-1.5 p-6 text-center">
                     <div class="font-semibold tracking-tight text-2xl text-[{{ template.secondaryColor }}]">Confirmation de présence</div>
                 </div>
-                <div class="p-6 pt-0 text-center">
+                <div class="p-6 pt-0 text-center" id="presence-section">
                     <div class="jsx-d0ada46de86ca64b space-y-6">
                         <p class="jsx-d0ada46de86ca64b text-[{{ template.secondaryColor }}]/70">{{ invitation.fullname }}, merci de confirmer votre présence pour nous aider à mieux vous accueillir.</p>
                         <div
@@ -1602,7 +1602,90 @@
         });
     });
 </script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const presenceSection = document.getElementById("presence-section");
 
+        function getUserFullName() {
+            return "{{ invitation.fullname }}";
+        }
+
+        function renderConfirmationUI(presence) {
+            const fullname = getUserFullName();
+
+            if (presence) {
+                presenceSection.innerHTML = `
+                <div class="space-y-4">
+                    <div class="bg-green-50 border-green-200 border rounded-lg p-6">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="lucide lucide-check w-12 h-12 text-green-500 mx-auto mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path d="M20 6 9 17l-5-5"></path>
+                        </svg>
+                        <p class="text-green-700 font-medium">Merci Mr ${fullname} ! Nous sommes ravis de savoir que vous serez présent(e) pour partager ce moment unique avec nous.</p>
+                        <p class="text-green-600 text-sm mt-2">Votre présence confirmée • Nous avons hâte de vous voir !</p>
+                    </div>
+                    <div class="text-center">
+                        <button class="modifier-reponse-btn inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 border bg-background h-10 px-4 py-2 border-[#f24173] text-[#f24173] hover:bg-[#f24173] hover:text-white">
+                            Modifier ma réponse
+                        </button>
+                    </div>
+                </div>
+            `;
+            } else {
+                presenceSection.innerHTML = `
+                <div class="space-y-4">
+                    <div class="bg-orange-50 border-orange-200 border rounded-lg p-6">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="lucide lucide-x w-12 h-12 text-orange-500 mx-auto mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path d="M18 6 6 18"></path>
+                            <path d="m6 6 12 12"></path>
+                        </svg>
+                        <p class="text-orange-700 font-medium">Merci Mr ${fullname} pour votre réponse. Nous regrettons que vous ne puissiez pas être présent(e), mais nous comprenons parfaitement.</p>
+                        <p class="text-orange-600 text-sm mt-2">Absence confirmée • Vous serez dans nos pensées</p>
+                    </div>
+                    <div class="text-center">
+                        <button class="modifier-reponse-btn inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 border bg-background h-10 px-4 py-2 border-[#f24173] text-[#f24173] hover:bg-[#f24173] hover:text-white">
+                            Modifier ma réponse
+                        </button>
+                    </div>
+                </div>
+            `;
+            }
+
+            // TODO: Tu peux ici remettre le formulaire si l'utilisateur clique sur "Modifier ma réponse"
+            document.querySelector(".modifier-reponse-btn")?.addEventListener("click", () => {
+                window.location.reload(); // ou réinjecter le bloc original
+            });
+        }
+
+        // 1. Gérer le clic sur les boutons
+        document.querySelectorAll(".confirm-presence-btn").forEach((btn) => {
+            btn.addEventListener("click", function () {
+                const invitationId = this.getAttribute("data-id");
+                const isPresent = this.getAttribute("data-presence") === "1";
+
+                fetch(`/api/invitations/${invitationId}/presence`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ presence: isPresent }),
+                })
+                    .then(response => {
+                        if (!response.ok) throw new Error("Erreur réseau");
+                        return response.json();
+                    })
+                    .then(() => {
+                        renderConfirmationUI(isPresent);
+                    })
+                    .catch(() => {
+                        alert("Une erreur est survenue. Veuillez réessayer.");
+                    });
+            });
+        });
+
+        const willBePresent = {{ invitation.willBePresent is not null ? invitation.willBePresent ? 'true' : 'false' : 'null' }};
+        if (willBePresent !== null) {
+            renderConfirmationUI(willBePresent);
+        }
+    });
+</script>
 </body>
 
 </html>
