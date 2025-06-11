@@ -23,7 +23,11 @@ class PresenceConfirmationController extends AbstractController
     public function __invoke(Request $request, Invitation $invitation): JsonResponse
     {
         $content = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
-        $presence = $content["presence"] ?? false;
+        if ($content["presence"] === null || $content["presence"] === 'null') {
+            $presence = null;
+        } else {
+            $presence = $content["presence"] == true ?? false;
+        }
 
         $invitation->setWillBePresent($presence);
         $this->invitationRepository->save($invitation);
