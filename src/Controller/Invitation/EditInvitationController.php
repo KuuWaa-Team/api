@@ -27,13 +27,9 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 class EditInvitationController extends AbstractController
 {
     public function __construct(
-        private readonly EventRepository $eventRepository,
         private readonly TableRepository $tableRepository,
         private readonly InvitationRepository $invitationRepository,
         private readonly NormalizerInterface $normalizer,
-        private readonly OTPService $OTPService,
-        private readonly DateService $dateService,
-        private readonly ApiService $apiService,
     )
     {
     }
@@ -98,43 +94,85 @@ class EditInvitationController extends AbstractController
             }
             $this->tableRepository->save($newTable, true);
 
-            $qrCodeData = [
-                'type' => 'KuuWaa',
-                'id' => $invitation->getId(),
-                'status' => $invitation->getStatus(),
-                'civility' => $invitation->getCivility(),
-                'name' => $invitation->getName(),
-                'count' => $invitation->getCount(),
-                'table' => $invitation->getInvitationTable()?->getName(),
-                'kwEv' => "KW000" . $event->getId()
-            ];
-
-            $jsonQrCodeData = json_encode($qrCodeData, JSON_THROW_ON_ERROR);
-            $fileName = uniqid('', true) . '.png';
-            $destinationPath = $kernel->getProjectDir() . '/public/events/invitations/qr_code';
-
-            $result = Builder::create()
-                ->writer(new PngWriter())
-                ->writerOptions([])
-                ->data($jsonQrCodeData)
-                ->encoding(new Encoding('UTF-8'))
-                ->errorCorrectionLevel(ErrorCorrectionLevel::Medium)
-                ->size(300)
-                ->margin(10)
-                ->roundBlockSizeMode(RoundBlockSizeMode::Margin)
-                ->logoPath($kernel->getProjectDir() . '/public/images/logo-dark.png')
-                ->logoResizeToWidth(80)
-                ->labelText($invitation->getCode())
-                ->labelFont(new NotoSans(20))
-                ->labelAlignment(LabelAlignment::Center)
-                ->validateResult(false)
-                ->build()
-            ;
-
-            $result->saveToFile($destinationPath . "/" . $fileName);
-            $invitation->setCodePath("/events/invitations/qr_code/" . $fileName);
-            $this->invitationRepository->save($invitation, true);
+//            $qrCodeData = [
+//                'type' => 'KuuWaa',
+//                'id' => $invitation->getId(),
+//                'status' => $invitation->getStatus(),
+//                'civility' => $invitation->getCivility(),
+//                'name' => $invitation->getName(),
+//                'count' => $invitation->getCount(),
+//                'table' => $invitation->getInvitationTable()?->getName(),
+//                'kwEv' => "KW000" . $event->getId()
+//            ];
+//
+//            $jsonQrCodeData = json_encode($qrCodeData, JSON_THROW_ON_ERROR);
+//            $fileName = uniqid('', true) . '.png';
+//            $destinationPath = $kernel->getProjectDir() . '/public/events/invitations/qr_code';
+//
+//            $result = Builder::create()
+//                ->writer(new PngWriter())
+//                ->writerOptions([])
+//                ->data($jsonQrCodeData)
+//                ->encoding(new Encoding('UTF-8'))
+//                ->errorCorrectionLevel(ErrorCorrectionLevel::Medium)
+//                ->size(300)
+//                ->margin(10)
+//                ->roundBlockSizeMode(RoundBlockSizeMode::Margin)
+//                ->logoPath($kernel->getProjectDir() . '/public/images/logo-dark.png')
+//                ->logoResizeToWidth(80)
+//                ->labelText($invitation->getCode())
+//                ->labelFont(new NotoSans(20))
+//                ->labelAlignment(LabelAlignment::Center)
+//                ->validateResult(false)
+//                ->build()
+//            ;
+//
+//            $result->saveToFile($destinationPath . "/" . $fileName);
+//            $invitation->setCodePath("/events/invitations/qr_code/" . $fileName);
+//            $this->invitationRepository->save($invitation, true);
         }
+
+        // CODE TO REMOVE
+        $qrCodeData = [
+            'type' => 'KuuWaa',
+            'id' => $invitation->getId(),
+            'status' => $invitation->getStatus(),
+            'civility' => $invitation->getCivility(),
+            'name' => $invitation->getName(),
+            'count' => $invitation->getCount(),
+            'table' => $invitation->getInvitationTable()?->getName(),
+            'kwEv' => "KW000" . $event->getId()
+        ];
+
+        $jsonQrCodeData = json_encode($qrCodeData, JSON_THROW_ON_ERROR);
+        $fileName = uniqid('', true) . '.png';
+        $destinationPath = $kernel->getProjectDir() . '/public/events/invitations/qr_code';
+
+        $result = Builder::create()
+            ->writer(new PngWriter())
+            ->writerOptions([])
+            ->data($jsonQrCodeData)
+            ->encoding(new Encoding('UTF-8'))
+            ->errorCorrectionLevel(ErrorCorrectionLevel::Medium)
+            ->size(300)
+            ->margin(10)
+            ->roundBlockSizeMode(RoundBlockSizeMode::Margin)
+            ->logoPath($kernel->getProjectDir() . '/public/images/logo-dark.png')
+            ->logoResizeToWidth(80)
+            ->labelText($invitation->getCode())
+            ->labelFont(new NotoSans(20))
+            ->labelAlignment(LabelAlignment::Center)
+            ->validateResult(false)
+            ->build()
+        ;
+
+        $result->saveToFile($destinationPath . "/" . $fileName);
+        $invitation->setCodePath("/events/invitations/qr_code/" . $fileName);
+        $this->invitationRepository->save($invitation, true);
+
+        // END CODE TO REMOVE
+
+
 
         $this->invitationRepository->save($invitation, true);
 
