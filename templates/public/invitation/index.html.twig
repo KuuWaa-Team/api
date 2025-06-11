@@ -581,15 +581,11 @@
                 <span class="jsx-d0ada46de86ca64b text-[{{ template.primaryColor }}] font-semibold">{{ invitation.fullname }}</span></p>
         </div>
     </div>
-    <section class="relative min-h-screen overflow-hidden">
-        <!-- FOND FIXE EN ABSOLU -->
-        <div
-                class="absolute inset-0 bg-cover bg-center"
-                style="
-                        background-image: url('{{ asset(apiUrl ~ invitation.event.imagePath) }}');
-                        z-index: 0;
-                        "
-        ></div>
+    <section
+            class="jsx-d0ada46de86ca64b min-h-screen flex flex-col relative overflow-hidden transition-all duration-1000 opacity-100 transform translate-y-0">
+        <!-- Image de fond en fixed -->
+        <div class="fixed inset-0 bg-cover bg-center" style="background-image: url('{{ asset(apiUrl ~ invitation.event.imagePath) }}'); background-attachment: fixed; background-position: center; background-size: cover"></div>
+
         <!-- Overlays de gradient -->
         <div class="fixed inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/60"></div>
         <div class="fixed inset-0 bg-gradient-to-r from-[{{ template.primaryColor }}]/20 to-[{{ template.secondaryColor }}]/20"></div>
