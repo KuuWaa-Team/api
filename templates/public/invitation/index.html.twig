@@ -828,10 +828,7 @@
                 </div>
                 <div class="p-6 pt-0 text-center">
                     <div class="jsx-d0ada46de86ca64b space-y-6">
-                        <p class="jsx-d0ada46de86ca64b text-[{{ template.secondaryColor }}]/70">Mr Daniel Mwema, votre présence nous tient
-                            à cœur. Merci de confirmer votre participation afin que nous puissions organiser cette
-                            journée parfaitement et nous assurer que tout soit préparé pour vous accueillir dans les
-                            meilleures conditions.</p>
+                        <p class="jsx-d0ada46de86ca64b text-[{{ template.secondaryColor }}]/70">{{ invitation.fullname }}, merci de confirmer votre présence pour nous aider à mieux vous accueillir.</p>
                         <div
                                 class="jsx-d0ada46de86ca64b flex flex-col sm:flex-row gap-4 justify-center max-w-md mx-auto">
                             <button
@@ -867,10 +864,7 @@
                         </svg>Choix de boissons</div>
                 </div>
                 <div class="p-6 pt-0">
-                    <p class="jsx-d0ada46de86ca64b text-center text-[{{ template.secondaryColor }}]/70 mb-6">Mr Daniel Mwema, pour que
-                        cette soirée soit parfaite, aidez-nous à préparer la réception en nous indiquant vos
-                        préférences de boissons. Cela nous permettra de nous assurer d'avoir suffisamment de vos
-                        boissons favorites et de créer un bar adapté aux goûts de tous nos invités.</p>
+                    <p class="jsx-d0ada46de86ca64b text-center text-[{{ template.secondaryColor }}]/70 mb-6">{{ invitation.fullname }}, merci de nous indiquer vos préférences de boissons afin de mieux préparer la réception et adapter le bar à vos goûts.</p>
                     <div class="jsx-d0ada46de86ca64b grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
                         <div class="jsx-d0ada46de86ca64b text-center"><button
                                     class="jsx-d0ada46de86ca64b w-full aspect-square rounded-xl flex flex-col items-center justify-center p-4 transition-all bg-white border border-[{{ template.primaryColor }}]/20 text-[{{ template.secondaryColor }}] hover:bg-[{{ template.primaryColor }}]/5"><svg
@@ -965,10 +959,7 @@
                         </svg>Quiz des mariés</div>
                 </div>
                 <div class="p-6 pt-0">
-                    <p class="jsx-d0ada46de86ca64b text-center text-[{{ template.secondaryColor }}]/70 mb-6">Mr Daniel Mwema, amusez-vous
-                        avec ce quiz sur notre histoire d'amour ! Répondez à ces questions sur notre couple et
-                        découvrez des anecdotes croustillantes. Le meilleur participant pourrait bien être
-                        récompensé lors de la soirée avec une surprise spéciale préparée par nos soins.</p>
+                    <p class="jsx-d0ada46de86ca64b text-center text-[{{ template.secondaryColor }}]/70 mb-6">M. Daniel Mwema, testez vos connaissances sur notre couple avec ce quiz amusant ! Une surprise spéciale attend le meilleur participant le jour de la soirée.</p>
                     <div
                             class="jsx-d0ada46de86ca64b relative overflow-hidden rounded-xl bg-gradient-to-br from-[{{ template.primaryColor }}]/20 via-[{{ template.primaryColor }}]/50 to-[{{ template.secondaryColor }}]/20 p-8 text-center">
                         <div
@@ -1061,8 +1052,7 @@
                             </div>
                             <div
                                     class="jsx-d0ada46de86ca64b bg-white/60 backdrop-blur-sm rounded-lg p-6 max-w-md mx-auto">
-                                <p class="jsx-d0ada46de86ca64b text-[{{ template.secondaryColor }}] font-medium mb-0">Testez vos
-                                    connaissances sur notre histoire d'amour !</p>
+                                <p class="jsx-d0ada46de86ca64b text-[{{ template.secondaryColor }}] font-medium mb-0">{{ invitation.fullname }}, testez vos connaissances sur notre couple avec ce quiz amusant ! Une surprise spéciale attend le meilleur participant le jour de la soirée.</p>
                             </div>
                             <div class="jsx-d0ada46de86ca64b space-y-4"><button
                                         class="inline-flex items-center justify-center gap-2 whitespace-nowrap ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 bg-primary hover:bg-primary/90 h-10 bg-gradient-to-r from-[{{ template.primaryColor }}] to-[{{ template.secondaryColor }}] hover:from-[{{ template.primaryColor }}]/90 hover:to-[{{ template.secondaryColor }}]/90 text-white px-8 py-4 text-lg font-semibold rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"><svg
@@ -1097,9 +1087,7 @@
                         </svg>Compte à rebours</div>
                 </div>
                 <div class="p-6 pt-0">
-                    <p class="jsx-d0ada46de86ca64b text-center text-[{{ template.secondaryColor }}]/70 mb-6">Mr Daniel Mwema, plus que
-                        quelques jours avant le grand jour ! Chaque seconde qui passe nous rapproche de ce moment
-                        magique que nous partagerons ensemble.</p>
+                    <p class="jsx-d0ada46de86ca64b text-center text-[{{ template.secondaryColor }}]/70 mb-6">{{ invitation.fullname }}, le grand jour approche à grands pas ! Nous avons hâte de vivre ce moment magique avec vous.</p>
                     <div class="jsx-d0ada46de86ca64b grid grid-cols-4 gap-4 max-w-md mx-auto">
                         <div
                                 class="jsx-d0ada46de86ca64b text-center bg-gradient-to-br from-[{{ template.primaryColor }}]/10 to-[{{ template.secondaryColor }}]/10 rounded-lg p-2">
@@ -1122,6 +1110,28 @@
                             <div class="jsx-d0ada46de86ca64b text-sm text-[{{ template.secondaryColor }}]/70">Secs</div>
                         </div>
                     </div>
+                    <div id="countdown"
+                         data-deadline="{{ invitation.event.startDate|date('c') }}"
+                         class="grid grid-cols-4 gap-4 max-w-md mx-auto">
+
+                        <div class="text-center bg-gradient-to-br from-[{{ template.primaryColor }}/10] to-[{{ template.secondaryColor }}/10] rounded-lg p-2">
+                            <div id="days" class="text-2xl md:text-3xl font-bold text-[{{ template.primaryColor }}]">--</div>
+                            <div class="text-sm text-[{{ template.secondaryColor }}/70]">Jours</div>
+                        </div>
+                        <div class="text-center bg-gradient-to-br from-[{{ template.primaryColor }}/10] to-[{{ template.secondaryColor }}/10] rounded-lg p-2">
+                            <div id="hours" class="text-2xl md:text-3xl font-bold text-[{{ template.primaryColor }}]">--</div>
+                            <div class="text-sm text-[{{ template.secondaryColor }}/70]">Heures</div>
+                        </div>
+                        <div class="text-center bg-gradient-to-br from-[{{ template.primaryColor }}/10] to-[{{ template.secondaryColor }}/10] rounded-lg p-2">
+                            <div id="minutes" class="text-2xl md:text-3xl font-bold text-[{{ template.primaryColor }}]">--</div>
+                            <div class="text-sm text-[{{ template.secondaryColor }}/70]">Minutes</div>
+                        </div>
+                        <div class="text-center bg-gradient-to-br from-[{{ template.primaryColor }}/10] to-[{{ template.secondaryColor }}/10] rounded-lg p-2">
+                            <div id="seconds" class="text-2xl md:text-3xl font-bold text-[{{ template.primaryColor }}]">--</div>
+                            <div class="text-sm text-[{{ template.secondaryColor }}/70]">Secs</div>
+                        </div>
+                    </div>
+
                     <div class="jsx-d0ada46de86ca64b text-center mt-6">
                         <p class="jsx-d0ada46de86ca64b text-[{{ template.primaryColor }}] font-medium">Le bonheur approche à grands pas
                             !</p>
@@ -1525,27 +1535,61 @@
         </div>
     </section>
 
-    <script>
-        window.addEventListener("DOMContentLoaded", (event) => {
-            document.getElementById('start-experience').addEventListener('click', function (e) {
-                e.preventDefault();
-                window.scrollBy({
-                    top: window.innerHeight,
-                    left: 0,
-                    behavior: 'smooth'
-                });
-            });
-            document.getElementById("scroll-button").addEventListener("click", function (e) {
-                e.preventDefault();
-                window.scrollBy({
-                    top: window.innerHeight,
-                    left: 0,
-                    behavior: 'smooth'
-                });
-            });
-        })
-    </script>
 </div>
+<script>
+    window.addEventListener("DOMContentLoaded", (event) => {
+        document.getElementById('start-experience').addEventListener('click', function (e) {
+            e.preventDefault();
+            window.scrollBy({
+                top: window.innerHeight,
+                left: 0,
+                behavior: 'smooth'
+            });
+        });
+        document.getElementById("scroll-button").addEventListener("click", function (e) {
+            e.preventDefault();
+            window.scrollBy({
+                top: window.innerHeight,
+                left: 0,
+                behavior: 'smooth'
+            });
+        });
+    })
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const countdown = document.getElementById('countdown');
+        const deadline = new Date(countdown.dataset.deadline).getTime();
+
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const diff = deadline - now;
+
+            if (diff <= 0) {
+                document.getElementById('days').textContent = '00';
+                document.getElementById('hours').textContent = '00';
+                document.getElementById('minutes').textContent = '00';
+                document.getElementById('seconds').textContent = '00';
+                clearInterval(interval);
+                return;
+            }
+
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+            const minutes = Math.floor((diff / (1000 * 60)) % 60);
+            const seconds = Math.floor((diff / 1000) % 60);
+
+            document.getElementById('days').textContent = String(days).padStart(2, '0');
+            document.getElementById('hours').textContent = String(hours).padStart(2, '0');
+            document.getElementById('minutes').textContent = String(minutes).padStart(2, '0');
+            document.getElementById('seconds').textContent = String(seconds).padStart(2, '0');
+        }
+
+        updateCountdown();
+        const interval = setInterval(updateCountdown, 1000);
+    });
+</script>
+
 </body>
 
 </html>
