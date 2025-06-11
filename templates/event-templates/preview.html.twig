@@ -1,14 +1,15 @@
+<!DOCTYPE html>
 <html lang="en">
-
 <head>
     <link rel="stylesheet" href="{{ asset('templates/'~template.code~'/styles.css')}}" data-precedence="next">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Template Ocean</title>
-    <meta name="description" content="Created with v0">
+    <title> KuuWaa === 🏷 INVITATION</title>
+    <meta name="description" content="{{ invitation is defined and invitation is not null ? invitation.event.title : 'Preview' }}" />
+    <meta property="og:image" itemprop="image" content="{{ invitation is defined and invitation is not null ?  apiUrl ~ invitation.event.thumbPath : asset('templates/ocean/photo.jpg')}}" />
+    <link itemprop="thumbnailUrl" href="{{ invitation is defined and invitation is not null ? apiUrl ~ invitation.event.thumbPath: asset('templates/ocean/photo.jpg') }}">
     <meta name="generator" content="v0.dev">
     <style type="text/css" data-styled-jsx="">
-
         .bg-primary {
             --tw-bg-opacity: 1;
             background-color: {{ template.primaryColor }} !important;
@@ -58,8 +59,8 @@
 
         {% for i in 1..20 %}
         .bg-\[\{{ template.primaryColor }}\]\/{{ i * 5 }} {
-            background-color: rgba({{ primaryR }}, {{ primaryG }}, {{ primaryB }}, {{ (i * 5) / 100 }});
-        }
+                                                background-color: rgba({{ primaryR }}, {{ primaryG }}, {{ primaryB }}, {{ (i * 5) / 100 }});
+                                            }
         {% endfor %}
 
         /* Classes de base */
@@ -583,7 +584,7 @@
     <section
             class="jsx-d0ada46de86ca64b min-h-screen flex flex-col relative overflow-hidden transition-all duration-1000 opacity-100 transform translate-y-0">
         <!-- Image de fond en fixed -->
-        <div class="fixed inset-0 bg-cover bg-center" style="background-image: url('{{ asset('templates/ocean/photo.jpg') }}'); background-attachment: fixed; background-position: center; background-size: cover"></div>
+        <div class="fixed inset-0 bg-cover bg-center" style="background-image: url('{{ invitation is defined and invitation is not null ? asset(apiUrl ~ invitation.event.imagePath) : asset('templates/ocean/photo.jpg') }}'); background-attachment: fixed; background-position: center; background-size: cover"></div>
 
         <!-- Overlays de gradient -->
         <div class="fixed inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/60"></div>
@@ -601,7 +602,7 @@
             <div class="jsx-d0ada46de86ca64b max-w-4xl mx-auto space-y-8">
                 <div class="jsx-d0ada46de86ca64b space-y-6 animate-fade-in">
                     <h1
-                            class="jsx-d0ada46de86ca64b text-3xl md:text-5xl lg:text-6xl font-serif text-white leading-tight">
+                            class="jsx-d0ada46de86ca64b text-2xl md:text-5xl lg:text-6xl font-serif text-white leading-tight">
                         Bienvenue dans votre invitation électronique</h1>
                     <h2
                             class="text-[{{ template.primaryColor }}] jsx-d0ada46de86ca64b text-xl md:text-4xl lg:text-5xl font-serif text-white/90 leading-tight"
@@ -609,11 +610,11 @@
                         pour notre mariage</h2>
                 </div>
                 <div class="jsx-d0ada46de86ca64b space-y-6 animate-fade-in delay-1000">
-                    <div    style="text-align: left"
-                            class="jsx-d0ada46de86ca64b bg-white/10 rounded-2xl p-6 md:p-8 border border-white/20">
+                    <div style="text-align: left"
+                         class="jsx-d0ada46de86ca64b bg-white/10 rounded-2xl p-3 md:p-4 border border-white/20">
                         <h3 style="text-align: center" class="jsx-d0ada46de86ca64b text-xl md:text-2xl font-semibold text-white mb-4">Comment
                             fonctionne cette invitation ?</h3>
-                        <div class="jsx-d0ada46de86ca64b grid md:grid-cols-2 gap-6 text-white/90">
+                        <div class="jsx-d0ada46de86ca64b grid md:grid-cols-2 gap-3 text-white/90">
                             <div class="jsx-d0ada46de86ca64b flex items-start space-x-3">
                                 <div
                                         class="jsx-d0ada46de86ca64b flex-shrink-0 w-8 h-8 bg-[{{ template.primaryColor }}] rounded-full flex items-center justify-center">
@@ -691,18 +692,18 @@
                         </div>
                     </div>
                 </div>
-                <div class="jsx-d0ada46de86ca64b space-y-4 animate-fade-in delay-1500">
-                    <button id="start-experience"
-                            class="jsx-d0ada46de86ca64b group inline-flex items-center space-x-2 bg-gradient-to-r from-[{{ template.primaryColor }}] to-[{{ template.primaryColor }}] text-white px-8 py-4 rounded-full font-semibold text-lg hover:shadow-2xl transition-all duration-300 hover:scale-105"><span
-                                class="jsx-d0ada46de86ca64b">Commencer l'expérience</span><svg
-                                xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round"
-                                class="lucide lucide-arrow-down w-5 h-5 group-hover:animate-bounce">
-                            <path d="M12 5v14"></path>
-                            <path d="m19 12-7 7-7-7"></path>
-                        </svg></button>
-                </div>
+                {#                <div class="jsx-d0ada46de86ca64b space-y-4 animate-fade-in delay-1500">#}
+                {#                    <button id="start-experience"#}
+                {#                            class="jsx-d0ada46de86ca64b group inline-flex items-center space-x-2 bg-gradient-to-r from-[{{ template.primaryColor }}] to-[{{ template.primaryColor }}] text-white px-8 py-4 rounded-full font-semibold text-lg hover:shadow-2xl transition-all duration-300 hover:scale-105"><span#}
+                {#                                class="jsx-d0ada46de86ca64b">Commencer l'expérience</span><svg#}
+                {#                                xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"#}
+                {#                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"#}
+                {#                                stroke-linejoin="round"#}
+                {#                                class="lucide lucide-arrow-down w-5 h-5 group-hover:animate-bounce">#}
+                {#                            <path d="M12 5v14"></path>#}
+                {#                            <path d="m19 12-7 7-7-7"></path>#}
+                {#                        </svg></button>#}
+                {#                </div>#}
             </div>
         </div>
         <div
@@ -847,9 +848,9 @@
                                 class="jsx-d0ada46de86ca64b flex flex-col sm:flex-row gap-4 justify-center max-w-md mx-auto">
                             <button
                                     class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 h-10 bg-[{{ template.primaryColor }}] hover:bg-[{{ template.primaryColor }}]/90 text-white px-6 py-3 text-lg flex-1"><svg
-                                    xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                    stroke-linejoin="round" class="lucide lucide-check w-5 h-5 mr-2">
+                                        xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round" class="lucide lucide-check w-5 h-5 mr-2">
                                     <path d="M20 6 9 17l-5-5"></path>
                                 </svg>Je serai présent(e)
                             </button>
