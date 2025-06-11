@@ -1666,7 +1666,7 @@
             document.querySelector(".modifier-reponse-btn")?.addEventListener("click", () => {
                 const invitationId = document.querySelector(".modifier-reponse-btn").dataset.id;
 
-                fetch(`/confirm-presence/${invitationId}`, {
+                fetch(`/api/confirm-presence/${invitationId}`, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
