@@ -31,12 +31,15 @@ class InvitationController extends AbstractController
     public function index($slug, Request $request, BeverageRepository $beverageRepository, BookRepository $bookRepository, InvitationRepository $invitationRepository, DateService $dateService, KernelInterface $kernel): Response
     {
         $invitation = $invitationRepository->findBySlug($slug);
-        $date = $dateService->getFullDate($invitation->getEvent()->getStartDate(), true, true) . " à " . $invitation->getEvent()->getStartDate()->format("H:i");
+        $date = $dateService->getFullDate($invitation->getEvent()->getStartDate(), true, true);
+        $year = $invitation->getEvent()->getStartDate()->format("Y");
+        $hour = $invitation->getEvent()->getStartDate()->format("H");
+        $minute = $invitation->getEvent()->getStartDate()->format("i");
+
         $eventImage = $dateService->imageToBase64($kernel->getProjectDir() . $invitation->getEvent()->getImagePath());
         $codeImage = $dateService->imageToBase64($kernel->getProjectDir() . $invitation->getCodePath());
 
         $apiUrl = $this->apiService->getApiUrl();
-
 
         $form = $this->createForm(BookMessageFormType::class);
         $form->handleRequest($request);
@@ -64,6 +67,9 @@ class InvitationController extends AbstractController
             'eventImage' => $eventImage,
             'codeImage' => $codeImage,
             'form' => $form->createView(),
+            'year' => $year,
+            'hour' => $hour,
+            'minute' => $minute,
         ]);
     }
 }

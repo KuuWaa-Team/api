@@ -162,26 +162,26 @@
     <img src="{{ asset('templates/ocean/bottom.png') }}" alt="bottom flower" class="decor-bottom">
 
     <h2 class="save-title" style="font-family: 'Blackjack', sans-serif">Invitation</h2>
-    <p class="invitation-subtitle" style="color: {{ template.secondaryColor }}">Mariage coutumier</p>
+    <p class="invitation-subtitle" style="color: {{ template.secondaryColor }}">{{ invitation is defined ? invitation.event.category.name : 'Mariage Coutumier' }}</p>
 
     <div class="decor-wrapper">
         <img src="{{ asset('templates/ocean/decor.png') }}" alt="decor hexagon" class="decor-center" />
         <div class="names-wrapper">
-            <div class="names">Rebecca & Serge</div>
+            <div class="names">{{ invitation is defined ? invitation.event.title : "Daniella & Daniel" }}</div>
         </div>
     </div>
 
     <div>
         <div class="date-block">
-            <div class="date-date">28 JUIN 2025</div>
-            <div class="date-time">20H00</div>
+            <div class="date-date">{{ date }}</div>
+            <div class="date-time">{{ hour }}H{{ minute }}</div>
         </div>
 
         <div class="location">
-            <div class="place-name" style="color: {{ template.secondaryColor }}">SALLE DE FETE LES JUMELLES</div>
-            <div class="full-address">123 Anywhere St., Any City, ST 12345</div>
+            <div class="place-name" style="color: {{ template.secondaryColor }}">{{ invitation is defined ? invitation.event.placeName : '' }}</div>
+            <div class="full-address">{{ invitation.event.address }}</div>
         </div>
     </div>
 
-    <p class="rsvp">Your reply requested by May 29, 2023</p>
+    <p class="rsvp">Generated with <b>KuuWaa</b></p>
 </div>
