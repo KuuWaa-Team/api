@@ -771,14 +771,15 @@
                 <div class="p-0">
                     <div class="w-full h-80 bg-gray-100">
                         <iframe
-                            src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d15!2d{{ invitation.event.placeLongitude }}!3d{{ invitation.event.placeLatitude }}!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sfr!2sfr!4v{{ "now"|date('U') }}!5m2!1sfr!2sfr"
-                            width="100%" height="100%" allowfullscreen="" loading="lazy"
-                            referrerpolicy="no-referrer-when-downgrade"
-                            style="border: 0;">
+                                src="https://maps.google.com/maps?q={{ invitation.event.placeLatitude }},{{ invitation.event.placeLongitude }}&z=15&output=embed"
+                                width="100%" height="100%" allowfullscreen="" loading="lazy"
+                                referrerpolicy="no-referrer-when-downgrade"
+                                style="border: 0;">
                         </iframe>
                     </div>
+
                     <div class="jsx-d0ada46de86ca64b p-4 bg-gradient-to-r from-[{{ template.primaryColor }}]/5 to-[{{ template.secondaryColor }}]/5">
-                        <p class="jsx-d0ada46de86ca64b text-[{{ template.secondaryColor }}] font-medium">{{ invitation.event.placeName }}<br>{{ invitation.event.address }}
+                        <p class="jsx-d0ada46de86ca64b text-[{{ template.secondaryColor }}] font-medium">{{ invitation.event.placeName|upper }}<br>{{ invitation.event.address }}
                             12345</p>
                         <p class="jsx-d0ada46de86ca64b text-[{{ template.secondaryColor }}]/70 text-sm mt-1">Parking disponible sur place
                             • Transport en commun accessible</p>
