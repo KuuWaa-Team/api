@@ -1590,10 +1590,23 @@
                 });
 
                 if (response.ok) {
-                    const result = await response.json();
-                    alert("Votre présence a bien été confirmée !");
-                } else {
-                    alert("Erreur lors de la confirmation.");
+                    confetti({
+                        ...defaults,
+                        particleCount: 50,
+                        scalar: 2,
+                    });
+
+                    confetti({
+                        ...defaults,
+                        particleCount: 25,
+                        scalar: 3,
+                    });
+
+                    confetti({
+                        ...defaults,
+                        particleCount: 10,
+                        scalar: 4,
+                    });
                 }
             } catch (error) {
                 console.error("Erreur AJAX :", error);
