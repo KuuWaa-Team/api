@@ -1522,14 +1522,14 @@
 </div>
 <script>
     window.addEventListener("DOMContentLoaded", (event) => {
-        document.getElementById('start-experience').addEventListener('click', function (e) {
-            e.preventDefault();
-            window.scrollBy({
-                top: window.innerHeight,
-                left: 0,
-                behavior: 'smooth'
-            });
-        });
+        // document.getElementById('start-experience').addEventListener('click', function (e) {
+        //     e.preventDefault();
+        //     window.scrollBy({
+        //         top: window.innerHeight,
+        //         left: 0,
+        //         behavior: 'smooth'
+        //     });
+        // });
         document.getElementById("scroll-button").addEventListener("click", function (e) {
             e.preventDefault();
             window.scrollBy({
@@ -1589,7 +1589,7 @@
                     body: JSON.stringify({ presence })
                 });
 
-                if (response.ok) {
+                if (response.ok && presence) {
                     confetti({
                         ...defaults,
                         particleCount: 50,
