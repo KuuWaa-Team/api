@@ -582,9 +582,8 @@
         </div>
     </div>
     <section
-            class="jsx-d0ada46de86ca64b min-h-screen flex flex-col overflow-hidden transition-all duration-1000 opacity-100 translate-y-0">
-        <!-- Image de fond en fixed -->
-        <div class="fixed inset-0 bg-cover bg-center" style="background-image: url('{{ asset(apiUrl ~ invitation.event.imagePath) }}'); background-attachment: fixed; background-position: center; background-size: cover"></div>
+            class="min-h-screen flex flex-col overflow-hidden transition-all duration-1000 opacity-100 translate-y-0 relative"
+            style="background-image: url('{{ asset(apiUrl ~ invitation.event.imagePath) }}'); background-attachment: fixed; background-position: center; background-size: cover;">
 
         <!-- Overlays de gradient -->
         <div class="fixed inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/60"></div>
