@@ -56,24 +56,6 @@ class InvitationController extends AbstractController
             $this->addFlash('notice', 'Message envoyé avec succès');
         }
 
-        $beveragesArray = [];
-        foreach ($invitation->getEvent()->getBeverages() as $bev) {
-            $beveragesArray[$bev->getName()] = $bev->getId();
-        }
-
-        $beverageForm = $this->createForm(BeverageFormType::class, null, [
-            'choices' => $beveragesArray
-        ]);
-        $beverageForm->handleRequest($request);
-
-        if ($beverageForm->isSubmitted() && $beverageForm->isValid()) {
-            $data = $beverageForm->getData();
-            $selectedBeverage = $beverageRepository->find($data['beverage']);
-            $invitation->setBeverage($selectedBeverage);
-            $invitationRepository->save($invitation, true);
-            $this->addFlash('notice', 'Préférence envoyée avec succès');
-        }
-
         return $this->render('public/invitation/index.html.twig', [
             'invitation' => $invitation,
             'template' => $invitation->getEvent()->getTemplate(),
@@ -82,7 +64,6 @@ class InvitationController extends AbstractController
             'eventImage' => $eventImage,
             'codeImage' => $codeImage,
             'form' => $form->createView(),
-            'beverageForm' => $beverageForm->createView(),
         ]);
     }
 }
