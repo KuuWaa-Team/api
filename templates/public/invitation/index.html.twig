@@ -15,23 +15,6 @@
             background-color: {{ template.primaryColor }} !important;
         }
 
-        {# Supposons que primaryColor = "#3498db" #}
-        {% set primaryHex = template.primaryColor|replace({'#': ''}) %}
-        {% set primaryR = primaryHex[0:2] %}
-        {% set primaryG = primaryHex[2:2] %}
-        {% set primaryB = primaryHex[4:2] %}
-
-        {# Convertir les hex en décimal avec '0x' + valeur #}
-        {% set primaryR = ('0x' ~ primaryR)|number_format(0, '.', '', '') %}
-        {% set primaryG = ('0x' ~ primaryG)|number_format(0, '.', '', '') %}
-        {% set primaryB = ('0x' ~ primaryB)|number_format(0, '.', '', '') %}
-
-        {# Idem pour secondaryColor #}
-        {% set secondaryHex = template.secondaryColor|replace({'#': ''}) %}
-        {% set secondaryR = ('0x' ~ secondaryHex[0:2])|number_format(0, '.', '', '') %}
-        {% set secondaryG = ('0x' ~ secondaryHex[2:2])|number_format(0, '.', '', '') %}
-        {% set secondaryB = ('0x' ~ secondaryHex[4:2])|number_format(0, '.', '', '') %}
-
         .to-\[\#{{ secondaryHex }}\] {
             --tw-gradient-to: #{{ secondaryHex }} var(--tw-gradient-to-position) !important;
         }
