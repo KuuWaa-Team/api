@@ -31,12 +31,10 @@ class InvitationController extends AbstractController
     public function index($slug, Request $request, BeverageRepository $beverageRepository, BookRepository $bookRepository, InvitationRepository $invitationRepository, DateService $dateService, KernelInterface $kernel): Response
     {
         $invitation = $invitationRepository->findBySlug($slug);
-        $date = $dateService->getFullDate($invitation->getEvent()->getDate(), true, true) . " à " . $invitation->getEvent()->getDate()->format("H:i");
+        $date = $dateService->getFullDate($invitation->getEvent()->getStartDate(), true, true) . " à " . $invitation->getEvent()->getStartDate()->format("H:i");
         $eventImage = $dateService->imageToBase64($kernel->getProjectDir() . $invitation->getEvent()->getImagePath());
         $codeImage = $dateService->imageToBase64($kernel->getProjectDir() . $invitation->getCodePath());
-        $eventFeaturesSlug = $content = json_decode($invitation->getEvent()->getFeatureslugs(), true, 512, JSON_THROW_ON_ERROR);;
-        $hasBook = in_array('BOOK', $eventFeaturesSlug, true);
-        $hasBeverage = in_array('BEVERAGE', $eventFeaturesSlug, true);
+
         $apiUrl = $this->apiService->getApiUrl();
 
 
@@ -81,8 +79,6 @@ class InvitationController extends AbstractController
             'template' => $invitation->getEvent()->getTemplate(),
             'date' => $date,
             'apiUrl' => $apiUrl,
-            'hasBook' => $hasBook,
-            'hasBeverage' => $hasBeverage,
             'eventImage' => $eventImage,
             'codeImage' => $codeImage,
             'form' => $form->createView(),
