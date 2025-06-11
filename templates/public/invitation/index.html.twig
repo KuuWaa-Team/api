@@ -1637,7 +1637,7 @@
                         <p class="text-green-600 text-sm mt-2">Votre présence confirmée • Nous avons hâte de vous voir !</p>
                     </div>
                     <div class="text-center">
-                        <button class="modifier-reponse-btn inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 border bg-background h-10 px-4 py-2 border-[#f24173] text-[#f24173] hover:bg-[#f24173] hover:text-white">
+                        <button class="modifier-reponse-btn inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 border bg-background h-10 px-4 py-2 border-[{{ template.primaryColor }}] text-[{{ template.primaryColor }}] hover:bg-[{{ template.primaryColor }}] hover:text-white">
                             Modifier ma réponse
                         </button>
                     </div>
@@ -1655,7 +1655,7 @@
                         <p class="text-orange-600 text-sm mt-2">Absence confirmée • Vous serez dans nos pensées</p>
                     </div>
                     <div class="text-center">
-                        <button class="modifier-reponse-btn inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 border bg-background h-10 px-4 py-2 border-[#f24173] text-[#f24173] hover:bg-[#f24173] hover:text-white">
+                        <button class="modifier-reponse-btn inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 border bg-background h-10 px-4 py-2 border-[{{ template.primaryColor }}] text-[{{ template.primaryColor }}] hover:bg-[{{ template.primaryColor }}] hover:text-white">
                             Modifier ma réponse
                         </button>
                     </div>
@@ -1663,9 +1663,29 @@
             `;
             }
 
-            // TODO: Tu peux ici remettre le formulaire si l'utilisateur clique sur "Modifier ma réponse"
             document.querySelector(".modifier-reponse-btn")?.addEventListener("click", () => {
-                window.location.reload(); // ou réinjecter le bloc original
+                const invitationId = document.querySelector(".modifier-reponse-btn").dataset.id;
+
+                fetch(`/confirm-presence/${invitationId}`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-Requested-With": "XMLHttpRequest",
+                        "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]')?.content // optionnel si CSRF
+                    },
+                    body: JSON.stringify({
+                        presence: null
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        window.location.reload();
+                    }
+                })
+                .catch(() => {
+                    alert("Erreur réseau. Vérifiez votre connexion.");
+                });
             });
         }
 
