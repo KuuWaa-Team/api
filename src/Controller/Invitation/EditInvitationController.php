@@ -166,7 +166,7 @@ class EditInvitationController extends AbstractController
             ->roundBlockSizeMode(RoundBlockSizeMode::Margin)
             ->logoPath($kernel->getProjectDir() . '/public/images/logo-dark.png')
             ->logoResizeToWidth(80)
-            ->labelText($invitation->getCode())
+            ->labelText($invitation->getFullname())
             ->labelFont(new NotoSans(20))
             ->labelAlignment(LabelAlignment::Center)
             ->validateResult(false)

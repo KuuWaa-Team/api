@@ -123,7 +123,7 @@ class AddInvitationController extends AbstractController
             ->roundBlockSizeMode(RoundBlockSizeMode::Margin)
             ->logoPath($kernel->getProjectDir() . '/public/images/logo-dark.png')
             ->logoResizeToWidth(80)
-            ->labelText($code)
+            ->labelText($invitation->getFullname())
             ->labelFont(new NotoSans(20))
             ->labelAlignment(LabelAlignment::Center)
             ->validateResult(false)
