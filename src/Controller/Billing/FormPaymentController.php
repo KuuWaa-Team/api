@@ -34,6 +34,6 @@ class FormPaymentController extends AbstractController
             $amount += $feature->getPrice();
         }
 
-        return $this->render('billing/form_payment/index.html.twig', ['event' => $event, 'amount' => $amount]);
+        return $this->render('billing/form_payment/index2.html.twig', ['event' => $event, 'amount' => $amount]);
     }
 }

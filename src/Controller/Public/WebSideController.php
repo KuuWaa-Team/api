@@ -27,7 +27,7 @@ class WebSideController extends AbstractController
                 $this->addFlash('success', 'Message envoyé avec succès');
             }
         }
-        return $this->render('public/web_side/index.html.twig', [
+        return $this->render('public/web_side/index2.html.twig', [
             'packs' => $packRepository->findAllOrdered(),
         ]);
     }

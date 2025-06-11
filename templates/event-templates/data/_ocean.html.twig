@@ -1,0 +1,187 @@
+<style>
+    .invitation-container {
+        position: relative;
+        background-color: #fff;
+        padding: 1.5rem 1rem;
+        border: 1px solid {{ template.primaryColor }};
+        max-width: 600px;
+        margin: auto;
+        text-align: center;
+        font-family: 'FairDisplay', serif;
+        color: #a77b00;
+        overflow: hidden;
+        z-index: 2;
+        border-radius: 5px;
+        box-shadow:
+                0 4px 6px rgba(0, 0, 0, 0.05),
+                0 8px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    @font-face {
+        font-family: 'Blackjack';
+        src: url('{{ asset('templates/ocean/blackjack.otf') }}') format('opentype');
+    }
+
+    @font-face {
+        font-family: 'FairDisplay';
+        src: url('{{ asset('templates/ocean/PlayfairDisplay-Regular.otf') }}') format('opentype');
+    }
+
+    @font-face {
+        font-family: 'Amsterdam';
+        src: url('{{ asset('templates/ocean/Amsterdam.ttf') }}') format('truetype');
+    }
+
+    .decor-top,
+    .decor-bottom {
+        position: absolute;
+        width: 250px;
+        z-index: 0;
+        pointer-events: none;
+    }
+
+    .decor-top {
+        top: -50px;
+        right: -50px;
+        animation: rotateClockwise 40s linear infinite;
+        transform-origin: center;
+    }
+
+    .decor-bottom {
+        bottom: -50px;
+        left: -50px;
+        animation: rotateCounter 40s linear infinite;
+        transform-origin: center;
+    }
+
+    @keyframes rotateClockwise {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    @keyframes rotateCounter {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(-360deg); }
+    }
+
+    .save-title {
+        font-size: 2rem;
+        letter-spacing: 1px;
+        margin-top: 1rem;
+        margin-bottom: 0.25rem;
+        position: relative;
+        z-index: 2;
+        line-height: .5;
+    }
+
+    .invitation-subtitle {
+        font-size: 0.75rem;
+        letter-spacing: 2px;
+        margin-bottom: 1rem;
+        position: relative;
+        z-index: 2;
+    }
+
+    .decor-wrapper {
+        position: relative;
+        width: 300px;
+        margin: 1.5rem auto;
+        z-index: 2;
+    }
+
+    .decor-center {
+        width: 100%;
+        display: block;
+    }
+
+    .names-wrapper {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-family: 'Amsterdam', cursive;
+        text-align: center;
+        color: #a77b00;
+    }
+
+    .names {
+        font-size: 2.2rem;
+        line-height: 4.5rem;
+    }
+
+    .ampersand {
+        font-size: 1.3rem;
+        font-family: 'FairDisplay';
+        margin: 0.3rem 0;
+    }
+
+    .date-block {
+        position: relative;
+        z-index: 2;
+        font-family: 'FairDisplay', sans-serif;
+    }
+
+    .date-date {
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: #8b6b1f;
+        margin-bottom: 0;
+        line-height: 0;
+    }
+
+    .date-time {
+        font-size: 1.85rem;
+        color: {{ template.primaryColor }};
+    }
+
+
+    .location {
+        font-size: 0.8rem;
+        letter-spacing: .5px;
+        padding: 0.5rem 1rem;
+        display: inline-block;
+        border-top: 1px solid {{ template.primaryColor }};
+        border-bottom: 1px solid {{ template.primaryColor }};
+        z-index: 2;
+        position: relative;
+    }
+
+    .rsvp {
+        font-size: 0.7rem;
+        margin-top: 1.5rem;
+        color: #777;
+        z-index: 2;
+        position: relative;
+    }
+
+</style>
+
+<div class="invitation-container">
+    <img src="{{ asset('templates/ocean/top.png') }}" alt="top flower" class="decor-top">
+    <img src="{{ asset('templates/ocean/bottom.png') }}" alt="bottom flower" class="decor-bottom">
+
+    <h2 class="save-title" style="font-family: 'Blackjack', sans-serif">Invitation</h2>
+    <p class="invitation-subtitle" style="color: {{ template.secondaryColor }}">Mariage coutumier</p>
+
+    <div class="decor-wrapper">
+        <img src="{{ asset('templates/ocean/decor.png') }}" alt="decor hexagon" class="decor-center" />
+        <div class="names-wrapper">
+            <div class="names">Rebecca & Serge</div>
+        </div>
+    </div>
+
+    <div>
+        <div class="date-block">
+            <div class="date-date">28 JUIN 2025</div>
+            <div class="date-time">20H00</div>
+        </div>
+
+        <div class="location">
+            <div class="place-name" style="color: {{ template.secondaryColor }}">SALLE DE FETE LES JUMELLES</div>
+            <div class="full-address">123 Anywhere St., Any City, ST 12345</div>
+        </div>
+    </div>
+
+    <p class="rsvp">Your reply requested by May 29, 2023</p>
+</div>

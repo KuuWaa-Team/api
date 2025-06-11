@@ -4,6 +4,7 @@ namespace App\Controller\Invitation;
 
 use App\Entity\Invitation;
 use App\Repository\InvitationRepository;
+use App\Service\ApiService;
 use App\Service\DateService;
 use App\Service\PhoneService;
 use App\Service\SmsService;
@@ -28,6 +29,7 @@ class SendInvitationController extends AbstractController
         private readonly NormalizerInterface $normalizer,
         private readonly WhatsappService $whatsappService,
         private readonly DateService $dateService,
+        private readonly ApiService $apiService,
     )
     {
     }
@@ -41,6 +43,7 @@ class SendInvitationController extends AbstractController
     {
         $content = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
         $method = $content["method"] ?? null;
+        $apiUrl = $this->apiService->getApiUrl();
 
         if ($invitation->getEvent()->getPaymentStatus() === 'paid') {
             $phoneNumber = $this->phoneService->format($invitation->getPhoneNumber());
@@ -48,7 +51,7 @@ class SendInvitationController extends AbstractController
                 $message = "Bonjour " . $invitation->getCivility() . " " . $invitation->getName();
                 $message .= ",\nVous etes invite a l'evenement \"{$invitation->getEvent()->getName()}\" le " . $this->dateService->getFullDate($invitation->getEvent()->getDate(), true, true) . " a {$invitation->getEvent()->getDate()->format('H:i')}.";
                 $message .= "\n\nPour acceder e votre invitation, veuillez ouvrir le lien suivant.";
-                $message .= "\nhttp://kuuwaa.com/invitations/" . $invitation->getCode();
+                $message .= "\n" . $apiUrl . "/invitations/" . $invitation->getCode();
                 $message .= "\n\nSi vous rencontrez des difficultes pour ouvrir le lien, veuillez retenir le code d'invitation a 6 chiffres ({$invitation->getCode()}) et présentez-le lors de la vérification a l'entree de l'evenement.";
                 // $this->smsService->send($phoneNumber, $body);
             } else if ($method === "wpp") {
@@ -56,7 +59,7 @@ class SendInvitationController extends AbstractController
                 $message = "Bonjour " . $invitation->getCivility() . " " . $invitation->getName();
                 $message .= ",\nVous êtes invité à l'évenement \"{$invitation->getEvent()->getCategory()->getName()} - {$invitation->getEvent()->getName()}\" le " . $this->dateService->getFullDate($invitation->getEvent()->getDate(), true, true)  . " à {$invitation->getEvent()->getDate()->format('H:i')}.";
                 $message .= "\n\nPour accéder à votre invitation, veuillez ouvrir le lien suivant.";
-                $message .= "\nhttp://kuuwaa.com/invitations/" . $invitation->getCode();
+                $message .= "\n" . $apiUrl . "/invitations/" . $invitation->getCode();
                 $message .= "\n\nSi vous rencontrez des difficultés pour ouvrir le lien, veuillez retenir le code d'invitation à 6 chiffres ({$invitation->getCode()}) et présentez-le lors de la vérification à l'entrée de l'évenement.";
                 try {
                     // $messageSid = $this->whatsappService->sendWhatsAppMessage($to, $body);

@@ -46,11 +46,11 @@ final class PreviewController extends AbstractController
         }
 
         $category = $this->categoryRepository->find((int) $categoryId);
-
-        return $this->render("template/preview/{$template->getCode()}.html.twig", [
+        return $this->render("event-templates/preview.html.twig", [
             'title' => $title,
             'address' => $address,
             'placeName' => $placeName,
+            'template' => $template,
             'details' => $details,
             'category' => $category,
             'startDate' => $startDate,

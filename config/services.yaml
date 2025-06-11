@@ -11,6 +11,7 @@ parameters:
 
   telegram_bot_token: '6583205215:AAEzE7r52D34qYVJRZZYBWl62J7JiSLxj5c'
   telegram_chat_id: '5222905724'
+  api_url: '%env(API_URL)%'
 
 services:
   # default configuration for services in *this* file

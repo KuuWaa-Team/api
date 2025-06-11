@@ -7,9 +7,11 @@ use App\Entity\Table;
 use App\Repository\EventRepository;
 use App\Repository\InvitationRepository;
 use App\Repository\TableRepository;
+use App\Service\ApiService;
 use App\Service\DateService;
 use App\Service\OTPService;
 use Endroid\QrCode\Builder\Builder;
+use Endroid\QrCode\Color\Color;
 use Endroid\QrCode\Encoding\Encoding;
 use Endroid\QrCode\ErrorCorrectionLevel;
 use Endroid\QrCode\Label\Font\NotoSans;
@@ -32,6 +34,7 @@ class AddInvitationController extends AbstractController
         private readonly NormalizerInterface $normalizer,
         private readonly OTPService $OTPService,
         private readonly DateService $dateService,
+        private readonly ApiService $apiService,
     )
     {
     }
@@ -48,6 +51,7 @@ class AddInvitationController extends AbstractController
         $count = $content["count"] ?? null;
         $eventId = $content["eventId"] ?? null;
         $tableId = $content["tableId"] ?? null;
+        $apiUrl = $this->apiService->getApiUrl();
 
         $event = $this->eventRepository->find($eventId);
         do {
@@ -102,10 +106,16 @@ class AddInvitationController extends AbstractController
         $fileName = uniqid('', true) . '.png';
         $destinationPath = $kernel->getProjectDir() . '/public/events/invitations/qr_code';
 
+        $primaryColor = $event->getTemplate()->getPrimaryColor(); // e.g., "#4285f4"
+        list($r, $g, $b) = $this->hexToRgb($primaryColor);
+
         $result = Builder::create()
             ->writer(new PngWriter())
             ->writerOptions([])
             ->data($jsonQrCodeData)
+            ->backgroundColor(new Color(255, 255, 255))
+            ->foregroundColor(new Color($r, $g, $b))
+            ->labelTextColor(new Color($r, $g, $b))
             ->encoding(new Encoding('UTF-8'))
             ->errorCorrectionLevel(ErrorCorrectionLevel::Medium)
             ->size(300)
@@ -125,7 +135,7 @@ class AddInvitationController extends AbstractController
         $invitMessage = "Bonjour " . $civility . " " . $name;
         $invitMessage .= ",\nVous êtes invité à l'évenement \"{$event->getCategory()->getName()} - {$event->getTitle()}\" le " . $this->dateService->getFullDate($event->getStartDate(), true, true)  . " à {$event->getStartDate()->format('H:i')}.";
         $invitMessage .= "\n\nPour accéder à votre invitation, veuillez ouvrir le lien suivant.";
-        $invitMessage .= "\nhttps://kuuwaa.com/invitations/" . $invitation->getSlug();
+        $invitMessage .= "\n" . $apiUrl . "com/invitations/" . $invitation->getSlug();
         $invitMessage .= "\n\nSi vous rencontrez des difficultés pour ouvrir le lien, veuillez retenir le code d'invitation à 6 chiffres ({$invitation->getCode()}) et présentez-le lors de la vérification à l'entrée de l'évenement.";
 
         $invitation->setMessage($invitMessage);
@@ -145,5 +155,18 @@ class AddInvitationController extends AbstractController
         ];
 
         return new JsonResponse($response, Response::HTTP_OK);
+    }
+
+    function hexToRgb(string $hex): array {
+        $hex = ltrim($hex, '#');
+        if (strlen($hex) === 3) {
+            $hex = $hex[0].$hex[0] . $hex[1].$hex[1] . $hex[2].$hex[2];
+        }
+
+        return [
+            hexdec(substr($hex, 0, 2)),
+            hexdec(substr($hex, 2, 2)),
+            hexdec(substr($hex, 4, 2))
+        ];
     }
 }
