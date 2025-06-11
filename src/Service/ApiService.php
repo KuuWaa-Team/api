@@ -15,6 +15,6 @@ class ApiService
 
     public function getApiUrl(): string
     {
-        return $this->params->get('env(API_URL)');
+        return $this->params->get('api_url');
     }
 }
