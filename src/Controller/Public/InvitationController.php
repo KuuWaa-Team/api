@@ -59,6 +59,9 @@ class InvitationController extends AbstractController
             $this->addFlash('notice', 'Message envoyé avec succès');
         }
 
+        list($primaryR, $primaryG, $primaryB) = $this->hexToRgb($invitation->getEvent()->getTemplate()->getPrimaryColor());
+        list($secondaryR, $secondaryG, $secondaryB) = $this->hexToRgb($invitation->getEvent()->getTemplate()->getSecondaryColor());
+
         return $this->render('public/invitation/index.html.twig', [
             'invitation' => $invitation,
             'template' => $invitation->getEvent()->getTemplate(),
@@ -70,6 +73,30 @@ class InvitationController extends AbstractController
             'year' => $year,
             'hour' => $hour,
             'minute' => $minute,
+
+            // colors
+            'primaryR' => $primaryR,
+            'primaryG' => $primaryG,
+            'primaryB' => $primaryB,
+            'secondaryR' => $secondaryR,
+            'secondaryG' => $secondaryG,
+            'secondaryB' => $secondaryB,
+
+            'primaryHex' => str_replace('#', '', $invitation->getEvent()->getTemplate()->getPrimaryColor()),
+            'secondaryHex' => str_replace('#', '', $invitation->getEvent()->getTemplate()->getSecondaryColor()),
         ]);
+    }
+
+    function hexToRgb(string $hex): array {
+        $hex = ltrim($hex, '#');
+        if (strlen($hex) === 3) {
+            $hex = $hex[0].$hex[0] . $hex[1].$hex[1] . $hex[2].$hex[2];
+        }
+
+        return [
+            hexdec(substr($hex, 0, 2)),
+            hexdec(substr($hex, 2, 2)),
+            hexdec(substr($hex, 4, 2))
+        ];
     }
 }
