@@ -7,6 +7,7 @@ use App\Entity\Table;
 use App\Repository\EventRepository;
 use App\Repository\InvitationRepository;
 use App\Repository\TableRepository;
+use App\Service\ApiService;
 use App\Service\DateService;
 use App\Service\OTPService;
 use Endroid\QrCode\Builder\Builder;
@@ -33,6 +34,7 @@ class AddInvitationController extends AbstractController
         private readonly NormalizerInterface $normalizer,
         private readonly OTPService $OTPService,
         private readonly DateService $dateService,
+        private readonly ApiService $apiService,
     )
     {
     }
@@ -49,6 +51,7 @@ class AddInvitationController extends AbstractController
         $count = $content["count"] ?? null;
         $eventId = $content["eventId"] ?? null;
         $tableId = $content["tableId"] ?? null;
+        $apiUrl = $this->apiService->getApiUrl();
 
         $event = $this->eventRepository->find($eventId);
         do {
@@ -132,7 +135,7 @@ class AddInvitationController extends AbstractController
         $invitMessage = "Bonjour " . $civility . " " . $name;
         $invitMessage .= ",\nVous êtes invité à l'évenement \"{$event->getCategory()->getName()} - {$event->getTitle()}\" le " . $this->dateService->getFullDate($event->getStartDate(), true, true)  . " à {$event->getStartDate()->format('H:i')}.";
         $invitMessage .= "\n\nPour accéder à votre invitation, veuillez ouvrir le lien suivant.";
-        $invitMessage .= "\nhttps://kuuwaa.com/invitations/" . $invitation->getSlug();
+        $invitMessage .= "\n" . $apiUrl . "com/invitations/" . $invitation->getSlug();
         $invitMessage .= "\n\nSi vous rencontrez des difficultés pour ouvrir le lien, veuillez retenir le code d'invitation à 6 chiffres ({$invitation->getCode()}) et présentez-le lors de la vérification à l'entrée de l'évenement.";
 
         $invitation->setMessage($invitMessage);

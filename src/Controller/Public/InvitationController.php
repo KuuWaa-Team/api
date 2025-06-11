@@ -9,6 +9,7 @@ use App\Form\Invitation\BookMessageFormType;
 use App\Repository\BeverageRepository;
 use App\Repository\Event\BookRepository;
 use App\Repository\InvitationRepository;
+use App\Service\ApiService;
 use App\Service\DateService;
 use Doctrine\ORM\NonUniqueResultException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -19,6 +20,10 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class InvitationController extends AbstractController
 {
+    public function __construct(
+        private readonly ApiService $apiService,
+    ){}
+
     /**
      * @throws NonUniqueResultException
      */
@@ -32,6 +37,8 @@ class InvitationController extends AbstractController
         $eventFeaturesSlug = $content = json_decode($invitation->getEvent()->getFeatureslugs(), true, 512, JSON_THROW_ON_ERROR);;
         $hasBook = in_array('BOOK', $eventFeaturesSlug, true);
         $hasBeverage = in_array('BEVERAGE', $eventFeaturesSlug, true);
+        $apiUrl = $this->apiService->getApiUrl();
+
 
         $form = $this->createForm(BookMessageFormType::class);
         $form->handleRequest($request);
@@ -71,7 +78,9 @@ class InvitationController extends AbstractController
 
         return $this->render('public/invitation/index.html.twig', [
             'invitation' => $invitation,
+            'template' => $invitation->getEvent()->getTemplate(),
             'date' => $date,
+            'apiUrl' => $apiUrl,
             'hasBook' => $hasBook,
             'hasBeverage' => $hasBeverage,
             'eventImage' => $eventImage,

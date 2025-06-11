@@ -6,6 +6,7 @@ use App\Entity\Invitation;
 use App\Repository\EventRepository;
 use App\Repository\InvitationRepository;
 use App\Repository\TableRepository;
+use App\Service\ApiService;
 use App\Service\DateService;
 use App\Service\OTPService;
 use Endroid\QrCode\Builder\Builder;
@@ -31,7 +32,8 @@ class EditInvitationController extends AbstractController
         private readonly InvitationRepository $invitationRepository,
         private readonly NormalizerInterface $normalizer,
         private readonly OTPService $OTPService,
-        private readonly DateService $dateService
+        private readonly DateService $dateService,
+        private readonly ApiService $apiService,
     )
     {
     }
