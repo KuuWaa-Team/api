@@ -307,9 +307,19 @@ class Invitation
         return $this->id;
     }
 
+    public function isFemale(): bool
+    {
+        return $this->civility === 'Mlle' || $this->civility === 'Mme';
+    }
+
     public function getName(): ?string
     {
         return $this->name;
+    }
+
+    public function getFullname(): ?string
+    {
+        return $this->civility . " " . $this->name;
     }
 
     public function setName(string $name): static

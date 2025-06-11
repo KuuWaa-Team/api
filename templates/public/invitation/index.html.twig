@@ -577,8 +577,8 @@
     <div class="jsx-d0ada46de86ca64b fixed top-4 left-4 right-4 z-50 flex justify-center">
         <div
                 class="jsx-d0ada46de86ca64b bg-white/95 backdrop-blur-md rounded-full px-4 md:px-6 py-2 md:py-3 shadow-lg border border-[{{ template.primaryColor }}]/20">
-            <p class="jsx-d0ada46de86ca64b text-[{{ template.secondaryColor }}] text-sm md:text-base font-medium tracking-wide">Cher(e)
-                <span class="jsx-d0ada46de86ca64b text-[{{ template.primaryColor }}] font-semibold">Mr Daniel Mwema</span></p>
+            <p class="jsx-d0ada46de86ca64b text-[{{ template.secondaryColor }}] text-sm md:text-base font-medium tracking-wide">Cher{{ invitation.isFemale ? 'e' : '' }}
+                <span class="jsx-d0ada46de86ca64b text-[{{ template.primaryColor }}] font-semibold">{{ invitation.fullname }}</span></p>
         </div>
     </div>
     <section
@@ -607,11 +607,11 @@
                     <h2
                             class="text-[{{ template.primaryColor }}] jsx-d0ada46de86ca64b text-xl md:text-4xl lg:text-5xl font-serif text-white/90 leading-tight"
                             style="margin-top:10px;">
-                        pour notre mariage</h2>
+                        pour notre {{ invitation.event.category.name }}</h2>
                 </div>
                 <div class="jsx-d0ada46de86ca64b space-y-6 animate-fade-in delay-1000">
                     <div style="text-align: left"
-                            class="jsx-d0ada46de86ca64b bg-white/10 rounded-2xl p-3 md:p-4 border border-white/20">
+                            class="jsx-d0ada46de86ca64b bg-white/10 rounded-2xl p-6 md:p-4 border border-white/20">
                         <h3 style="text-align: center" class="jsx-d0ada46de86ca64b text-xl md:text-2xl font-semibold text-white mb-4">Comment
                             fonctionne cette invitation ?</h3>
                         <div class="jsx-d0ada46de86ca64b grid md:grid-cols-2 gap-3 text-white/90">
@@ -665,7 +665,7 @@
                                 <div class="jsx-d0ada46de86ca64b">
                                     <h4 class="jsx-d0ada46de86ca64b font-medium mb-1">Expérience personnalisée</h4>
                                     <p class="jsx-d0ada46de86ca64b text-sm text-white/80">Chaque section est adaptée
-                                        pour vous, Mr Daniel Mwema</p>
+                                        pour vous, {{ invitation.fullname }}</p>
                                 </div>
                             </div>
                             <div class="jsx-d0ada46de86ca64b flex items-start space-x-3">
@@ -754,9 +754,7 @@
     <section id="interactive-content" class="jsx-d0ada46de86ca64b py-4 px-4">
         <div class="jsx-d0ada46de86ca64b max-w-4xl mx-auto space-y-8">
             <div class="quote-container" style="--quote-color: {{ template.primaryColor }};">
-                <p class="quote-text">
-                    Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.
-                </p>
+                <p class="quote-text">{{ invitation.event.detail }}</p>
             </div>
             <div class="rounded-lg border bg-card text-card-foreground border-[{{ template.primaryColor }}]/20 shadow-lg overflow-hidden">
                 <div class="flex flex-col space-y-1.5 p-6 text-center">
@@ -771,13 +769,16 @@
                         </svg>Lieu de la cérémonie</div>
                 </div>
                 <div class="p-0">
-                    <div class="jsx-d0ada46de86ca64b w-full h-80 bg-gray-100"><iframe
-                                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2624.9916256937604!2d2.2922926156743847!3d48.858370079287475!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47e66e2964e34e2d%3A0x8ddca9ee380ef7e0!2sTour%20Eiffel!5e0!3m2!1sfr!2sfr!4v1654956153617!5m2!1sfr!2sfr"
-                                width="100%" height="100%" allowfullscreen="" loading="lazy"
-                                referrerpolicy="no-referrer-when-downgrade" class="jsx-d0ada46de86ca64b"
-                                style="border: 0px;"></iframe></div>
+                    <div class="w-full h-80 bg-gray-100">
+                        <iframe
+                            src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d15!2d{{ invitation.event.placeLongitude }}!3d{{ invitation.event.placeLatitude }}!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sfr!2sfr!4v{{ "now"|date('U') }}!5m2!1sfr!2sfr"
+                            width="100%" height="100%" allowfullscreen="" loading="lazy"
+                            referrerpolicy="no-referrer-when-downgrade"
+                            style="border: 0;">
+                        </iframe>
+                    </div>
                     <div class="jsx-d0ada46de86ca64b p-4 bg-gradient-to-r from-[{{ template.primaryColor }}]/5 to-[{{ template.secondaryColor }}]/5">
-                        <p class="jsx-d0ada46de86ca64b text-[{{ template.secondaryColor }}] font-medium">123 ANYWHERE ST., ANY CITY, ST
+                        <p class="jsx-d0ada46de86ca64b text-[{{ template.secondaryColor }}] font-medium">{{ invitation.event.placeName }}<br>{{ Invitation.event.address }}
                             12345</p>
                         <p class="jsx-d0ada46de86ca64b text-[{{ template.secondaryColor }}]/70 text-sm mt-1">Parking disponible sur place
                             • Transport en commun accessible</p>
@@ -806,29 +807,14 @@
                         </svg>Accès à la salle</div>
                 </div>
                 <div class="p-6 pt-0 text-center">
-                    <p class="jsx-d0ada46de86ca64b text-[{{ template.secondaryColor }}]/70 mb-6">Mr Daniel Mwema, pour faciliter votre
-                        entrée et éviter les files d'attente, nous avons préparé ce QR code personnel. Il vous
-                        permettra un accès rapide et sécurisé à la salle de réception.</p>
+                    <p class="jsx-d0ada46de86ca64b text-[{{ template.secondaryColor }}]/70 mb-6">
+                        {{ invitation.fullname }}, veuillez présenter ce QR code à l’entrée pour un accès rapide et sécurisé à la salle. <br><b>Nous vous recommandons d’en faire une capture d’écran.</b>
+                    </p>
                     <div
                             class="jsx-d0ada46de86ca64b bg-white p-8 rounded-lg border-2 border-dashed border-[{{ template.primaryColor }}]/30 inline-block">
                         <div
                                 class="jsx-d0ada46de86ca64b w-48 h-48 bg-gradient-to-br from-[{{ template.primaryColor }}]/10 to-[{{ template.secondaryColor }}]/10 rounded-lg flex items-center justify-center">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                 stroke-linejoin="round" class="lucide lucide-qr-code w-24 h-24 text-[{{ template.primaryColor }}]">
-                                <rect width="5" height="5" x="3" y="3" rx="1"></rect>
-                                <rect width="5" height="5" x="16" y="3" rx="1"></rect>
-                                <rect width="5" height="5" x="3" y="16" rx="1"></rect>
-                                <path d="M21 16h-3a2 2 0 0 0-2 2v3"></path>
-                                <path d="M21 21v.01"></path>
-                                <path d="M12 7v3a2 2 0 0 1-2 2H7"></path>
-                                <path d="M3 12h.01"></path>
-                                <path d="M12 3h.01"></path>
-                                <path d="M12 16v.01"></path>
-                                <path d="M16 12h1"></path>
-                                <path d="M21 12v.01"></path>
-                                <path d="M12 21v-1"></path>
-                            </svg></div>
+                            {{ apiUrl }} ~ {{ invitation.codePath }}</div>
                     </div>
                     <p class="jsx-d0ada46de86ca64b mt-4 text-[{{ template.secondaryColor }}]/70">Présentez ce QR code à l'entrée de la
                         salle</p>
