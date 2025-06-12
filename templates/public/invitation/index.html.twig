@@ -909,7 +909,7 @@
                                         {% if isSelected %}
                                            color:white!important;
                                            background-color: {{ template.primaryColor }};
-                                        {% else %}"
+                                        {% endif %}"
                                         data-beverage-id="{{ beverage.id }}"
                                         class="beverage-btn w-full aspect-square rounded-xl flex flex-col items-center justify-center p-4 transition-all bg-white border border-[{{ template.primaryColor }}]/20 text-[{{ template.secondaryColor }}] hover:bg-[{{ template.primaryColor }}]/5">
                                         {% if beverage.type == 'BEER' %}
@@ -1784,7 +1784,7 @@
                 }
             });
         });
-    });//ok
+    });
 </script>
 
 </body>
