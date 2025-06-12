@@ -910,7 +910,7 @@
                                     data-beverage-id="{{ beverage.id }}"
                                     data-selected="{{ isSelected ? '1' : '0' }}"
                                     data-url="{{ path('app_invitation_toggle_beverage', {slug: invitation.slug, id: beverage.id}) }}"
-                                    class="{% if isSelected %}bg-[{{ template.primaryColor }}]{% endif %} beverage-btn w-full aspect-square rounded-xl flex flex-col items-center justify-center p-4 transition-all bg-white text-[{{ template.secondaryColor }}]
+                                    class="{% if isSelected %}bg-[{{ template.primaryColor }}] selected{% endif %} beverage-btn w-full aspect-square rounded-xl flex flex-col items-center justify-center p-4 transition-all bg-white text-[{{ template.secondaryColor }}]
                                     border border-[{{ template.primaryColor }}]/20 hover:bg-[{{ template.primaryColor }}]/5">
 
                                     {% if beverage.type == 'BEER' %}
@@ -946,14 +946,7 @@
                                     {% endif %}
 
                                     <span class="text-sm font-medium">{{ beverage.name }}</span>
-                                    <small id="beverage-count-detail" style="display: {{ isSelected ? 'block': 'none' }}; opacity: .7" class="text-xs text-gray-500 mt-1">
-                                        {% set others = beverage.countTaken - 1 %}
-                                        {% if others <= 0 %}
-                                            Aucune autre personne n’a choisi cette boisson
-                                        {% else %}
-                                            {{ beverage.countTakenText | capitalize }} autre{{ others > 1 ? 's' : '' }} personne{{ others > 1 ? 's' : '' }} ont choisi cette boisson
-                                        {% endif %}
-                                    </small>
+
                                 </button>
                             </div>
                         {% endfor %}
@@ -1750,7 +1743,10 @@
         buttons.forEach(button => {
             button.addEventListener("click", () => {
                 const beverageId = button.dataset.beverageId;
-                const isSelected = button.classList.toggle("selected");
+
+                const isCurrentlySelected = button.classList.contains("selected");
+                const isSelected = !isCurrentlySelected;
+
                 const action = isSelected ? 'add' : 'remove';
 
                 fetch(`/api/invitations/${slug}/toggle-beverage`, {
@@ -1781,20 +1777,20 @@
 
                 // Mise à jour des styles
                 if (isSelected) {
+                    button.classList.add("selected");
                     button.classList.add("bg-[{{ template.primaryColor }}]");
                     button.style.setProperty('color', 'white', 'important');
                     button.querySelectorAll('svg').forEach(svg => {
                         svg.style.setProperty('color', 'white', 'important');
                     });
-                    button.querySelector('#beverage-count-detail').style.setProperty('display','block');
                 } else {
+                    button.classList.remove("selected");
                     button.classList.remove("bg-[{{ template.primaryColor }}]");
                     button.style.removeProperty('color');
                     button.querySelectorAll('svg').forEach(svg => {
                         svg.style.removeProperty('color');
                         svg.style.removeProperty('fill');
                     });
-                    button.querySelector('#beverage-count-detail').style.setProperty('display','none');
                 }
             });
         });
