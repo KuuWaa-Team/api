@@ -904,8 +904,8 @@
                             {% for beverage in invitation.event.beverages %}
                                 <div class="text-center">
                                     <button type="button"
-                                            data-beverage-id="{{ beverage.id }}"
-                                            class="beverage-btn w-full aspect-square rounded-xl flex flex-col items-center justify-center p-4 transition-all bg-white border border-[{{ template.primaryColor }}]/20 text-[{{ template.secondaryColor }}] hover:bg-[{{ template.primaryColor }}]/5">
+                                        data-beverage-id="{{ beverage.id }}"
+                                        class="beverage-btn w-full aspect-square rounded-xl flex flex-col items-center justify-center p-4 transition-all bg-white border border-[{{ template.primaryColor }}]/20 text-[{{ template.secondaryColor }}] hover:bg-[{{ template.primaryColor }}]/5">
                                         {% if beverage.type == 'BEER' %}
                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-beer jsx-d0ada46de86ca64b w-8 h-8 mb-2 text-[#b27409]">
                                                 <path d="M17 11h1a3 3 0 0 1 0 6h-1"></path>
@@ -1733,6 +1733,28 @@
 
         updateCountdown();
         setInterval(updateCountdown, 1000);
+    });
+</script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const buttons = document.querySelectorAll("[data-beverage-id]");
+
+        buttons.forEach(button => {
+            button.addEventListener("click", () => {
+                button.classList.toggle("selected");
+
+                const input = button.querySelector("input[type='checkbox']");
+                input.checked = !input.checked;
+
+                if (button.classList.contains("selected")) {
+                    button.classList.add("text-white");
+                    button.classList.add("bg-[{{ template.primaryColor }}]");
+                } else {
+                    button.classList.remove("text-white");
+                    button.classList.remove("bg-[{{ template.primaryColor }}]");
+                }
+            });
+        });
     });
 </script>
 
