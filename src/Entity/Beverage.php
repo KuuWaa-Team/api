@@ -52,10 +52,6 @@ class Beverage
     #[Groups(["beverage:pRead", 'event:pRead', 'event:fRead', 'invitation:fRead', "invitation:pRead"])]
     private ?int $id = null;
 
-    #[ORM\OneToMany(mappedBy: 'beverage', targetEntity: Invitation::class)]
-    #[Groups(["beverage:pRead"])]
-    private Collection $invitations;
-
     #[ORM\Column(length: 255, nullable: true)]
     #[Groups(["beverage:pRead", 'event:pRead', 'event:fRead', 'invitation:fRead', "invitation:pRead"])]
     private ?string $name = null;
@@ -69,6 +65,12 @@ class Beverage
 
     #[ORM\Column(length: 255)]
     private ?string $type = null;
+
+    /**
+     * @var Collection<int, Invitation>
+     */
+    #[ORM\ManyToMany(targetEntity: Invitation::class, mappedBy: 'beverages')]
+    private Collection $invitations;
 
     public function __construct()
     {
@@ -104,36 +106,6 @@ class Beverage
         return $this;
     }
 
-    /**
-     * @return Collection<int, Invitation>
-     */
-    public function getInvitations(): Collection
-    {
-        return $this->invitations;
-    }
-
-    public function addInvitation(Invitation $invitation): static
-    {
-        if (!$this->invitations->contains($invitation)) {
-            $this->invitations->add($invitation);
-            $invitation->setBeverage($this);
-        }
-
-        return $this;
-    }
-
-    public function removeInvitation(Invitation $invitation): static
-    {
-        if ($this->invitations->removeElement($invitation)) {
-            // set the owning side to null (unless already changed)
-            if ($invitation->getBeverage() === $this) {
-                $invitation->setBeverage(null);
-            }
-        }
-
-        return $this;
-    }
-
     public function getEvent(): ?Event
     {
         return $this->event;
@@ -154,6 +126,33 @@ class Beverage
     public function setType(string $type): static
     {
         $this->type = $type;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Invitation>
+     */
+    public function getInvitations(): Collection
+    {
+        return $this->invitations;
+    }
+
+    public function addInvitation(Invitation $invitation): static
+    {
+        if (!$this->invitations->contains($invitation)) {
+            $this->invitations->add($invitation);
+            $invitation->addBeverage($this);
+        }
+
+        return $this;
+    }
+
+    public function removeInvitation(Invitation $invitation): static
+    {
+        if ($this->invitations->removeElement($invitation)) {
+            $invitation->removeBeverage($this);
+        }
 
         return $this;
     }

@@ -43,8 +43,8 @@ class InvitationController extends AbstractController
 
         $form = $this->createForm(BookMessageFormType::class);
         $form->handleRequest($request);
-        
-        if ($form->isSubmitted() && $form->isValid()) { 
+
+        if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
             $book = (new Book())
                 ->setEvent($invitation->getEvent())
@@ -85,6 +85,36 @@ class InvitationController extends AbstractController
             'primaryHex' => str_replace('#', '', $invitation->getEvent()->getTemplate()->getPrimaryColor()),
             'secondaryHex' => str_replace('#', '', $invitation->getEvent()->getTemplate()->getSecondaryColor()),
         ]);
+    }
+
+    #[Route('/invitations/{slug}/confirm-beverage', name: 'app_invitation_confirm_beverage', methods: ['POST'])]
+    public function confirmBeverage(
+        string $slug,
+        Request $request,
+        InvitationRepository $invitationRepository,
+        BeverageRepository $beverageRepository,
+    ): Response {
+        $invitation = $invitationRepository->findOneBy(['slug' => $slug]);
+
+        if (!$invitation) {
+            throw $this->createNotFoundException('Invitation non trouvée.');
+        }
+
+        $beverageIds = $request->request->all('beverages');
+
+        foreach ($invitation->getBeverages() as $beverage) {
+            $invitation->removeBeverage($beverage);
+        }
+
+        foreach ($beverageIds as $id) {
+            $beverage = $beverageRepository->find($id);
+            if ($beverage) {
+                $invitation->addBeverage($beverage);
+            }
+        }
+
+        $invitationRepository->save($invitation);
+        return $this->redirect($request->headers->get('referer') ?? '/');
     }
 
     function hexToRgb(string $hex): array {

@@ -8,9 +8,6 @@ use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
-use App\Controller\Beverage\SelectBeverageController;
-use App\Controller\Event\ActivePackEventController;
-use App\Controller\Event\CreateEventController;
 use App\Controller\Invitation\AddInvitationController;
 use App\Controller\Invitation\CheckByCodeController;
 use App\Controller\Invitation\EditInvitationController;
@@ -147,24 +144,6 @@ use Symfony\Component\Serializer\Annotation\Groups;
             name: 'sendAllInvitation',
         ),
         new Post(
-            uriTemplate: '/invitations/{id}/beverage',
-            controller: SelectBeverageController::class,
-            openapiContext: [
-                'summary' => 'Select beverage',
-                'requestBody' => [
-                    'content' => [
-                        'application/json' => [
-                            'schema' => [
-                                'type' => 'object',
-                            ]
-                        ]
-                    ]
-                ],
-            ],
-            description: 'Select beverage',
-            name: 'selectInvitationBeverage',
-        ),
-        new Post(
             uriTemplate: '/invitations/{id}/validate',
             controller: ValidateController::class,
             openapiContext: [
@@ -243,10 +222,6 @@ class Invitation
     #[Groups(["invitation:pRead", 'table:pRead', 'invitation:fRead'])]
     private ?Table $invitationTable = null;
 
-    #[ORM\ManyToOne(inversedBy: 'invitations')]
-    #[Groups(["invitation:pRead", 'invitation:fRead'])]
-    private ?Beverage $beverage = null;
-
     #[ORM\Column(length: 255, nullable: true)]
     #[Groups(["invitation:pRead", 'invitation:fRead'])]
     private ?string $codePath = null;
@@ -294,12 +269,19 @@ class Invitation
     #[ORM\ManyToMany(targetEntity: Gift::class, inversedBy: 'invitations')]
     private Collection $gifts;
 
+    /**
+     * @var Collection<int, Beverage>
+     */
+    #[ORM\ManyToMany(targetEntity: Beverage::class, inversedBy: 'invitations')]
+    private Collection $beverages;
+
     public function __construct()
     {
         $this->books = new ArrayCollection();
         $this->invitations = new ArrayCollection();
         $this->answers = new ArrayCollection();
         $this->gifts = new ArrayCollection();
+        $this->beverages = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -400,19 +382,6 @@ class Invitation
 
         return $this;
     }
-
-    public function getBeverage(): ?Beverage
-    {
-        return $this->beverage;
-    }
-
-    public function setBeverage(?Beverage $beverage): static
-    {
-        $this->beverage = $beverage;
-
-        return $this;
-    }
-
     public function getCodePath(): ?string
     {
         return $this->codePath;
@@ -607,6 +576,30 @@ class Invitation
     public function removeGift(Gift $gift): static
     {
         $this->gifts->removeElement($gift);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Beverage>
+     */
+    public function getBeverages(): Collection
+    {
+        return $this->beverages;
+    }
+
+    public function addBeverage(Beverage $beverage): static
+    {
+        if (!$this->beverages->contains($beverage)) {
+            $this->beverages->add($beverage);
+        }
+
+        return $this;
+    }
+
+    public function removeBeverage(Beverage $beverage): static
+    {
+        $this->beverages->removeElement($beverage);
 
         return $this;
     }
