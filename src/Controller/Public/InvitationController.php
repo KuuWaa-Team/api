@@ -127,7 +127,7 @@ class InvitationController extends AbstractController
         return $this->redirect($request->headers->get('referer') ?? '/');
     }
 
-    #[Route('/invitations/{slug}/toggle-beverage', name: 'app_invitation_toggle_beverage', methods: ['POST'])]
+    #[Route('/api/invitations/{slug}/toggle-beverage', name: 'app_invitation_toggle_beverage', methods: ['POST'])]
     public function toggleBeverage(
         string $slug,
         Request $request,
