@@ -950,7 +950,7 @@
                                             {% if others <= 0 %}
                                                 Aucune autre personne n’a choisi cette boisson
                                             {% else %}
-                                                {{ others | number_spellout | capitalize }} autre{{ others > 1 ? 's' : '' }} personne{{ others > 1 ? 's' : '' }} ont choisi cette boisson
+                                                {{ beverage.countTakenText | capitalize }} autre{{ others > 1 ? 's' : '' }} personne{{ others > 1 ? 's' : '' }} ont choisi cette boisson
                                             {% endif %}
                                         </small>
                                         <input type="checkbox" name="beverages[]" value="{{ beverage.id }}" class="hidden">
