@@ -1768,8 +1768,7 @@
 
                     const svgs = button.querySelectorAll('svg');
                     svgs.forEach(svg => {
-                        svg.style.setProperty('color', 'white', 'important');
-                        svg.style.setProperty('fill', 'white', 'important'); // au cas où fill est utilisé
+                        svg.style.setProperty('color', 'white',/ 'important');
                     });
                 } else {
                     button.classList.remove("bg-[{{ template.primaryColor }}]");
