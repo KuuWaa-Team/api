@@ -72,6 +72,8 @@ class Beverage
     #[ORM\ManyToMany(targetEntity: Invitation::class, mappedBy: 'beverages')]
     private Collection $invitations;
 
+    private ?string $countTakenText = null;
+
     public function __construct()
     {
         $this->invitations = new ArrayCollection();
@@ -153,6 +155,18 @@ class Beverage
         if ($this->invitations->removeElement($invitation)) {
             $invitation->removeBeverage($this);
         }
+
+        return $this;
+    }
+
+    public function getCountTakenText(): ?string
+    {
+        return $this->countTakenText;
+    }
+
+    public function setCountTakenText(string $countTakenText): static
+    {
+        $this->countTakenText = $countTakenText;
 
         return $this;
     }
