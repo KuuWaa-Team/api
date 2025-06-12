@@ -905,16 +905,14 @@
                             {% set isSelected = beverage.id in invitation.beverages|map(b => b.id) %}
                             <div class="text-center">
                                 <button type="button"
-                                        data-beverage-id="{{ beverage.id }}"
-                                        data-selected="{{ isSelected ? '1' : '0' }}"
-                                        data-url="{{ path('app_invitation_toggle_beverage', {slug: invitation.slug, id: beverage.id}) }}"
-                                        class="beverage-btn w-full aspect-square rounded-xl flex flex-col items-center justify-center p-4 transition-all
-                        {{ isSelected ? 'bg-['~template.primaryColor~'] text-white' : 'bg-white text-['~template.secondaryColor~']' }}
-                        border border-[{{ template.primaryColor }}]/20 hover:bg-[{{ template.primaryColor }}]/5">
+                                    data-beverage-id="{{ beverage.id }}"
+                                    data-selected="{{ isSelected ? '1' : '0' }}"
+                                    data-url="{{ path('app_invitation_toggle_beverage', {slug: invitation.slug, id: beverage.id}) }}"
+                                    class="beverage-btn w-full aspect-square rounded-xl flex flex-col items-center justify-center p-4 transition-all bg-white text-[{{ template.secondaryColor }}]
+                                    border border-[{{ template.primaryColor }}]/20 hover:bg-[{{ template.primaryColor }}]/5">
 
-                                    {# SVG icons selon type, inchangé #}
                                     {% if beverage.type == 'BEER' %}
-                                        <svg style="{% if isSelected %}color:white!important;{% endif %}" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-beer jsx-d0ada46de86ca64b w-8 h-8 mb-2 text-[#b27409]">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-beer jsx-d0ada46de86ca64b w-8 h-8 mb-2 text-[#b27409]">
                                             <path d="M17 11h1a3 3 0 0 1 0 6h-1"></path>
                                             <path d="M9 12v6"></path>
                                             <path d="M13 12v6"></path>
@@ -1749,12 +1747,8 @@
 
         buttons.forEach(button => {
             button.addEventListener("click", () => {
-                const input = button.querySelector("input[type='checkbox']");
                 const beverageId = button.dataset.beverageId;
                 const isSelected = button.classList.toggle("selected");
-
-                input.checked = isSelected;
-
                 const action = isSelected ? 'add' : 'remove';
 
                 fetch(`/api/invitations/${slug}/toggle-beverage`, {
@@ -1802,7 +1796,6 @@
         });
     });
 </script>
-
 
 </body>
 
