@@ -804,9 +804,10 @@
                         </div>
                     </div>
 
-                    <div class="jsx-d0ada46de86ca64b text-center mt-6">
-                        <p class="jsx-d0ada46de86ca64b text-[{{ template.primaryColor }}] font-medium">Le bonheur approche à grands pas
-                            !</p>
+                    <div class="text-center mt-6">
+                        <p id="dynamic-countdown-message" class="text-[{{ template.primaryColor }}] font-medium">
+                            Le bonheur approche à grands pas !
+                        </p>
                     </div>
                 </div>
             </div>
@@ -1702,6 +1703,58 @@
         }
     });
 </script>
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const deadline = new Date(document.getElementById("countdown").dataset.deadline);
+        const messageElement = document.querySelector("#dynamic-countdown-message");
+
+        function updateCountdown() {
+            const now = new Date();
+            const diff = deadline - now;
+
+            if (diff <= 0) {
+                document.getElementById("days").textContent = "00";
+                document.getElementById("hours").textContent = "00";
+                document.getElementById("minutes").textContent = "00";
+                document.getElementById("seconds").textContent = "00";
+                messageElement.textContent = "C’est aujourd’hui, profitez pleinement !";
+                return;
+            }
+
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+            const minutes = Math.floor((diff / (1000 * 60)) % 60);
+            const seconds = Math.floor((diff / 1000) % 60);
+
+            document.getElementById("days").textContent = String(days).padStart(2, "0");
+            document.getElementById("hours").textContent = String(hours).padStart(2, "0");
+            document.getElementById("minutes").textContent = String(minutes).padStart(2, "0");
+            document.getElementById("seconds").textContent = String(seconds).padStart(2, "0");
+
+            // 🔁 Message dynamique selon les jours restants
+            let message = "";
+            if (days > 30) {
+                message = "Encore un peu de patience, le jour J se prépare !";
+            } else if (days > 14) {
+                message = "Le bonheur approche à grands pas !";
+            } else if (days > 7) {
+                message = "Plus que quelques jours avant l'événement !";
+            } else if (days > 1) {
+                message = "C’est bientôt, préparez-vous !";
+            } else if (days === 1) {
+                message = "Demain, c’est le grand jour !";
+            } else if (days === 0) {
+                message = "C’est aujourd’hui, profitez pleinement !";
+            }
+
+            messageElement.textContent = message;
+        }
+
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
+    });
+</script>
+
 </body>
 
 </html>
