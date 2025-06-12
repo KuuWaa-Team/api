@@ -10,6 +10,9 @@
     <link itemprop="thumbnailUrl" href="{{ apiUrl ~ invitation.event.thumbPath }}">
     <meta name="generator" content="v0.dev">
     <style type="text/css" data-styled-jsx="">
+        .text-white {
+            color: white;
+        }
         .bg-primary {
             --tw-bg-opacity: 1;
             background-color: {{ template.primaryColor }} !important;
@@ -781,7 +784,6 @@
                         </svg>Compte à rebours</div>
                 </div>
                 <div class="p-6 pt-0">
-                    <p class="jsx-d0ada46de86ca64b text-center text-[{{ template.secondaryColor }}]/70 mb-6">Le grand jour approche à grands pas ! Nous avons hâte de vivre ce moment magique avec vous, {{ invitation.fullname }}.</p>
                     <div id="countdown"
                          data-deadline="{{ invitation.event.startDate|date('c') }}"
                          class="grid grid-cols-4 gap-4 max-w-md mx-auto">
@@ -862,7 +864,7 @@
                                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                     stroke-linejoin="round" class="lucide lucide-check w-5 h-5 mr-2">
                                 <path d="M20 6 9 17l-5-5"></path>
-                                </svg>Je serai présent(e)
+                                </svg>Je serai présent{{ invitation.isFemale ? 'e' : '' }}
                             </button>
                             <button
                                 data-id="{{ invitation.id }}"
