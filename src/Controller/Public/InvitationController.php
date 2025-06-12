@@ -13,6 +13,7 @@ use App\Service\ApiService;
 use App\Service\DateService;
 use Doctrine\ORM\NonUniqueResultException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelInterface;
@@ -124,6 +125,50 @@ class InvitationController extends AbstractController
 
         $invitationRepository->save($invitation);
         return $this->redirect($request->headers->get('referer') ?? '/');
+    }
+
+    #[Route('/invitations/{slug}/toggle-beverage', name: 'app_invitation_toggle_beverage', methods: ['POST'])]
+    public function toggleBeverage(
+        string $slug,
+        Request $request,
+        InvitationRepository $invitationRepository,
+        BeverageRepository $beverageRepository
+    ): JsonResponse {
+        $invitation = $invitationRepository->findOneBy(['slug' => $slug]);
+
+        if (!$invitation) {
+            return new JsonResponse(['success' => false, 'message' => 'Invitation non trouvée.'], 404);
+        }
+
+        $beverageId = $request->request->get('beverageId');
+        $action = $request->request->get('action'); // "add" ou "remove"
+
+        $beverage = $beverageRepository->find($beverageId);
+
+        if (!$beverage) {
+            return new JsonResponse(['success' => false, 'message' => 'Boisson non trouvée.'], 404);
+        }
+
+        if ($action === 'add') {
+            if (!$invitation->getBeverages()->contains($beverage)) {
+                $invitation->addBeverage($beverage);
+                $beverage->setCountTaken($beverage->getCountTaken() + 1);
+            }
+        } elseif ($action === 'remove') {
+            if ($invitation->getBeverages()->contains($beverage)) {
+                $invitation->removeBeverage($beverage);
+                $beverage->setCountTaken($beverage->getCountTaken() - 1);
+            }
+        }
+
+        $beverageRepository->save($beverage, true);
+        $invitationRepository->save($invitation);
+
+        return new JsonResponse([
+            'success' => true,
+            'countTaken' => $beverage->getCountTaken(),
+            'countTakenText' => $beverage->getCountTaken() > 0 ? $beverage->getCountTaken().' personne'.($beverage->getCountTaken() > 1 ? 's' : '') : 'aucune'
+        ]);
     }
 
     function hexToRgb(string $hex): array {
