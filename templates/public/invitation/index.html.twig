@@ -946,7 +946,7 @@
                                     {% endif %}
 
                                     <span class="text-sm font-medium">{{ beverage.name }}</span>
-                                    <small class="text-xs text-gray-500 mt-1">
+                                    <small id="beverage-count-detail" style="display: {{ isSelected ? 'block': 'none' }}; opacity: .7" class="text-xs text-gray-500 mt-1">
                                         {% set others = beverage.countTaken - 1 %}
                                         {% if others <= 0 %}
                                             Aucune autre personne n’a choisi cette boisson
@@ -1786,6 +1786,7 @@
                     button.querySelectorAll('svg').forEach(svg => {
                         svg.style.setProperty('color', 'white', 'important');
                     });
+                    button.querySelector('#beverage-count-detail').style.setProperty('display','block');
                 } else {
                     button.classList.remove("bg-[{{ template.primaryColor }}]");
                     button.style.removeProperty('color');
@@ -1793,6 +1794,7 @@
                         svg.style.removeProperty('color');
                         svg.style.removeProperty('fill');
                     });
+                    button.querySelector('#beverage-count-detail').style.setProperty('display','none');
                 }
             });
         });
