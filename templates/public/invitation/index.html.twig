@@ -895,7 +895,7 @@
                         </svg>Choix de boissons</div>
                 </div>
                 <div class="p-6 pt-0">
-                    <form method="POST" action="#">
+                    <form method="POST" action="{{ path('app_invitation_confirm_beverage') }}">
                         <p class="text-center text-[{{ template.secondaryColor }}]/70 mb-6">
                             {{ invitation.fullname }}, merci de nous indiquer vos préférences de boissons afin de mieux préparer la réception et adapter le bar à vos goûts.
                         </p>
@@ -907,11 +907,35 @@
                                             data-beverage-id="{{ beverage.id }}"
                                             class="beverage-btn w-full aspect-square rounded-xl flex flex-col items-center justify-center p-4 transition-all bg-white border border-[{{ template.primaryColor }}]/20 text-[{{ template.secondaryColor }}] hover:bg-[{{ template.primaryColor }}]/5">
                                         {% if beverage.type == 'BEER' %}
-                                            <!-- Icône bière -->
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-beer jsx-d0ada46de86ca64b w-8 h-8 mb-2 text-[#b27409]">
+                                                <path d="M17 11h1a3 3 0 0 1 0 6h-1"></path>
+                                                <path d="M9 12v6"></path>
+                                                <path d="M13 12v6"></path>
+                                                <path d="M14 7.5c-1 0-1.44.5-3 .5s-2-.5-3-.5-1.72.5-2.5.5a2.5 2.5 0 0 1 0-5c.78 0 1.57.5 2.5.5S9.44 2 11 2s2 1.5 3 1.5 1.72-.5 2.5-.5a2.5 2.5 0 0 1 0 5c-.78 0-1.5-.5-2.5-.5Z">
+                                                </path>
+                                                <path d="M5 8v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V8"></path>
+                                            </svg>
                                         {% elseif beverage.type == 'WINE' %}
-                                            <!-- Icône vin pétillant -->
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sparkles jsx-d0ada46de86ca64b w-8 h-8 mb-2 text-[#b27409]">
+                                                <path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z">
+                                                </path>
+                                                <path d="M20 3v4"></path>
+                                                <path d="M22 5h-4"></path>
+                                                <path d="M4 17v2"></path>
+                                                <path d="M5 18H3"></path>
+                                            </svg>
                                         {% else %}
-                                            <!-- Icône par défaut -->
+                                            <svg
+                                                    xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                                    stroke-linejoin="round"
+                                                    class="lucide lucide-wine jsx-d0ada46de86ca64b w-8 h-8 mb-2 text-[{{ template.primaryColor }}]">
+                                                <path d="M8 22h8"></path>
+                                                <path d="M7 10h10"></path>
+                                                <path d="M12 15v7"></path>
+                                                <path d="M12 15a5 5 0 0 0 5-5c0-2-.5-4-2-8H9c-1.5 4-2 6-2 8a5 5 0 0 0 5 5Z">
+                                                </path>
+                                            </svg>
                                         {% endif %}
 
                                         <span class="text-sm font-medium">{{ beverage.name }}</span>
@@ -1709,28 +1733,6 @@
 
         updateCountdown();
         setInterval(updateCountdown, 1000);
-    });
-</script>
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const buttons = document.querySelectorAll("[data-beverage-id]");
-
-        buttons.forEach(button => {
-            button.addEventListener("click", () => {
-                button.classList.toggle("selected");
-
-                const input = button.querySelector("input[type='checkbox']");
-                input.checked = !input.checked;
-
-                if (button.classList.contains("selected")) {
-                    button.classList.add("text-white");
-                    button.classList.add("bg-[{{ template.primaryColor }}]");
-                } else {
-                    button.classList.remove("text-white");
-                    button.classList.remove("bg-[{{ template.primaryColor }}]");
-                }
-            });
-        });
     });
 </script>
 
