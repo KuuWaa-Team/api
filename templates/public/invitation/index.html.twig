@@ -895,7 +895,7 @@
                         </svg>Choix de boissons</div>
                 </div>
                 <div class="p-6 pt-0">
-                    <form method="POST" action="{{ path('app_invitation_confirm_beverage') }}">
+                    <form method="POST" action="{{ path('app_invitation_confirm_beverage', {'slug': invitation.slug}) }}">
                         <p class="text-center text-[{{ template.secondaryColor }}]/70 mb-6">
                             {{ invitation.fullname }}, merci de nous indiquer vos préférences de boissons afin de mieux préparer la réception et adapter le bar à vos goûts.
                         </p>
