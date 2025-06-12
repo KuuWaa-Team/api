@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Controller\Public;
-
+use NumberFormatter;
 use App\Entity\Event\Book;
 use App\Entity\Invitation;
 use App\Form\Invitation\BeverageFormType;
@@ -62,6 +62,13 @@ class InvitationController extends AbstractController
         list($primaryR, $primaryG, $primaryB) = $this->hexToRgb($invitation->getEvent()->getTemplate()->getPrimaryColor());
         list($secondaryR, $secondaryG, $secondaryB) = $this->hexToRgb($invitation->getEvent()->getTemplate()->getSecondaryColor());
 
+        $formatter = new \NumberFormatter('fr_FR', \NumberFormatter::SPELLOUT);
+
+        foreach ($invitation->getEvent()->getBeverages() as $beverage) {
+            $othersCount = max(0, $beverage->getCountTaken() - 1);
+            $beverage->setCountTakenText(ucfirst($formatter->format($othersCount)));
+        }
+
         return $this->render('public/invitation/index.html.twig', [
             'invitation' => $invitation,
             'template' => $invitation->getEvent()->getTemplate(),
@@ -104,6 +111,8 @@ class InvitationController extends AbstractController
 
         foreach ($invitation->getBeverages() as $beverage) {
             $invitation->removeBeverage($beverage);
+            $beverage->setCountTaken($beverage->getCountTaken() - 1);
+            $beverageRepository->save($beverage, true);
         }
 
         foreach ($beverageIds as $id) {
