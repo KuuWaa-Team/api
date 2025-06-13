@@ -67,6 +67,9 @@ class Book
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $audioPath = null;
 
+    #[ORM\Column(length: 255)]
+    private ?string $visibility = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -138,6 +141,18 @@ class Book
     public function setAudioPath(?string $audioPath): static
     {
         $this->audioPath = $audioPath;
+
+        return $this;
+    }
+
+    public function getVisibility(): ?string
+    {
+        return $this->visibility;
+    }
+
+    public function setVisibility(string $visibility): static
+    {
+        $this->visibility = $visibility;
 
         return $this;
     }
