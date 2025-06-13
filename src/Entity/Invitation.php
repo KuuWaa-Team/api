@@ -230,13 +230,6 @@ class Invitation
     #[Groups(["invitation:pRead", 'invitation:fRead'])]
     private ?string $code = null;
 
-    #[ORM\OneToMany(mappedBy: 'invitation', targetEntity: Book::class)]
-    private Collection $books;
-
-    #[ORM\Column(nullable: true)]
-    #[Groups(["invitation:pRead", 'table:pRead', 'invitation:fRead', 'event:pRead', 'event:fRead'])]
-    private ?bool $bookSent = null;
-
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     #[Groups(["invitation:pRead", 'table:pRead', 'invitation:fRead', 'event:pRead', 'event:fRead'])]
     private ?string $message = null;
@@ -275,9 +268,11 @@ class Invitation
     #[ORM\ManyToMany(targetEntity: Beverage::class, inversedBy: 'invitations')]
     private Collection $beverages;
 
+    #[ORM\OneToOne(inversedBy: 'invitation', cascade: ['persist', 'remove'])]
+    private ?Book $book = null;
+
     public function __construct()
     {
-        $this->books = new ArrayCollection();
         $this->invitations = new ArrayCollection();
         $this->answers = new ArrayCollection();
         $this->gifts = new ArrayCollection();
@@ -402,48 +397,6 @@ class Invitation
     public function setCode(?string $code): static
     {
         $this->code = $code;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Book>
-     */
-    public function getBooks(): Collection
-    {
-        return $this->books;
-    }
-
-    public function addBook(Book $book): static
-    {
-        if (!$this->books->contains($book)) {
-            $this->books->add($book);
-            $book->setInvitation($this);
-        }
-
-        return $this;
-    }
-
-    public function removeBook(Book $book): static
-    {
-        if ($this->books->removeElement($book)) {
-            // set the owning side to null (unless already changed)
-            if ($book->getInvitation() === $this) {
-                $book->setInvitation(null);
-            }
-        }
-
-        return $this;
-    }
-
-    public function isBookSent(): ?bool
-    {
-        return $this->bookSent;
-    }
-
-    public function setBookSent(?bool $bookSent): static
-    {
-        $this->bookSent = $bookSent;
 
         return $this;
     }
@@ -600,6 +553,18 @@ class Invitation
     public function removeBeverage(Beverage $beverage): static
     {
         $this->beverages->removeElement($beverage);
+
+        return $this;
+    }
+
+    public function getBook(): ?Book
+    {
+        return $this->book;
+    }
+
+    public function setBook(?Book $book): static
+    {
+        $this->book = $book;
 
         return $this;
     }

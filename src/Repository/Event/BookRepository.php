@@ -23,7 +23,7 @@ class BookRepository extends ServiceEntityRepository
         parent::__construct($registry, Book::class);
     }
 
-    public function save(Book $book, bool $flush = false): void
+    public function save(Book $book, bool $flush = true): void
     {
         $this->getEntityManager()->persist($book);
         if ($flush) {

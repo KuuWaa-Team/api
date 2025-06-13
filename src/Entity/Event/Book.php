@@ -8,7 +8,6 @@ use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
-use App\Controller\Beverage\AddBeverageController;
 use App\Controller\Book\DeleteController;
 use App\Entity\Event;
 use App\Entity\Invitation;
@@ -59,12 +58,14 @@ class Book
     #[Groups(['event:pRead', 'event:fRead'])]
     private ?string $message = null;
 
-    #[ORM\ManyToOne(inversedBy: 'books')]
-    #[Groups(['event:pRead', 'event:fRead'])]
-    private ?Invitation $invitation = null;
-
     #[ORM\Column(nullable: true)]
     private ?bool $public = null;
+
+    #[ORM\OneToOne(mappedBy: 'book', cascade: ['persist', 'remove'])]
+    private ?Invitation $invitation = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $audioPath = null;
 
     public function getId(): ?int
     {
@@ -95,18 +96,6 @@ class Book
         return $this;
     }
 
-    public function getInvitation(): ?Invitation
-    {
-        return $this->invitation;
-    }
-
-    public function setInvitation(?Invitation $invitation): static
-    {
-        $this->invitation = $invitation;
-
-        return $this;
-    }
-
     public function isPublic(): ?bool
     {
         return $this->public;
@@ -115,6 +104,40 @@ class Book
     public function setPublic(?bool $public): static
     {
         $this->public = $public;
+
+        return $this;
+    }
+
+    public function getInvitation(): ?Invitation
+    {
+        return $this->invitation;
+    }
+
+    public function setInvitation(?Invitation $invitation): static
+    {
+        // unset the owning side of the relation if necessary
+        if ($invitation === null && $this->invitation !== null) {
+            $this->invitation->setBook(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($invitation !== null && $invitation->getBook() !== $this) {
+            $invitation->setBook($this);
+        }
+
+        $this->invitation = $invitation;
+
+        return $this;
+    }
+
+    public function getAudioPath(): ?string
+    {
+        return $this->audioPath;
+    }
+
+    public function setAudioPath(?string $audioPath): static
+    {
+        $this->audioPath = $audioPath;
 
         return $this;
     }
