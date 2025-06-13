@@ -1131,19 +1131,25 @@
 
                             <div class="space-y-4">
                                 <h3 class="font-medium text-[#023133]">Message vocal</h3>
-                                <div class="border-2 border-dashed border-[#b27409]/30 rounded-lg p-8 text-center">
+
+                                <div id="recorderBox" class="border-2 border-dashed border-[#b27409]/30 rounded-lg p-8 text-center">
                                     <button id="recordBtn" class="inline-flex items-center justify-center gap-2 text-sm font-medium border bg-background h-10 px-4 py-2 w-full border-[#b27409] text-[#b27409] hover:bg-[#b27409] hover:text-white">
-                                        <svg
-                                                xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                                stroke-linecap="round" stroke-linejoin="round"
-                                                class="lucide lucide-mic w-4 h-4 mr-2">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="lucide lucide-mic w-4 h-4 mr-2" fill="none" stroke="currentColor" stroke-width="2">
                                             <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"></path>
                                             <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
                                             <line x1="12" x2="12" y1="19" y2="22"></line>
                                         </svg>
                                         Enregistrer un message
                                     </button>
+
+                                    <div id="recordingInfo" class="mt-4 hidden">
+                                        <div class="flex items-center justify-center space-x-2">
+                                            <div class="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
+                                            <span class="text-red-500 text-sm">Enregistrement en cours...</span>
+                                            <span class="text-sm text-red-500" id="timer">00:00</span>
+                                        </div>
+                                    </div>
+
                                     <div id="audioPreview" class="mt-4"></div>
                                     <input type="hidden" name="audioBlobBase64" id="audioBlobBase64">
                                 </div>
@@ -1823,17 +1829,31 @@
 <script>
     let mediaRecorder;
     let recordedChunks = [];
+    let isRecording = false;
+    let timerInterval;
+    let seconds = 0;
 
     const recordBtn = document.getElementById('recordBtn');
+    const recorderBox = document.getElementById('recorderBox');
     const audioPreview = document.getElementById('audioPreview');
     const hiddenInput = document.getElementById('audioBlobBase64');
+    const recordingInfo = document.getElementById('recordingInfo');
+    const timer = document.getElementById('timer');
+
+    function formatTime(seconds) {
+        const m = String(Math.floor(seconds / 60)).padStart(2, '0');
+        const s = String(seconds % 60).padStart(2, '0');
+        return `${m}:${s}`;
+    }
 
     recordBtn.addEventListener('click', async () => {
-        if (!mediaRecorder || mediaRecorder.state === 'inactive') {
-            // Démarrer l’enregistrement
+        if (!isRecording) {
+            // Start recording
             const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
             mediaRecorder = new MediaRecorder(stream);
             recordedChunks = [];
+            seconds = 0;
+            timer.textContent = "00:00";
 
             mediaRecorder.ondataavailable = e => {
                 if (e.data.size > 0) recordedChunks.push(e.data);
@@ -1842,27 +1862,60 @@
             mediaRecorder.onstop = () => {
                 const blob = new Blob(recordedChunks, { type: 'audio/webm' });
                 const audioUrl = URL.createObjectURL(blob);
-
-                // Prévisualisation
                 audioPreview.innerHTML = `<audio controls src="${audioUrl}"></audio>`;
 
-                // Conversion en base64 pour envoi dans un champ du formulaire
                 const reader = new FileReader();
                 reader.readAsDataURL(blob);
                 reader.onloadend = () => {
-                    hiddenInput.value = reader.result; // base64 string
+                    hiddenInput.value = reader.result;
                 };
-
-                recordBtn.textContent = 'Enregistrer un message';
             };
 
             mediaRecorder.start();
-            recordBtn.textContent = 'Arrêter l’enregistrement';
-        } else if (mediaRecorder.state === 'recording') {
+            isRecording = true;
+
+            // UI updates
+            recorderBox.classList.remove("border-[#b27409]/30");
+            recorderBox.classList.add("border-[#f24173]/30");
+            recordBtn.innerHTML = `
+      <svg xmlns="http://www.w3.org/2000/svg" class="lucide lucide-mic-off w-4 h-4 mr-2" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="2" x2="22" y1="2" y2="22"></line>
+        <path d="M18.89 13.23A7.12 7.12 0 0 0 19 12v-2"></path>
+        <path d="M5 10v2a7 7 0 0 0 12 5"></path>
+        <path d="M15 9.34V5a3 3 0 0 0-5.68-1.33"></path>
+        <path d="M9 9v3a3 3 0 0 0 5.12 2.12"></path>
+        <line x1="12" x2="12" y1="19" y2="22"></line>
+      </svg>Arrêter l’enregistrement`;
+            recordBtn.classList.add("bg-red-500", "hover:bg-red-600", "text-white");
+            recordingInfo.classList.remove("hidden");
+
+            // Start timer
+            timerInterval = setInterval(() => {
+                seconds++;
+                timer.textContent = formatTime(seconds);
+            }, 1000);
+
+        } else {
+            // Stop recording
             mediaRecorder.stop();
+            isRecording = false;
+
+            // UI reset
+            recorderBox.classList.remove("border-[#f24173]/30");
+            recorderBox.classList.add("border-[#b27409]/30");
+            recordBtn.innerHTML = `
+      <svg xmlns="http://www.w3.org/2000/svg" class="lucide lucide-mic w-4 h-4 mr-2" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"></path>
+        <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+        <line x1="12" x2="12" y1="19" y2="22"></line>
+      </svg>Enregistrer un message`;
+            recordBtn.classList.remove("bg-red-500", "hover:bg-red-600", "text-white");
+            recordingInfo.classList.add("hidden");
+
+            clearInterval(timerInterval);
         }
     });
 </script>
-
 </body>
+
 </html>
