@@ -1150,7 +1150,14 @@
                                         </div>
                                     </div>
 
-                                    <div id="audioPreview" class="mt-4"></div>
+                                    <div id="audioPreview" class="mt-4 hidden bg-[#f9f2f2] p-4 rounded-lg text-left">
+                                        <div class="text-sm font-semibold text-[#b27409] mb-2">Prévisualisation :</div>
+                                        <div class="flex items-center justify-between gap-4">
+                                            <audio id="audioPlayer" controls class="w-full"></audio>
+                                            <button id="cancelBtn" class="text-sm text-red-600 hover:text-red-800">Annuler</button>
+                                        </div>
+                                    </div>
+
                                     <input type="hidden" name="audioBlobBase64" id="audioBlobBase64">
                                 </div>
                             </div>
@@ -1836,6 +1843,8 @@
     const recordBtn = document.getElementById('recordBtn');
     const recorderBox = document.getElementById('recorderBox');
     const audioPreview = document.getElementById('audioPreview');
+    const audioPlayer = document.getElementById('audioPlayer');
+    const cancelBtn = document.getElementById('cancelBtn');
     const hiddenInput = document.getElementById('audioBlobBase64');
     const recordingInfo = document.getElementById('recordingInfo');
     const timer = document.getElementById('timer');
@@ -1848,7 +1857,6 @@
 
     recordBtn.addEventListener('click', async () => {
         if (!isRecording) {
-            // Start recording
             const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
             mediaRecorder = new MediaRecorder(stream);
             recordedChunks = [];
@@ -1862,7 +1870,8 @@
             mediaRecorder.onstop = () => {
                 const blob = new Blob(recordedChunks, { type: 'audio/webm' });
                 const audioUrl = URL.createObjectURL(blob);
-                audioPreview.innerHTML = `<audio controls src="${audioUrl}"></audio>`;
+                audioPlayer.src = audioUrl;
+                audioPreview.classList.remove("hidden");
 
                 const reader = new FileReader();
                 reader.readAsDataURL(blob);
@@ -1874,7 +1883,7 @@
             mediaRecorder.start();
             isRecording = true;
 
-            // UI updates
+            // UI
             recorderBox.classList.remove("border-[#b27409]/30");
             recorderBox.classList.add("border-[#f24173]/30");
             recordBtn.innerHTML = `
@@ -1889,18 +1898,15 @@
             recordBtn.classList.add("bg-red-500", "hover:bg-red-600", "text-white");
             recordingInfo.classList.remove("hidden");
 
-            // Start timer
             timerInterval = setInterval(() => {
                 seconds++;
                 timer.textContent = formatTime(seconds);
             }, 1000);
 
         } else {
-            // Stop recording
             mediaRecorder.stop();
             isRecording = false;
 
-            // UI reset
             recorderBox.classList.remove("border-[#f24173]/30");
             recorderBox.classList.add("border-[#b27409]/30");
             recordBtn.innerHTML = `
@@ -1911,9 +1917,14 @@
       </svg>Enregistrer un message`;
             recordBtn.classList.remove("bg-red-500", "hover:bg-red-600", "text-white");
             recordingInfo.classList.add("hidden");
-
             clearInterval(timerInterval);
         }
+    });
+
+    cancelBtn.addEventListener('click', () => {
+        audioPreview.classList.add("hidden");
+        audioPlayer.src = '';
+        hiddenInput.value = '';
     });
 </script>
 </body>
