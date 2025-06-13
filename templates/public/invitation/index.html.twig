@@ -1155,11 +1155,13 @@
                                 <div id="recorderBox" class="border-2 border-dashed border-[#b27409]/30 rounded-lg p-8 text-center">
                                     <!-- Enregistrement -->
                                     <div class="flex gap-2 justify-center">
-                                        <button id="recordBtn" class="inline-flex items-center justify-center gap-2 text-sm font-medium border bg-background h-10 px-4 py-2 border-[#b27409] text-[#b27409] hover:bg-[#b27409] hover:text-white">
-                                            🎤 Enregistrer
+                                        <button style="width: 100%" id="recordBtn" class="inline-flex items-center justify-center gap-2 text-sm font-medium border bg-background h-10 px-4 py-2 border-[#b27409] text-[#b27409] hover:bg-[#b27409] hover:text-white">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-mic w-4 h-4 mr-2" __v0_r="0,38892,38906"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" x2="12" y1="19" y2="22"></line></svg>
+                                            Enregistrer un message
                                         </button>
-                                        <button id="stopBtn" class="hidden inline-flex items-center justify-center gap-2 text-sm font-medium border bg-red-500 h-10 px-4 py-2 text-white hover:bg-red-600">
-                                            ⏹️ Arrêter
+                                        <button style="width: 100%" id="stopBtn" class="hidden inline-flex items-center justify-center gap-2 text-sm font-medium border bg-red-500 h-10 px-4 py-2 text-white hover:bg-red-600">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-mic-off w-4 h-4 mr-2" __v0_r="0,38699,38713"><line x1="2" x2="22" y1="2" y2="22"></line><path d="M18.89 13.23A7.12 7.12 0 0 0 19 12v-2"></path><path d="M5 10v2a7 7 0 0 0 12 5"></path><path d="M15 9.34V5a3 3 0 0 0-5.68-1.33"></path><path d="M9 9v3a3 3 0 0 0 5.12 2.12"></path><line x1="12" x2="12" y1="19" y2="22"></line></svg>
+                                            Arrêter l'enregistrement
                                         </button>
                                     </div>
 
@@ -1184,7 +1186,7 @@
                                                 <span id="voice-duration" class="text-xs text-[#2f2644]/60">(00:00)</span>
                                             </div>
                                             <button id="play-button" class="inline-flex items-center justify-center gap-2 text-sm font-medium h-9 rounded-md px-3 bg-[#2f2644] text-white hover:bg-[#2f2644]/90">
-                                                ▶️
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-play w-4 h-4" __v0_r="0,8633,8642"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
                                             </button>
                                         </div>
 
@@ -1954,7 +1956,7 @@
         if (!isPlaying) {
             audio.play();
             isPlaying = true;
-            playButton.textContent = '⏸️';
+            playButton.textContent = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-pause w-4 h-4" __v0_r="0,8602,8611"><rect x="14" y="4" width="4" height="16" rx="1"></rect><rect x="6" y="4" width="4" height="16" rx="1"></rect></svg>`;
 
             audio.ontimeupdate = () => {
                 const current = audio.currentTime;
@@ -1966,7 +1968,7 @@
 
             audio.onended = () => {
                 isPlaying = false;
-                playButton.textContent = '▶️';
+                playButton.textContent = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-play w-4 h-4" __v0_r="0,8633,8642"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>`;
                 progressFill.style.width = '0%';
             };
         } else {
