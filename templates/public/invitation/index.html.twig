@@ -1123,16 +1123,18 @@
                             <path
                                     d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z">
                             </path>
-                        </svg>Livre d'or</div>
+                        </svg>{% if invitation.book != null  %}Votre message au {% endif %}Livre d'or </div>
                 </div>
                 <div class="p-6 pt-0 space-y-6">
+                    {% if inviation.book != null %}
                     <p class="jsx-d0ada46de86ca64b text-center text-[{{ template.secondaryColor }}]/70">Mr Daniel Mwema, ce livre d'or numérique recueille vos messages et vœux de bonheur, en texte ou en vocal. Vos mots resteront à jamais dans nos cœurs.</p>
+                    {% endif %}
                     <div class="jsx-d0ada46de86ca64b bg-[{{ template.primaryColor }}]/5 rounded-lg p-4 mb-6">
-                        <h3 class="jsx-d0ada46de86ca64b font-medium text-[{{ template.secondaryColor }}] mb-3">Visibilité de votre message</h3>
+                        <h3 class="jsx-d0ada46de86ca64b font-medium text-[{{ template.secondaryColor }}] mb-3">{{ invitation.book != null ? invitation.book.visibility : 'Visibilité de votre message' }}</h3>
+                        {% if invitation.book == null %}
                         <div class="jsx-d0ada46de86ca64b flex gap-4">
                             <label class="jsx-d0ada46de86ca64b flex items-center gap-2 cursor-pointer">
-                                <input
-                                        class="jsx-d0ada46de86ca64b text-[{{ template.primaryColor }}] focus:ring-[{{ template.primaryColor }}]"
+                                <input class="jsx-d0ada46de86ca64b text-[{{ template.primaryColor }}] focus:ring-[{{ template.primaryColor }}]"
                                         type="radio" value="public" name="visibility" checked>
                                 <span class="jsx-d0ada46de86ca64b text-[{{ template.secondaryColor }}]">Public</span>
                             </label>
@@ -1147,6 +1149,7 @@
                            class="jsx-d0ada46de86ca64b text-sm text-[{{ template.secondaryColor }}]/60 mt-2">
                             Votre message sera visible par tous les invités dans le livre d'or public.
                         </p>
+                        {% endif %}
                     </div>
                     <div class="jsx-d0ada46de86ca64b grid md:grid-cols-2 gap-6">
                         <div class="jsx-d0ada46de86ca64b space-y-4">
@@ -1155,6 +1158,11 @@
                             <textarea id="textMessage" required
                                     class="flex w-full rounded-md border bg-background px-3 py-2 text-base ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm min-h-32 border-[{{ template.primaryColor }}]/30 focus:border-[{{ template.primaryColor }}]"
                                     placeholder="Mr Daniel Mwema, laissez-nous un message..."></textarea>
+                            {% else %}
+                                {% if invitation.book.message != null %}
+                                    <p class="jsx-d0ada46de86ca64b text-left text-[{{ template.secondaryColor }}]/70">"{{ invitation.book.message }}"</p>
+                                    <p class="jsx-d0ada46de86ca64b text-left text-[{{ template.primaryColor }}]"><b>{{ invitation.fullname }}</b></p>
+                                {% endif %}
                             {% endif %}
                             <div class="space-y-4">
                                 <h3 class="font-medium text-[#023133]">Message vocal</h3>
@@ -1875,7 +1883,7 @@
                 }
             });
         });
-    });
+    %});
 </script>
 <script>
     let mediaRecorder;
@@ -1898,6 +1906,7 @@
     const audioInput = document.getElementById('audioBlobBase64');
     const sendBookBtn = document.getElementById('sendBookBtn');
     const textMessage = document.getElementById('textMessage');
+    const visibility = document.querySelector('input[name="visibility"]:checked')?.value;
 
     let startTime = 0;
 
@@ -2036,6 +2045,7 @@
         const formData = new FormData();
         formData.append('message', message);
         formData.append('hasAudio', hasAudio ? '1' : '0');
+        formData.append('visibility', visibility);
 
         if (hasAudio) {
             const file = new File([audioBlob], 'audio.webm', { type: 'audio/webm' });

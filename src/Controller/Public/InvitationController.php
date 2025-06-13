@@ -188,10 +188,12 @@ class InvitationController extends AbstractController
 
         $message = $request->request->get('message');
         $hasAudio = filter_var($request->request->get('hasAudio'), FILTER_VALIDATE_BOOLEAN);
+        $visibility = $request->request->get('visibility');
 
         $book = $invitation->getBook() ?? new Book();
         $book->setInvitation($invitation);
         $book->setMessage($message);
+        $book->setVisibility($visibility);
 
         if ($hasAudio && $request->files->get('audio')) {
             $audioFile = $request->files->get('audio');
