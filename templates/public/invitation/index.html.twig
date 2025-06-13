@@ -1129,12 +1129,11 @@
                                     class="flex w-full rounded-md border bg-background px-3 py-2 text-base ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm min-h-32 border-[{{ template.primaryColor }}]/30 focus:border-[{{ template.primaryColor }}]"
                                     placeholder="Mr Daniel Mwema, laissez-nous un message..."></textarea>
 
-                            <div class="jsx-d0ada46de86ca64b space-y-4">
-                                <h3 class="jsx-d0ada46de86ca64b font-medium text-[{{ template.secondaryColor }}]">Message vocal</h3>
-                                <div
-                                        class="jsx-d0ada46de86ca64b border-2 border-dashed border-[{{ template.primaryColor }}]/30 rounded-lg p-8 text-center">
-                                    <button
-                                            class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 border bg-background h-10 px-4 py-2 w-full border-[{{ template.primaryColor }}] text-[{{ template.primaryColor }}] hover:bg-[{{ template.primaryColor }}] hover:text-white"><svg
+                            <div class="space-y-4">
+                                <h3 class="font-medium text-[#023133]">Message vocal</h3>
+                                <div class="border-2 border-dashed border-[#b27409]/30 rounded-lg p-8 text-center">
+                                    <button id="recordBtn" class="inline-flex items-center justify-center gap-2 text-sm font-medium border bg-background h-10 px-4 py-2 w-full border-[#b27409] text-[#b27409] hover:bg-[#b27409] hover:text-white">
+                                        <svg
                                                 xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                                 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                                                 stroke-linecap="round" stroke-linejoin="round"
@@ -1142,8 +1141,14 @@
                                             <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"></path>
                                             <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
                                             <line x1="12" x2="12" y1="19" y2="22"></line>
-                                        </svg>Enregistrer un message</button></div>
+                                        </svg>
+                                        Enregistrer un message
+                                    </button>
+                                    <div id="audioPreview" class="mt-4"></div>
+                                    <input type="hidden" name="audioBlobBase64" id="audioBlobBase64">
+                                </div>
                             </div>
+
                             <button
                                     class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 text-primary-foreground h-10 px-4 py-2 w-full bg-[{{ template.primaryColor }}] hover:bg-[{{ template.primaryColor }}]/90"><svg
                                         xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
@@ -1815,6 +1820,49 @@
         });
     });
 </script>
-</body>
+<script>
+    let mediaRecorder;
+    let recordedChunks = [];
 
+    const recordBtn = document.getElementById('recordBtn');
+    const audioPreview = document.getElementById('audioPreview');
+    const hiddenInput = document.getElementById('audioBlobBase64');
+
+    recordBtn.addEventListener('click', async () => {
+        if (!mediaRecorder || mediaRecorder.state === 'inactive') {
+            // Démarrer l’enregistrement
+            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            mediaRecorder = new MediaRecorder(stream);
+            recordedChunks = [];
+
+            mediaRecorder.ondataavailable = e => {
+                if (e.data.size > 0) recordedChunks.push(e.data);
+            };
+
+            mediaRecorder.onstop = () => {
+                const blob = new Blob(recordedChunks, { type: 'audio/webm' });
+                const audioUrl = URL.createObjectURL(blob);
+
+                // Prévisualisation
+                audioPreview.innerHTML = `<audio controls src="${audioUrl}"></audio>`;
+
+                // Conversion en base64 pour envoi dans un champ du formulaire
+                const reader = new FileReader();
+                reader.readAsDataURL(blob);
+                reader.onloadend = () => {
+                    hiddenInput.value = reader.result; // base64 string
+                };
+
+                recordBtn.textContent = 'Enregistrer un message';
+            };
+
+            mediaRecorder.start();
+            recordBtn.textContent = 'Arrêter l’enregistrement';
+        } else if (mediaRecorder.state === 'recording') {
+            mediaRecorder.stop();
+        }
+    });
+</script>
+
+</body>
 </html>
