@@ -1897,6 +1897,7 @@
     let startTime = 0;
 
     function formatTime(seconds) {
+        if (!isFinite(seconds)) return "00:00";
         const m = Math.floor(seconds / 60).toString().padStart(2, '0');
         const s = Math.floor(seconds % 60).toString().padStart(2, '0');
         return `${m}:${s}`;
@@ -1922,12 +1923,18 @@
                 audioBlob = blob;
                 audioUrl = URL.createObjectURL(blob);
                 audio = new Audio(audioUrl);
+
+                // Attendre que les métadonnées soient chargées
                 audio.addEventListener('loadedmetadata', () => {
+                    // Ne rien afficher tant que duration est NaN
+                    if (!isFinite(audio.duration)) return;
+
                     voiceDuration.textContent = `(${formatTime(audio.duration)})`;
-                    audioInput.value = blobToBase64(blob);
+                    voiceMessage.classList.remove('hidden'); // Affiche la preview uniquement ici
+                    progressBarContainer.classList.remove('hidden');
+                    blobToBase64(blob);
                 });
-                voiceMessage.classList.remove('hidden');
-                progressBarContainer.classList.remove('hidden');
+
             };
 
             setTimeout(() => {
@@ -1979,7 +1986,6 @@
         reader.onloadend = () => {
             audioInput.value = reader.result;
         };
-        return '';
     }
 </script>
 </body>
