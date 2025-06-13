@@ -10,6 +10,27 @@
     <link itemprop="thumbnailUrl" href="{{ apiUrl ~ invitation.event.thumbPath }}">
     <meta name="generator" content="v0.dev">
     <style type="text/css" data-styled-jsx="">
+        #progress-bar {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+        #progress-bar > div {
+            flex: 1;
+            background: white;
+            height: 0.5rem;
+            border-radius: 9999px;
+            overflow: hidden;
+        }
+        #progress-bar > div > div {
+            background: #f24173;
+            height: 100%;
+            width: 0%;
+            border-radius: 9999px;
+            transition: width 0.2s;
+        }
+
         .text-white {
             color: white;
         }
@@ -1858,98 +1879,108 @@
     let audioChunks = [];
     let audioBlob;
     let audioUrl;
-    let audio;
+    let audio = null;
+    let isPlaying = false;
+    let timerInterval;
 
     const recordBtn = document.getElementById('recordBtn');
     const recordingInfo = document.getElementById('recordingInfo');
-    const voiceMessage = document.getElementById('voice-message');
     const playButton = document.getElementById('play-button');
     const playIcon = document.getElementById('play-icon');
-    const progressBar = document.getElementById('progress-bar');
+    const timerDisplay = document.getElementById('timer');
+    const progressBarContainer = document.getElementById('progress-bar');
+    const progressFill = progressBarContainer.querySelector('div > div');
     const voiceDuration = document.getElementById('voice-duration');
-    const audioBase64Input = document.getElementById('audioBlobBase64');
-    const timer = document.getElementById('timer');
+    const voiceMessage = document.getElementById('voice-message');
+    const audioInput = document.getElementById('audioBlobBase64');
 
-    let isRecording = false;
-    let startTime;
-    let timerInterval;
+    let startTime = 0;
 
     function formatTime(seconds) {
-        const m = String(Math.floor(seconds / 60)).padStart(2, '0');
-        const s = String(seconds % 60).padStart(2, '0');
+        const m = Math.floor(seconds / 60).toString().padStart(2, '0');
+        const s = Math.floor(seconds % 60).toString().padStart(2, '0');
         return `${m}:${s}`;
     }
 
-    function startTimer() {
-        startTime = Date.now();
-        timerInterval = setInterval(() => {
-            const elapsed = Math.floor((Date.now() - startTime) / 1000);
-            timer.textContent = formatTime(elapsed);
-        }, 1000);
-    }
-
-    function stopTimer() {
-        clearInterval(timerInterval);
-    }
-
     recordBtn.addEventListener('click', async () => {
-        if (!isRecording) {
+        audioChunks = [];
+        try {
             const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
             mediaRecorder = new MediaRecorder(stream);
-            audioChunks = [];
-
-            mediaRecorder.ondataavailable = event => {
-                audioChunks.push(event.data);
-            };
-
-            mediaRecorder.onstop = () => {
-                audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
-                audioUrl = URL.createObjectURL(audioBlob);
-                audio = new Audio(audioUrl);
-
-                // Convertir en Base64
-                const reader = new FileReader();
-                reader.readAsDataURL(audioBlob);
-                reader.onloadend = function () {
-                    audioBase64Input.value = reader.result;
-                };
-
-                // Afficher
-                voiceMessage.style.display = 'block';
-                voiceDuration.textContent = `(${formatTime(Math.floor(audio.duration))})`;
-            };
-
             mediaRecorder.start();
-            isRecording = true;
+            startTime = Date.now();
+            updateTimer();
+
             recordingInfo.classList.remove('hidden');
-            startTimer();
-            recordBtn.textContent = 'Arrêter l’enregistrement';
-        } else {
-            mediaRecorder.stop();
-            isRecording = false;
-            stopTimer();
-            recordingInfo.classList.add('hidden');
-            recordBtn.textContent = 'Enregistrer un message';
+            recordBtn.disabled = true;
+            recordBtn.textContent = 'Enregistrement...';
+
+            mediaRecorder.ondataavailable = event => audioChunks.push(event.data);
+            mediaRecorder.onstop = () => {
+                clearInterval(timerInterval);
+                const blob = new Blob(audioChunks, { type: 'audio/webm' });
+                audioBlob = blob;
+                audioUrl = URL.createObjectURL(blob);
+                audio = new Audio(audioUrl);
+                audio.addEventListener('loadedmetadata', () => {
+                    voiceDuration.textContent = `(${formatTime(audio.duration)})`;
+                    audioInput.value = blobToBase64(blob);
+                });
+                voiceMessage.classList.remove('hidden');
+                progressBarContainer.classList.remove('hidden');
+            };
+
+            setTimeout(() => {
+                mediaRecorder.stop();
+                recordBtn.disabled = false;
+                recordBtn.textContent = 'Réenregistrer';
+                recordingInfo.classList.add('hidden');
+            }, 10000); // Stop après 10s
+        } catch (e) {
+            alert('Erreur d’accès au micro : ' + e.message);
         }
     });
 
-    window.togglePlayback = () => {
+    function updateTimer() {
+        timerInterval = setInterval(() => {
+            const elapsed = (Date.now() - startTime) / 1000;
+            timerDisplay.textContent = formatTime(elapsed);
+        }, 500);
+    }
+
+    playButton.addEventListener('click', () => {
         if (!audio) return;
-        if (audio.paused) {
+
+        if (!isPlaying) {
             audio.play();
-            progressBar.classList.remove('hidden');
-            playIcon.innerHTML = '<rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect>';
+            playIcon.innerHTML = `<line x1="6" y1="4" x2="6" y2="20"/><line x1="18" y1="4" x2="18" y2="20"/>`;
+            isPlaying = true;
+
+            audio.ontimeupdate = () => {
+                const progress = (audio.currentTime / audio.duration) * 100;
+                progressFill.style.width = `${progress}%`;
+            };
+
+            audio.onended = () => {
+                playIcon.innerHTML = `<polygon points="6 3 20 12 6 21 6 3"></polygon>`;
+                isPlaying = false;
+                progressFill.style.width = `0%`;
+            };
         } else {
             audio.pause();
-            progressBar.classList.add('hidden');
-            playIcon.innerHTML = '<polygon points="6 3 20 12 6 21 6 3"></polygon>';
+            playIcon.innerHTML = `<polygon points="6 3 20 12 6 21 6 3"></polygon>`;
+            isPlaying = false;
         }
+    });
 
-        audio.onended = () => {
-            progressBar.classList.add('hidden');
-            playIcon.innerHTML = '<polygon points="6 3 20 12 6 21 6 3"></polygon>';
+    function blobToBase64(blob) {
+        const reader = new FileReader();
+        reader.readAsDataURL(blob);
+        reader.onloadend = () => {
+            audioInput.value = reader.result;
         };
-    };
+        return '';
+    }
 </script>
 </body>
 
