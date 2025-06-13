@@ -1192,7 +1192,7 @@
 
                                         <div id="progress-bar" class="mt-3 flex items-center gap-2">
                                             <div class="flex-1 bg-white rounded-full h-2 overflow-hidden">
-                                                <div id="progress-fill" class="bg-[#f24173] h-full w-0 rounded-full transition-all duration-200"></div>
+                                                <div id="progress-fill" class="bg-[{{ template.primaryColor }}] h-full w-0 rounded-full transition-all duration-200"></div>
                                             </div>
                                         </div>
                                     </div>
@@ -1973,7 +1973,7 @@
         } else {
             audio.pause();
             isPlaying = false;
-            playButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-pause w-4 h-4" __v0_r="0,8602,8611"><rect x="14" y="4" width="4" height="16" rx="1"></rect><rect x="6" y="4" width="4" height="16" rx="1"></rect></svg>`;
+            playButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-play w-4 h-4" __v0_r="0,8633,8642"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>`;
         }
     });
 
