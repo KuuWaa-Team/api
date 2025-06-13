@@ -1151,7 +1151,7 @@
                     <div class="jsx-d0ada46de86ca64b grid md:grid-cols-2 gap-6">
                         <div class="jsx-d0ada46de86ca64b space-y-4">
                             <h3 class="jsx-d0ada46de86ca64b font-medium text-[{{ template.secondaryColor }}]">Message écrit</h3>
-                            <textarea
+                            <textarea id="textMessage" required
                                     class="flex w-full rounded-md border bg-background px-3 py-2 text-base ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm min-h-32 border-[{{ template.primaryColor }}]/30 focus:border-[{{ template.primaryColor }}]"
                                     placeholder="Mr Daniel Mwema, laissez-nous un message..."></textarea>
                             <div class="space-y-4">
@@ -1202,14 +1202,15 @@
                             </div>
 
                             <button
-                                    class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 text-primary-foreground h-10 px-4 py-2 w-full bg-[{{ template.primaryColor }}] hover:bg-[{{ template.primaryColor }}]/90"><svg
-                                        xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                        stroke-linejoin="round" class="lucide lucide-send w-4 h-4 mr-2">
-                                    <path
-                                            d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z">
-                                    </path>
-                                    <path d="m21.854 2.147-10.94 10.939"></path>
+                                    id="sendBookBtn"
+                                class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 text-primary-foreground h-10 px-4 py-2 w-full bg-[{{ template.primaryColor }}] hover:bg-[{{ template.primaryColor }}]/90"><svg
+                                    xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="lucide lucide-send w-4 h-4 mr-2">
+                                <path
+                                        d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z">
+                                </path>
+                                <path d="m21.854 2.147-10.94 10.939"></path>
                                 </svg>Envoyer le message</button>
                         </div>
                     </div>
@@ -1891,6 +1892,8 @@
     const voiceDuration = document.getElementById('voice-duration');
     const progressFill = document.getElementById('progress-fill');
     const audioInput = document.getElementById('audioBlobBase64');
+    const sendBookBtn = document.getElementById('sendBookBtn');
+    const textMessage = document.getElementById('textMessage');
 
     let startTime = 0;
 
@@ -1902,7 +1905,6 @@
     }
 
     recordBtn.addEventListener('click', async () => {
-        // Réinitialiser l'état
         audioChunks = [];
         progressFill.style.width = '0%';
         voiceMessage.classList.add('hidden');
@@ -1912,6 +1914,7 @@
             mediaRecorder = new MediaRecorder(stream);
             mediaRecorder.start();
             isRecording = true;
+            sendBookBtn.style.display = 'none';
             startTime = Date.now();
             updateTimer();
 
@@ -1921,6 +1924,7 @@
 
             mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
             mediaRecorder.onstop = () => {
+                sendBookBtn.style.display = 'block';
                 clearInterval(timerInterval);
                 recordingInfo.classList.add('hidden');
                 recordBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-mic w-4 h-4 mr-2" __v0_r="0,38892,38906"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" x2="12" y1="19" y2="22"></line></svg> Réenregistrer`;
@@ -1938,6 +1942,7 @@
                 };
             };
         } catch (e) {
+            sendBookBtn.style.display = 'block';
             alert("Erreur : " + e.message);
         }
     });
