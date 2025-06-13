@@ -1154,14 +1154,14 @@
 
                                 <div id="recorderBox" class="border-2 border-dashed border-[#b27409]/30 rounded-lg p-8 text-center">
                                     <!-- Enregistrement -->
-                                    <button id="recordBtn" class="inline-flex items-center justify-center gap-2 text-sm font-medium border bg-background h-10 px-4 py-2 w-full border-[#b27409] text-[#b27409] hover:bg-[#b27409] hover:text-white">
-                                        <svg class="lucide lucide-mic w-4 h-4 mr-2" fill="none" stroke="currentColor" stroke-width="2">
-                                            <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"></path>
-                                            <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
-                                            <line x1="12" x2="12" y1="19" y2="22"></line>
-                                        </svg>
-                                        Enregistrer un message
-                                    </button>
+                                    <div class="flex gap-2 justify-center">
+                                        <button id="recordBtn" class="inline-flex items-center justify-center gap-2 text-sm font-medium border bg-background h-10 px-4 py-2 border-[#b27409] text-[#b27409] hover:bg-[#b27409] hover:text-white">
+                                            🎤 Enregistrer
+                                        </button>
+                                        <button id="stopBtn" class="hidden inline-flex items-center justify-center gap-2 text-sm font-medium border bg-red-500 h-10 px-4 py-2 text-white hover:bg-red-600">
+                                            ⏹️ Arrêter
+                                        </button>
+                                    </div>
 
                                     <div id="recordingInfo" class="mt-4 hidden">
                                         <div class="flex items-center justify-center space-x-2">
@@ -1171,37 +1171,35 @@
                                         </div>
                                     </div>
 
-                                    <!-- Prévisualisation audio custom (hidden par défaut) -->
-                                    <div id="voice-message" class="hidden bg-gradient-to-r from-[#f24173]/5 to-[#2f2644]/5 rounded-lg p-4">
+                                    <!-- Prévisualisation audio custom -->
+                                    <div id="voice-message" class="hidden bg-gradient-to-r from-[#f24173]/5 to-[#2f2644]/5 rounded-lg p-4 mt-4">
                                         <div class="flex items-center justify-between">
                                             <div class="flex items-center gap-2">
-                                                <svg xmlns="http://www.w3.org/2000/svg" class="lucide lucide-mic w-4 h-4 text-[#f24173]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                                    <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z" />
-                                                    <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
-                                                    <line x1="12" x2="12" y1="19" y2="22" />
+                                                <svg class="lucide lucide-mic w-4 h-4 text-[#f24173]">
+                                                    <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"></path>
+                                                    <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                                                    <line x1="12" x2="12" y1="19" y2="22"></line>
                                                 </svg>
                                                 <span class="text-sm font-medium text-[#2f2644]">Message vocal</span>
                                                 <span id="voice-duration" class="text-xs text-[#2f2644]/60">(00:00)</span>
                                             </div>
-                                            <button id="play-button" onclick="togglePlayback()" class="inline-flex items-center justify-center gap-2 text-sm font-medium h-9 rounded-md px-3 bg-[#2f2644] text-white hover:bg-[#2f2644]/90">
-                                                <svg id="play-icon" xmlns="http://www.w3.org/2000/svg" class="lucide lucide-play w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                                    <polygon points="6 3 20 12 6 21 6 3"></polygon>
-                                                </svg>
+                                            <button id="play-button" class="inline-flex items-center justify-center gap-2 text-sm font-medium h-9 rounded-md px-3 bg-[#2f2644] text-white hover:bg-[#2f2644]/90">
+                                                ▶️
                                             </button>
                                         </div>
 
-                                        <!-- Barre de lecture -->
-                                        <div id="progress-bar" class="mt-3 flex items-center gap-2 hidden">
+                                        <div id="progress-bar" class="mt-3 flex items-center gap-2">
                                             <div class="flex-1 bg-white rounded-full h-2 overflow-hidden">
-                                                <div class="bg-[#f24173] h-full w-1/3 rounded-full animate-pulse"></div>
+                                                <div id="progress-fill" class="bg-[#f24173] h-full w-0 rounded-full transition-all duration-200"></div>
                                             </div>
-                                            <span class="text-xs text-[#2f2644]/60">En cours de lecture...</span>
+                                            <span class="text-xs text-[#2f2644]/60">Lecture</span>
                                         </div>
                                     </div>
 
                                     <input type="hidden" name="audioBlobBase64" id="audioBlobBase64">
                                 </div>
                             </div>
+
                             <button
                                     class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 text-primary-foreground h-10 px-4 py-2 w-full bg-[{{ template.primaryColor }}] hover:bg-[{{ template.primaryColor }}]/90"><svg
                                         xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
@@ -1878,19 +1876,19 @@
     let audioChunks = [];
     let audioBlob;
     let audioUrl;
-    let audio = null;
+    let audio;
     let isPlaying = false;
+    let isRecording = false;
     let timerInterval;
 
     const recordBtn = document.getElementById('recordBtn');
+    const stopBtn = document.getElementById('stopBtn');
     const recordingInfo = document.getElementById('recordingInfo');
-    const playButton = document.getElementById('play-button');
-    const playIcon = document.getElementById('play-icon');
     const timerDisplay = document.getElementById('timer');
-    const progressBarContainer = document.getElementById('progress-bar');
-    const progressFill = progressBarContainer.querySelector('div > div');
-    const voiceDuration = document.getElementById('voice-duration');
     const voiceMessage = document.getElementById('voice-message');
+    const playButton = document.getElementById('play-button');
+    const voiceDuration = document.getElementById('voice-duration');
+    const progressFill = document.getElementById('progress-fill');
     const audioInput = document.getElementById('audioBlobBase64');
 
     let startTime = 0;
@@ -1903,48 +1901,78 @@
     }
 
     recordBtn.addEventListener('click', async () => {
+        // Réinitialiser l'état
         audioChunks = [];
+        progressFill.style.width = '0%';
+        voiceMessage.classList.add('hidden');
+
         try {
             const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
             mediaRecorder = new MediaRecorder(stream);
             mediaRecorder.start();
+            isRecording = true;
             startTime = Date.now();
             updateTimer();
 
             recordingInfo.classList.remove('hidden');
-            recordBtn.disabled = true;
-            recordBtn.textContent = 'Enregistrement...';
+            recordBtn.classList.add('hidden');
+            stopBtn.classList.remove('hidden');
 
-            mediaRecorder.ondataavailable = event => audioChunks.push(event.data);
+            mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
             mediaRecorder.onstop = () => {
                 clearInterval(timerInterval);
-                const blob = new Blob(audioChunks, { type: 'audio/webm' });
-                audioBlob = blob;
-                audioUrl = URL.createObjectURL(blob);
-                audio = new Audio(audioUrl);
+                recordingInfo.classList.add('hidden');
+                recordBtn.textContent = '🎤 Réenregistrer';
+                recordBtn.classList.remove('hidden');
+                stopBtn.classList.add('hidden');
 
-                audio.addEventListener('loadedmetadata', () => {
-                    setTimeout(() => {
-                        if (!isFinite(audio.duration)) {
-                            voiceDuration.textContent = '(00:00)';
-                        } else {
-                            voiceDuration.textContent = `(${formatTime(audio.duration)})`;
-                        }
-                        voiceMessage.classList.remove('hidden');
-                        progressBarContainer.classList.remove('hidden');
-                        blobToBase64(blob);
-                    }, 100);
-                });
+                audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+                audioUrl = URL.createObjectURL(audioBlob);
+                audio = new Audio(audioUrl);
+                blobToBase64(audioBlob);
+
+                audio.onloadedmetadata = () => {
+                    voiceDuration.textContent = `(${formatTime(audio.duration)})`;
+                    voiceMessage.classList.remove('hidden');
+                };
+            };
+        } catch (e) {
+            alert("Erreur : " + e.message);
+        }
+    });
+
+    stopBtn.addEventListener('click', () => {
+        if (mediaRecorder && isRecording) {
+            mediaRecorder.stop();
+            isRecording = false;
+        }
+    });
+
+    playButton.addEventListener('click', () => {
+        if (!audio) return;
+
+        if (!isPlaying) {
+            audio.play();
+            isPlaying = true;
+            playButton.textContent = '⏸️';
+
+            audio.ontimeupdate = () => {
+                const current = audio.currentTime;
+                const duration = audio.duration;
+                voiceDuration.textContent = `(${formatTime(current)})`;
+                const progress = (current / duration) * 100;
+                progressFill.style.width = `${progress}%`;
             };
 
-            setTimeout(() => {
-                mediaRecorder.stop();
-                recordBtn.disabled = false;
-                recordBtn.textContent = 'Réenregistrer';
-                recordingInfo.classList.add('hidden');
-            }, 10000);
-        } catch (e) {
-            alert('Erreur d’accès au micro : ' + e.message);
+            audio.onended = () => {
+                isPlaying = false;
+                playButton.textContent = '▶️';
+                progressFill.style.width = '0%';
+            };
+        } else {
+            audio.pause();
+            isPlaying = false;
+            playButton.textContent = '▶️';
         }
     });
 
@@ -1954,31 +1982,6 @@
             timerDisplay.textContent = formatTime(elapsed);
         }, 500);
     }
-
-    playButton.addEventListener('click', () => {
-        if (!audio) return;
-
-        if (!isPlaying) {
-            audio.play();
-            playIcon.innerHTML = `<line x1="6" y1="4" x2="6" y2="20"/><line x1="18" y1="4" x2="18" y2="20"/>`;
-            isPlaying = true;
-
-            audio.ontimeupdate = () => {
-                const progress = (audio.currentTime / audio.duration) * 100;
-                progressFill.style.width = `${progress}%`;
-            };
-
-            audio.onended = () => {
-                playIcon.innerHTML = `<polygon points="6 3 20 12 6 21 6 3"></polygon>`;
-                isPlaying = false;
-                progressFill.style.width = `0%`;
-            };
-        } else {
-            audio.pause();
-            playIcon.innerHTML = `<polygon points="6 3 20 12 6 21 6 3"></polygon>`;
-            isPlaying = false;
-        }
-    });
 
     function blobToBase64(blob) {
         const reader = new FileReader();
