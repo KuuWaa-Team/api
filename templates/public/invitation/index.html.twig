@@ -1974,6 +1974,9 @@
         audio.currentTime = 0;
         audio.play();
 
+        updateProgressUI();
+        audio.ontimeupdate = updateProgressUI;
+
         audio.ontimeupdate = () => {
             const current = audio.currentTime;
             const duration = audio.duration || 1; // éviter division par 0
@@ -1988,6 +1991,16 @@
             // progressFill.style.width = '0%';
         };
     }
+
+    function updateProgressUI() {
+        const current = audio.currentTime || 0;
+        const duration = audio.duration || 1;
+        voiceDuration.textContent = `(${formatTime(current)})`;
+        const progress = (current / duration) * 100;
+        progressFill.style.width = `${progress}%`;
+    }
+
+
     function updateTimer() {
         timerInterval = setInterval(() => {
             const elapsed = (Date.now() - startTime) / 1000;
