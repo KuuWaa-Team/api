@@ -105,7 +105,12 @@
         }
         .hover\:bg-\[\#{{ primaryHex }}\]:hover {
             --tw-bg-opacity: 1;
+            --tw-bg-opacity: 1;
             background-color: rgba({{ primaryR }} {{ primaryG }} {{ primaryB }}/var(--tw-bg-opacity));
+        }
+
+        .hover\:text-white:hover {
+            color: white !important;
         }
 
         /* Classes avec opacités dynamiques */
@@ -1155,7 +1160,7 @@
                                 <div id="recorderBox" class="border-2 border-dashed border-[#b27409]/30 rounded-lg p-8 text-center">
                                     <!-- Enregistrement -->
                                     <div class="flex gap-2 justify-center">
-                                        <button style="width: 100%" id="recordBtn" class="inline-flex items-center justify-center gap-2 text-sm font-medium border bg-background h-10 px-4 py-2 border-[#b27409] text-[#b27409] hover:bg-[#b27409] hover:text-white">
+                                        <button style="width: 100%" id="recordBtn" class="inline-flex items-center justify-center gap-2 text-sm font-medium border bg-background h-10 px-4 py-2 border-[{{ template.primaryColor }}] text-[{{ template.primaryColor }}] hover:bg-[{{ template.primaryColor }}] hover:text-white">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-mic w-4 h-4 mr-2" __v0_r="0,38892,38906"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" x2="12" y1="19" y2="22"></line></svg>
                                             Enregistrer un message
                                         </button>
@@ -1174,18 +1179,13 @@
                                     </div>
 
                                     <!-- Prévisualisation audio custom -->
-                                    <div id="voice-message" class="hidden bg-gradient-to-r from-[#f24173]/5 to-[#2f2644]/5 rounded-lg p-4 mt-4">
+                                    <div id="voice-message" class="hidden bg-gradient-to-r from-[{{ template.primaryColor }}]/5 to-[{{ template.secondaryColor }}]/5 rounded-lg p-4 mt-4">
                                         <div class="flex items-center justify-between">
                                             <div class="flex items-center gap-2">
-                                                <svg class="lucide lucide-mic w-4 h-4 text-[#f24173]">
-                                                    <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"></path>
-                                                    <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
-                                                    <line x1="12" x2="12" y1="19" y2="22"></line>
-                                                </svg>
-                                                <span class="text-sm font-medium text-[#2f2644]">Message vocal</span>
-                                                <span id="voice-duration" class="text-xs text-[#2f2644]/60">(00:00)</span>
+                                                <span class="text-sm font-medium text-[{{ template.secondaryColor }}]">Message vocal</span>
+                                                <span id="voice-duration" class="text-xs text-[{{ template.secondaryColor }}]/60">(00:00)</span>
                                             </div>
-                                            <button id="play-button" class="inline-flex items-center justify-center gap-2 text-sm font-medium h-9 rounded-md px-3 bg-[#2f2644] text-white hover:bg-[#2f2644]/90">
+                                            <button id="play-button" class="inline-flex items-center justify-center gap-2 text-sm font-medium h-9 rounded-md px-3 bg-[{{ template.secondaryColor }}] text-white hover:bg-[{{ template.secondaryColor }}]/90">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-play w-4 h-4" __v0_r="0,8633,8642"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
                                             </button>
                                         </div>
@@ -1194,7 +1194,6 @@
                                             <div class="flex-1 bg-white rounded-full h-2 overflow-hidden">
                                                 <div id="progress-fill" class="bg-[#f24173] h-full w-0 rounded-full transition-all duration-200"></div>
                                             </div>
-                                            <span class="text-xs text-[#2f2644]/60">Lecture</span>
                                         </div>
                                     </div>
 
