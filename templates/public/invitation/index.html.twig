@@ -1133,12 +1133,9 @@
                                 <h3 class="font-medium text-[#023133]">Message vocal</h3>
 
                                 <div id="recorderBox" class="border-2 border-dashed border-[#b27409]/30 rounded-lg p-8 text-center">
+                                    <!-- Enregistrement -->
                                     <button id="recordBtn" class="inline-flex items-center justify-center gap-2 text-sm font-medium border bg-background h-10 px-4 py-2 w-full border-[#b27409] text-[#b27409] hover:bg-[#b27409] hover:text-white">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="lucide lucide-mic w-4 h-4 mr-2" fill="none" stroke="currentColor" stroke-width="2">
-                                            <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"></path>
-                                            <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
-                                            <line x1="12" x2="12" y1="19" y2="22"></line>
-                                        </svg>
+                                        <svg class="lucide lucide-mic w-4 h-4 mr-2" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" x2="12" y1="19" y2="22"></line></svg>
                                         Enregistrer un message
                                     </button>
 
@@ -1146,16 +1143,25 @@
                                         <div class="flex items-center justify-center space-x-2">
                                             <div class="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
                                             <span class="text-red-500 text-sm">Enregistrement en cours...</span>
-                                            <span class="text-sm text-red-500" id="timer">00:00</span>
+                                            <span id="timer" class="text-sm text-red-500">00:00</span>
                                         </div>
                                     </div>
 
-                                    <div id="audioPreview" class="mt-4 hidden bg-[#f9f2f2] p-4 rounded-lg text-left">
-                                        <div class="text-sm font-semibold text-[#b27409] mb-2">Prévisualisation :</div>
-                                        <div class="flex items-center justify-between gap-4">
-                                            <audio id="audioPlayer" controls class="w-full"></audio>
-                                            <button id="cancelBtn" class="text-sm text-red-600 hover:text-red-800">Annuler</button>
+                                    <!-- Prévisualisation audio custom -->
+                                    <div id="audioPreview" class="hidden mt-4 flex items-center justify-between bg-[#fef4e7] rounded-xl p-4 border border-[#f3d1a3]">
+                                        <div class="flex items-center gap-4 w-full">
+                                            <button id="playPauseBtn" class="w-10 h-10 rounded-full bg-[#b27409] text-white flex items-center justify-center">
+                                                ▶️
+                                            </button>
+
+                                            <div class="flex-1">
+                                                <div class="relative h-1.5 bg-[#f3d1a3] rounded-full overflow-hidden mb-1">
+                                                    <div id="progressBar" class="absolute left-0 top-0 h-full bg-[#b27409] w-0 transition-all"></div>
+                                                </div>
+                                                <span id="currentTime" class="text-xs text-[#b27409]">00:00</span>
+                                            </div>
                                         </div>
+                                        <button id="cancelBtn" class="ml-4 text-red-500 hover:text-red-700">🗑️</button>
                                     </div>
 
                                     <input type="hidden" name="audioBlobBase64" id="audioBlobBase64">
@@ -1834,25 +1840,23 @@
     });
 </script>
 <script>
-    let mediaRecorder;
-    let recordedChunks = [];
-    let isRecording = false;
-    let timerInterval;
-    let seconds = 0;
-
+    let mediaRecorder, recordedChunks = [], isRecording = false, timerInterval, seconds = 0;
     const recordBtn = document.getElementById('recordBtn');
-    const recorderBox = document.getElementById('recorderBox');
-    const audioPreview = document.getElementById('audioPreview');
-    const audioPlayer = document.getElementById('audioPlayer');
-    const cancelBtn = document.getElementById('cancelBtn');
-    const hiddenInput = document.getElementById('audioBlobBase64');
     const recordingInfo = document.getElementById('recordingInfo');
     const timer = document.getElementById('timer');
+    const audioPreview = document.getElementById('audioPreview');
+    const playPauseBtn = document.getElementById('playPauseBtn');
+    const progressBar = document.getElementById('progressBar');
+    const currentTime = document.getElementById('currentTime');
+    const cancelBtn = document.getElementById('cancelBtn');
+    const hiddenInput = document.getElementById('audioBlobBase64');
 
-    function formatTime(seconds) {
-        const m = String(Math.floor(seconds / 60)).padStart(2, '0');
-        const s = String(seconds % 60).padStart(2, '0');
-        return `${m}:${s}`;
+    let audioBlob, audioUrl, audio = null;
+
+    function formatTime(s) {
+        const m = String(Math.floor(s / 60)).padStart(2, '0');
+        const sec = String(s % 60).padStart(2, '0');
+        return `${m}:${sec}`;
     }
 
     recordBtn.addEventListener('click', async () => {
@@ -1863,68 +1867,67 @@
             seconds = 0;
             timer.textContent = "00:00";
 
-            mediaRecorder.ondataavailable = e => {
-                if (e.data.size > 0) recordedChunks.push(e.data);
-            };
-
+            mediaRecorder.ondataavailable = e => { if (e.data.size > 0) recordedChunks.push(e.data); };
             mediaRecorder.onstop = () => {
-                const blob = new Blob(recordedChunks, { type: 'audio/webm' });
-                const audioUrl = URL.createObjectURL(blob);
-                audioPlayer.src = audioUrl;
+                audioBlob = new Blob(recordedChunks, { type: 'audio/webm' });
+                audioUrl = URL.createObjectURL(audioBlob);
+                audio = new Audio(audioUrl);
                 audioPreview.classList.remove("hidden");
 
                 const reader = new FileReader();
-                reader.readAsDataURL(blob);
-                reader.onloadend = () => {
-                    hiddenInput.value = reader.result;
-                };
+                reader.readAsDataURL(audioBlob);
+                reader.onloadend = () => hiddenInput.value = reader.result;
             };
 
             mediaRecorder.start();
             isRecording = true;
-
-            // UI
-            recorderBox.classList.remove("border-[#b27409]/30");
-            recorderBox.classList.add("border-[#f24173]/30");
-            recordBtn.innerHTML = `
-      <svg xmlns="http://www.w3.org/2000/svg" class="lucide lucide-mic-off w-4 h-4 mr-2" fill="none" stroke="currentColor" stroke-width="2">
-        <line x1="2" x2="22" y1="2" y2="22"></line>
-        <path d="M18.89 13.23A7.12 7.12 0 0 0 19 12v-2"></path>
-        <path d="M5 10v2a7 7 0 0 0 12 5"></path>
-        <path d="M15 9.34V5a3 3 0 0 0-5.68-1.33"></path>
-        <path d="M9 9v3a3 3 0 0 0 5.12 2.12"></path>
-        <line x1="12" x2="12" y1="19" y2="22"></line>
-      </svg>Arrêter l’enregistrement`;
+            recordingInfo.classList.remove('hidden');
+            recordBtn.innerHTML = "⏹️ Arrêter l'enregistrement";
             recordBtn.classList.add("bg-red-500", "hover:bg-red-600", "text-white");
-            recordingInfo.classList.remove("hidden");
 
             timerInterval = setInterval(() => {
                 seconds++;
                 timer.textContent = formatTime(seconds);
             }, 1000);
-
         } else {
             mediaRecorder.stop();
             isRecording = false;
-
-            recorderBox.classList.remove("border-[#f24173]/30");
-            recorderBox.classList.add("border-[#b27409]/30");
-            recordBtn.innerHTML = `
-      <svg xmlns="http://www.w3.org/2000/svg" class="lucide lucide-mic w-4 h-4 mr-2" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"></path>
-        <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
-        <line x1="12" x2="12" y1="19" y2="22"></line>
-      </svg>Enregistrer un message`;
+            recordingInfo.classList.add('hidden');
+            recordBtn.innerHTML = "🎙️ Enregistrer un message";
             recordBtn.classList.remove("bg-red-500", "hover:bg-red-600", "text-white");
-            recordingInfo.classList.add("hidden");
             clearInterval(timerInterval);
         }
     });
 
+    playPauseBtn.addEventListener('click', () => {
+        if (!audio) return;
+        if (audio.paused) {
+            audio.play();
+            playPauseBtn.textContent = "⏸️";
+        } else {
+            audio.pause();
+            playPauseBtn.textContent = "▶️";
+        }
+    });
+
+    if (!audio) audio = new Audio();
+
+    let progressUpdate = setInterval(() => {
+        if (audio && !audio.paused) {
+            const progress = (audio.currentTime / audio.duration) * 100;
+            progressBar.style.width = `${progress}%`;
+            currentTime.textContent = formatTime(Math.floor(audio.currentTime));
+        }
+    }, 300);
+
     cancelBtn.addEventListener('click', () => {
         audioPreview.classList.add("hidden");
-        audioPlayer.src = '';
+        audioBlob = null;
+        audioUrl = "";
         hiddenInput.value = '';
+        playPauseBtn.textContent = "▶️";
+        progressBar.style.width = "0%";
+        currentTime.textContent = "00:00";
     });
 </script>
 </body>
