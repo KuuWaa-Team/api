@@ -2043,7 +2043,7 @@
         }
 
         try {
-            const response = await fetch('/api/messages', {
+            const response = await fetch('/api/invitations/{{ invitation.slug }}/send-book-messages', {
                 method: 'POST',
                 body: formData,
             });
