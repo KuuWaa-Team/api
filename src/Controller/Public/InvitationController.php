@@ -18,6 +18,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 class InvitationController extends AbstractController
 {
@@ -169,6 +170,53 @@ class InvitationController extends AbstractController
             'countTaken' => $beverage->getCountTaken(),
             'countTakenText' => $beverage->getCountTaken() > 0 ? $beverage->getCountTaken().' personne'.($beverage->getCountTaken() > 1 ? 's' : '') : 'aucune'
         ]);
+    }
+
+    #[Route('/api/invitations/{slug}/send-book-messages', name: 'app_invitation_send_book_messages', methods: ['POST'])]
+    public function sendBookMessages(
+        string $slug,
+        Request $request,
+        InvitationRepository $invitationRepository,
+        BookRepository $bookRepository,
+        SluggerInterface $slugger
+    ): JsonResponse {
+        $invitation = $invitationRepository->findOneBy(['slug' => $slug]);
+
+        if (!$invitation) {
+            return new JsonResponse(['success' => false, 'message' => 'Invitation non trouvée.'], 404);
+        }
+
+        $message = $request->request->get('message');
+        $hasAudio = filter_var($request->request->get('hasAudio'), FILTER_VALIDATE_BOOLEAN);
+
+        $book = $invitation->getBook() ?? new Book();
+        $book->setInvitation($invitation);
+        $book->setMessage($message);
+
+        if ($hasAudio && $request->files->get('audio')) {
+            $audioFile = $request->files->get('audio');
+
+            if ($audioFile->isValid()) {
+                $originalFilename = pathinfo($audioFile->getClientOriginalName(), PATHINFO_FILENAME);
+                $safeFilename = $slugger->slug($originalFilename);
+                $newFilename = $safeFilename . '-' . uniqid() . '.' . $audioFile->guessExtension();
+
+                $destination = $this->getParameter('kernel.project_dir') . '/public/events/invitations/audios';
+
+                try {
+                    $audioFile->move($destination, $newFilename);
+                    $book->setAudioPath('/events/invitations/audios/' . $newFilename);
+                } catch (\Exception $e) {
+                    return new JsonResponse(['success' => false, 'message' => 'Erreur lors du téléchargement du fichier audio.'], 500);
+                }
+            } else {
+                return new JsonResponse(['success' => false, 'message' => 'Fichier audio invalide.'], 400);
+            }
+        }
+
+        $bookRepository->save($book);
+
+        return new JsonResponse(['success' => true, 'message' => 'Message enregistré avec succès.']);
     }
 
     function hexToRgb(string $hex): array {

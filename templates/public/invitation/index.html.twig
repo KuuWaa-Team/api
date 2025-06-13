@@ -1151,12 +1151,15 @@
                     <div class="jsx-d0ada46de86ca64b grid md:grid-cols-2 gap-6">
                         <div class="jsx-d0ada46de86ca64b space-y-4">
                             <h3 class="jsx-d0ada46de86ca64b font-medium text-[{{ template.secondaryColor }}]">Message écrit</h3>
+                            {% if invitation.book == null %}
                             <textarea id="textMessage" required
                                     class="flex w-full rounded-md border bg-background px-3 py-2 text-base ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm min-h-32 border-[{{ template.primaryColor }}]/30 focus:border-[{{ template.primaryColor }}]"
                                     placeholder="Mr Daniel Mwema, laissez-nous un message..."></textarea>
+                            {% endif %}
                             <div class="space-y-4">
                                 <h3 class="font-medium text-[#023133]">Message vocal</h3>
 
+                                {% if invitation.book == null %}
                                 <div id="recorderBox" class="border-2 border-dashed border-[#b27409]/30 rounded-lg p-8 text-center">
                                     <!-- Enregistrement -->
                                     <div class="flex gap-2 justify-center">
@@ -1199,6 +1202,7 @@
 
                                     <input type="hidden" name="audioBlobBase64" id="audioBlobBase64">
                                 </div>
+                                {% endif %}
                             </div>
 
                             <button
@@ -1781,7 +1785,7 @@
                 message = "Le bonheur approche à grands pas !";
             } else if (days > 7) {
                 message = "Plus que quelques jours avant l'événement !";
-            } else if (days > 1) {
+            %} else if (days > 1) {
                 message = "C’est bientôt, préparez-vous !";
             } else if (days === 1) {
                 message = "Demain, c’est le grand jour !";
@@ -1924,7 +1928,7 @@
 
             mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
             mediaRecorder.onstop = () => {
-                sendBookBtn.style.display = 'block';
+                sendBookBtn.style.display = 'inline-flex';
                 clearInterval(timerInterval);
                 recordingInfo.classList.add('hidden');
                 recordBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-mic w-4 h-4 mr-2" __v0_r="0,38892,38906"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" x2="12" y1="19" y2="22"></line></svg> Réenregistrer`;
@@ -1942,7 +1946,7 @@
                 };
             };
         } catch (e) {
-            sendBookBtn.style.display = 'block';
+            sendBookBtn.style.display = 'inline-flex';
             alert("Erreur : " + e.message);
         }
     });
@@ -2005,7 +2009,6 @@
         progressFill.style.width = `${progress}%`;
     }
 
-
     function updateTimer() {
         timerInterval = setInterval(() => {
             const elapsed = (Date.now() - startTime) / 1000;
@@ -2020,6 +2023,42 @@
             audioInput.value = reader.result;
         };
     }
+
+    sendBookBtn.addEventListener('click', async () => {
+        const message = textMessage.value.trim();
+        const hasAudio = !!audioBlob;
+
+        if (!message && !hasAudio) {
+            alert('Vous ne pouvez pas envoyer un message vide');
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('message', message);
+        formData.append('hasAudio', hasAudio ? '1' : '0');
+
+        if (hasAudio) {
+            const file = new File([audioBlob], 'audio.webm', { type: 'audio/webm' });
+            formData.append('audio', file);
+        }
+
+        try {
+            const response = await fetch('/api/messages', {
+                method: 'POST',
+                body: formData,
+            });
+
+            if (!response.ok) {
+                throw new Error('Erreur lors de l’envoi');
+            }
+
+            window.location.reload();
+
+        } catch (error) {
+            console.error(error);
+            alert('Erreur lors de l’envoi du message');
+        }
+    });
 </script>
 
 </body>
