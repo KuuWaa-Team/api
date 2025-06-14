@@ -1780,6 +1780,7 @@
     document.addEventListener("DOMContentLoaded", () => {
         const deadline = new Date(document.getElementById("countdown").dataset.deadline);
         const messageElement = document.querySelector("#dynamic-countdown-message");
+        let message = "";
 
         function updateCountdown() {
             const now = new Date();
@@ -1804,7 +1805,8 @@
             document.getElementById("minutes").textContent = String(minutes).padStart(2, "0");
             document.getElementById("seconds").textContent = String(seconds).padStart(2, "0");
 
-            let message = "";
+            console.log("days");
+            console.log(days);
             if (days > 30) {
                 message = "Encore un peu de patience, le jour J se prépare !";
             } else if (days > 14) {
