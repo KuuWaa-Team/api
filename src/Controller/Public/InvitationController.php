@@ -2,6 +2,7 @@
 
 namespace App\Controller\Public;
 use App\Entity\Event\Photo;
+use App\Repository\Event\PhotoRepository;
 use App\Service\MediaUploaderService;
 use NumberFormatter;
 use App\Entity\Event\Book;
@@ -251,7 +252,8 @@ class InvitationController extends AbstractController
         string $slug,
         Request $request,
         InvitationRepository $invitationRepository,
-        MediaUploaderService $mediaUploader
+        MediaUploaderService $mediaUploader,
+        PhotoRepository $photoRepository,
     ): JsonResponse {
         $invitation = $invitationRepository->findOneBy(['slug' => $slug]);
         if (!$invitation) {
@@ -261,10 +263,10 @@ class InvitationController extends AbstractController
         $uploaded = [];
         foreach ($request->files->get('photos', []) as $photo) {
             $fileName = $mediaUploader->upload($photo, 'events/invitations/photos');
-            $invitation->addPhoto(
-                (new Photo())
-                ->setPath($fileName)
-            );
+            $photo = (new Photo())
+                ->setInvitation($invitation)
+                ->setPath($fileName);
+            $photoRepository->save($photo);
             $uploaded[] = $fileName;
         }
 
