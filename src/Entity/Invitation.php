@@ -18,6 +18,7 @@ use App\Controller\Invitation\SendInvitationController;
 use App\Controller\Invitation\ValidateController;
 use App\Entity\Event\Book;
 use App\Entity\Event\Gift;
+use App\Entity\Event\Photo;
 use App\Entity\Question\Answer;
 use App\Repository\InvitationRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -274,12 +275,19 @@ class Invitation
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $musicChoice = null;
 
+    /**
+     * @var Collection<int, Photo>
+     */
+    #[ORM\OneToMany(mappedBy: 'invitation', targetEntity: Photo::class)]
+    private Collection $photos;
+
     public function __construct()
     {
         $this->invitations = new ArrayCollection();
         $this->answers = new ArrayCollection();
         $this->gifts = new ArrayCollection();
         $this->beverages = new ArrayCollection();
+        $this->photos = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -580,6 +588,36 @@ class Invitation
     public function setMusicChoice(?string $musicChoice): static
     {
         $this->musicChoice = $musicChoice;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Photo>
+     */
+    public function getPhotos(): Collection
+    {
+        return $this->photos;
+    }
+
+    public function addPhoto(Photo $photo): static
+    {
+        if (!$this->photos->contains($photo)) {
+            $this->photos->add($photo);
+            $photo->setInvitation($this);
+        }
+
+        return $this;
+    }
+
+    public function removePhoto(Photo $photo): static
+    {
+        if ($this->photos->removeElement($photo)) {
+            // set the owning side to null (unless already changed)
+            if ($photo->getInvitation() === $this) {
+                $photo->setInvitation(null);
+            }
+        }
 
         return $this;
     }
