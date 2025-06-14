@@ -232,7 +232,7 @@ class InvitationController extends AbstractController
                     $audioFile->move($destination, $newFilename);
                     $book->setAudioPath('/events/invitations/audios/' . $newFilename);
                 } catch (\Exception $e) {
-                    return new JsonResponse(['success' => false, 'message' => 'Erreur lors du téléchargement du fichier audio.'], 500);
+                    return new JsonResponse(['success' => false, 'message' => "Erreur lors du téléchargement du fichier audio.\n" . $e->getMessage()], 500);
                 }
             } else {
                 return new JsonResponse(['success' => false, 'message' => 'Fichier audio invalide.'], 400);
