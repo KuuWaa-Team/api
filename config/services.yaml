@@ -14,9 +14,6 @@ parameters:
   api_url: '%env(API_URL)%'
 
 services:
-  App\Service\MediaUploaderService:
-    arguments:
-      $targetDirectory: '%kernel.project_dir%/public/uploads'
   # default configuration for services in *this* file
   _defaults:
     autowire: true # Automatically injects dependencies in your services.
