@@ -1151,21 +1151,20 @@
                     {% endif %}
                     <div class="jsx-d0ada46de86ca64b grid md:grid-cols-2 gap-6">
                         <div class="jsx-d0ada46de86ca64b space-y-4">
-                            <h3 class="jsx-d0ada46de86ca64b font-medium text-[{{ template.secondaryColor }}]">Message écrit</h3>
                             {% if invitation.book == null %}
+                            <h3 class="jsx-d0ada46de86ca64b font-medium text-[{{ template.secondaryColor }}]">Message écrit</h3>
                             <textarea id="textMessage" required
                                     class="flex w-full rounded-md border bg-background px-3 py-2 text-base ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm min-h-32 border-[{{ template.primaryColor }}]/30 focus:border-[{{ template.primaryColor }}]"
                                     placeholder="Mr Daniel Mwema, laissez-nous un message..."></textarea>
                             {% else %}
                                 {% if invitation.book.message != null %}
-                                    <p style="margin-bottom:0" class="jsx-d0ada46de86ca64b text-left text-[{{ template.secondaryColor }}]/70">{{ invitation.book.message }}</p>
+                                    <p style="margin-bottom:0!important;" class="jsx-d0ada46de86ca64b text-left text-[{{ template.secondaryColor }}]/70">{{ invitation.book.message }}</p>
                                     <p class="jsx-d0ada46de86ca64b text-left text-[{{ template.primaryColor }}]"><b>{{ invitation.fullname }}</b></p>
                                 {% endif %}
                             {% endif %}
                             <div class="space-y-4">
-                                <h3 class="font-medium text-[#023133]">Message vocal</h3>
-
                                 {% if invitation.book == null %}
+                                <h3 class="font-medium text-[#023133]">Message vocal</h3>
                                 <div id="recorderBox" class="border-2 border-dashed border-[#b27409]/30 rounded-lg p-8 text-center">
                                     <!-- Enregistrement -->
                                     <div class="flex gap-2 justify-center">
