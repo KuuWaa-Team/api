@@ -1126,12 +1126,10 @@
                         </svg>{% if invitation.book != null  %}Votre message au {% endif %}Livre d'or </div>
                 </div>
                 <div class="p-6 pt-0 space-y-6">
-                    {% if invitation.book != null %}
-                    <p class="jsx-d0ada46de86ca64b text-center text-[{{ template.secondaryColor }}]/70">Mr Daniel Mwema, ce livre d'or numérique recueille vos messages et vœux de bonheur, en texte ou en vocal. Vos mots resteront à jamais dans nos cœurs.</p>
-                    {% endif %}
+                    {% if invitation.book == null %}
+                    <p class="jsx-d0ada46de86ca64b text-center text-[{{ template.secondaryColor }}]/70">{{ invitation.fullname }}, ce livre d'or numérique recueille vos messages et vœux de bonheur, en texte ou en vocal. Vos mots resteront à jamais dans nos cœurs.</p>
                     <div class="jsx-d0ada46de86ca64b bg-[{{ template.primaryColor }}]/5 rounded-lg p-4 mb-6">
-                        <h3 class="jsx-d0ada46de86ca64b font-medium text-[{{ template.secondaryColor }}] mb-3">{{ invitation.book != null ? invitation.book.visibility : 'Visibilité de votre message' }}</h3>
-                        {% if invitation.book == null %}
+                        <h3 class="jsx-d0ada46de86ca64b font-medium text-[{{ template.secondaryColor }}] mb-3">Visibilité de votre message</h3>
                         <div class="jsx-d0ada46de86ca64b flex gap-4">
                             <label class="jsx-d0ada46de86ca64b flex items-center gap-2 cursor-pointer">
                                 <input class="jsx-d0ada46de86ca64b text-[{{ template.primaryColor }}] focus:ring-[{{ template.primaryColor }}]"
@@ -1149,8 +1147,8 @@
                            class="jsx-d0ada46de86ca64b text-sm text-[{{ template.secondaryColor }}]/60 mt-2">
                             Votre message sera visible par tous les invités dans le livre d'or public.
                         </p>
-                        {% endif %}
                     </div>
+                    {% endif %}
                     <div class="jsx-d0ada46de86ca64b grid md:grid-cols-2 gap-6">
                         <div class="jsx-d0ada46de86ca64b space-y-4">
                             <h3 class="jsx-d0ada46de86ca64b font-medium text-[{{ template.secondaryColor }}]">Message écrit</h3>
@@ -1160,7 +1158,7 @@
                                     placeholder="Mr Daniel Mwema, laissez-nous un message..."></textarea>
                             {% else %}
                                 {% if invitation.book.message != null %}
-                                    <p class="jsx-d0ada46de86ca64b text-left text-[{{ template.secondaryColor }}]/70">"{{ invitation.book.message }}"</p>
+                                    <p class="jsx-d0ada46de86ca64b text-left text-[{{ template.secondaryColor }}]/70">{{ invitation.book.message }}</p>
                                     <p class="jsx-d0ada46de86ca64b text-left text-[{{ template.primaryColor }}]"><b>{{ invitation.fullname }}</b></p>
                                 {% endif %}
                             {% endif %}
