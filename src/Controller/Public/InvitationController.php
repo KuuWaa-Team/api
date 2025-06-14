@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Controller\Public;
+use App\Entity\Event\Photo;
+use App\Service\MediaUploaderService;
 use NumberFormatter;
 use App\Entity\Event\Book;
 use App\Entity\Invitation;
@@ -243,6 +245,32 @@ class InvitationController extends AbstractController
 
         return new JsonResponse(['success' => true, 'message' => 'Message enregistré avec succès.']);
     }
+
+    #[Route('/api/invitations/{slug}/upload-photos', name: 'app_invitation_upload_photos', methods: ['POST'])]
+    public function uploadPhotos(
+        string $slug,
+        Request $request,
+        InvitationRepository $invitationRepository,
+        MediaUploaderService $mediaUploader
+    ): JsonResponse {
+        $invitation = $invitationRepository->findOneBy(['slug' => $slug]);
+        if (!$invitation) {
+            return new JsonResponse(['success' => false, 'message' => 'Invitation introuvable'], 404);
+        }
+
+        $uploaded = [];
+        foreach ($request->files->get('photos', []) as $photo) {
+            $fileName = $mediaUploader->upload($photo, 'events/invitations/photos');
+            $invitation->addPhoto(
+                (new Photo())
+                ->setPath($fileName)
+            );
+            $uploaded[] = $fileName;
+        }
+
+        return new JsonResponse(['success' => true, 'uploaded' => $uploaded]);
+    }
+
 
     function hexToRgb(string $hex): array {
         $hex = ltrim($hex, '#');
