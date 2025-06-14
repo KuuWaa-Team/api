@@ -1307,7 +1307,14 @@
                         </svg>Partage de photos</div>
                 </div>
                 <input id="photo-upload" type="file" accept="image/*" multiple class="hidden">
-                <div id="preview-container" class="flex flex-wrap gap-2 justify-center mt-4"></div>
+                <div id="preview-container" class="flex flex-wrap gap-2 justify-center mb-6">
+                    {% for photo in invitation.photos %}
+                        <div class="relative group">
+                            <img alt="photo{{ photo.id }}" src="{{ photo.path }}"/>
+                            <button class="absolute top-0 right-0 bg-black bg-opacity-50 text-white w-6 h-6 rounded-full hidden group-hover:block">×</button>
+                        </div>
+                    {% endfor %}
+                </div>
                 <div class="p-6 pt-0 text-center space-y-4">
                     <p class="jsx-d0ada46de86ca64b text-[{{ template.secondaryColor }}]/70">{{ invitation.fullname }}, cette invitation est votre souvenir ! Ajoutez vos anciennes photos et téléchargez celles de l’événement pour créer ensemble un album inoubliable.</p>
                     <div class="jsx-d0ada46de86ca64b border-2 border-dashed border-[{{ template.primaryColor }}]/30 rounded-lg p-8"><svg
