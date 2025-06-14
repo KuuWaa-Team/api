@@ -1158,8 +1158,7 @@
                                     placeholder="Mr Daniel Mwema, laissez-nous un message..."></textarea>
                             {% else %}
                                 {% if invitation.book.message != null %}
-                                    <p style="margin-bottom:0!important;" class="jsx-d0ada46de86ca64b text-left text-[{{ template.secondaryColor }}]/70">{{ invitation.book.message }}</p>
-                                    <p class="jsx-d0ada46de86ca64b text-left text-[{{ template.primaryColor }}]"><b>{{ invitation.fullname }}</b></p>
+                                    <p class="jsx-d0ada46de86ca64b text-left text-[{{ template.secondaryColor }}]/70">{{ invitation.book.message }}</p>
                                 {% endif %}
                             {% endif %}
                             <div class="space-y-4">
@@ -1207,6 +1206,26 @@
 
                                     <input type="hidden" name="audioBlobBase64" id="audioBlobBase64">
                                 </div>
+                                {% elseif invitation.book.audioPath != null %}
+                                    <div id="voice-message" class="bg-gradient-to-r from-[{{ template.primaryColor }}]/5 to-[{{ template.secondaryColor }}]/5 rounded-lg p-4 mt-4">
+                                        <div class="flex items-center justify-between">
+                                            <div class="flex items-center gap-2">
+                                                <span class="text-sm font-medium text-[{{ template.secondaryColor }}]">Message vocal</span>
+                                                <span id="voice-duration" class="text-xs text-[{{ template.secondaryColor }}]/60">(00:00)</span>
+                                            </div>
+                                            <button id="play-button" class="inline-flex items-center justify-center gap-2 text-sm font-medium h-9 rounded-md px-3 bg-[{{ template.secondaryColor }}] text-white hover:bg-[{{ template.secondaryColor }}]/90">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-play w-4 h-4"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
+                                            </button>
+                                        </div>
+
+                                        <div id="progress-bar" class="mt-3 flex items-center gap-2">
+                                            <div class="flex-1 bg-white rounded-full h-2 overflow-hidden">
+                                                <div id="progress-fill" class="bg-[{{ template.primaryColor }}] h-full w-0 rounded-full transition-all duration-200"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <audio id="audio-player" src="{{ asset('events/invitations/audios/' ~ invitation.book.audioPath) }}"></audio>
                                 {% endif %}
                             </div>
 
@@ -1785,7 +1804,6 @@
             document.getElementById("minutes").textContent = String(minutes).padStart(2, "0");
             document.getElementById("seconds").textContent = String(seconds).padStart(2, "0");
 
-            // 🔁 Message dynamique selon les jours restants
             let message = "";
             if (days > 30) {
                 message = "Encore un peu de patience, le jour J se prépare !";
@@ -2067,6 +2085,69 @@
         } catch (error) {
             console.error(error);
             alert('Erreur lors de l’envoi du message');
+        }
+    });
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const playButton = document.getElementById('play-button');
+        const audio = document.getElementById('audio-player');
+        const progressFill = document.getElementById('progress-fill');
+        const voiceDuration = document.getElementById('voice-duration');
+
+        let isPlaying = false;
+
+        if (!audio) return;
+
+        // Affiche la durée une fois chargée
+        audio.addEventListener('loadedmetadata', () => {
+            const duration = formatTime(audio.duration);
+            voiceDuration.textContent = `(${duration})`;
+        });
+
+        // Joue ou pause
+        playButton.addEventListener('click', () => {
+            if (isPlaying) {
+                audio.pause();
+            } else {
+                audio.play();
+            }
+        });
+
+        // Toggle texte et icône
+        audio.addEventListener('play', () => {
+            isPlaying = true;
+            playButton.innerHTML = `
+            <svg xmlns="http://www.w3.org/2000/svg" class="lucide lucide-pause w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+        `;
+        });
+
+        audio.addEventListener('pause', () => {
+            isPlaying = false;
+            playButton.innerHTML = `
+            <svg xmlns="http://www.w3.org/2000/svg" class="lucide lucide-play w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><polygon points="6 3 20 12 6 21 6 3"/></svg>
+        `;
+        });
+
+        // Mise à jour de la barre de progression
+        audio.addEventListener('timeupdate', () => {
+            const progress = (audio.currentTime / audio.duration) * 100;
+            progressFill.style.width = `${progress}%`;
+        });
+
+        audio.addEventListener('ended', () => {
+            isPlaying = false;
+            playButton.innerHTML = `
+            <svg xmlns="http://www.w3.org/2000/svg" class="lucide lucide-play w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><polygon points="6 3 20 12 6 21 6 3"/></svg>
+        `;
+            progressFill.style.width = `0%`;
+        });
+
+        // Formatage de la durée (mm:ss)
+        function formatTime(time) {
+            const minutes = Math.floor(time / 60).toString().padStart(2, '0');
+            const seconds = Math.floor(time % 60).toString().padStart(2, '0');
+            return `${minutes}:${seconds}`;
         }
     });
 </script>
