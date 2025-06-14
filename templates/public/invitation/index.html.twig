@@ -800,14 +800,10 @@
             </div>
             <div class="rounded-lg border bg-card text-card-foreground border-[{{ template.primaryColor }}]/20 shadow-lg">
                 <div class="flex flex-col space-y-1.5 p-6 text-center">
-                    <div
-                            class="font-semibold tracking-tight text-2xl text-[{{ template.secondaryColor }}] flex items-center justify-center gap-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                             stroke-linejoin="round" class="lucide lucide-clock w-6 h-6 text-[{{ template.primaryColor }}]">
-                            <circle cx="12" cy="12" r="10"></circle>
-                            <polyline points="12 6 12 12 16 14"></polyline>
-                        </svg>Compte à rebours</div>
+                    <div id="dynamic-countdown-message"
+                         style="text-align: left"
+                        class="font-semibold tracking-tight text-2xl text-[{{ template.secondaryColor }}] flex items-center justify-center gap-2">
+                    </div>
                 </div>
                 <div class="p-6 pt-0">
                     <div id="countdown"
@@ -830,10 +826,6 @@
                             <div id="seconds" class="text-2xl md:text-3xl font-bold text-[{{ template.primaryColor }}]">--</div>
                             <div class="text-sm text-[{{ template.secondaryColor }}/70]">Secs</div>
                         </div>
-                    </div>
-
-                    <div class="text-center mt-6">
-                        <p id="dynamic-countdown-message" class="text-[{{ template.primaryColor }}] font-medium"></p>
                     </div>
                 </div>
             </div>
@@ -907,6 +899,7 @@
                     </div>
                 </div>
             </div>
+            {% if event.hasBeverage == true %}
             <div class="rounded-lg border bg-card text-card-foreground border-[{{ template.primaryColor }}]/20 shadow-lg">
                 <div class="flex flex-col space-y-1.5 p-6 text-center">
                     <div
@@ -984,6 +977,8 @@
                 </div>
 
             </div>
+            {% endif %}
+            {% if event.hasQuiz == true %}
             <div class="rounded-lg border bg-card text-card-foreground border-[{{ template.primaryColor }}]/20 shadow-lg">
                 <div class="flex flex-col space-y-1.5 p-6 text-center">
                     <div
@@ -997,7 +992,7 @@
                         </svg>Quiz des mariés</div>
                 </div>
                 <div class="p-6 pt-0">
-                    <p class="jsx-d0ada46de86ca64b text-center text-[{{ template.secondaryColor }}]/70 mb-6">M. Daniel Mwema, testez vos connaissances sur notre couple avec ce quiz amusant ! Une surprise spéciale attend le meilleur participant le jour de la soirée.</p>
+                    <p class="jsx-d0ada46de86ca64b text-center text-[{{ template.secondaryColor }}]/70 mb-6">{{ invitation.fullname }}, testez vos connaissances sur notre couple avec ce quiz amusant ! Une surprise spéciale attend le meilleur participant le jour de la soirée.</p>
                     <div
                             class="jsx-d0ada46de86ca64b relative overflow-hidden rounded-xl bg-gradient-to-br from-[{{ template.primaryColor }}]/20 via-[{{ template.primaryColor }}]/50 to-[{{ template.secondaryColor }}]/20 p-8 text-center">
                         <div
@@ -1113,6 +1108,7 @@
                     </div>
                 </div>
             </div>
+            {% endif %}
             <div class="rounded-lg border bg-card text-card-foreground border-[{{ template.primaryColor }}]/20 shadow-lg">
                 <div class="flex flex-col space-y-1.5 p-6 text-center">
                     <div
@@ -1155,7 +1151,7 @@
                             <h3 class="jsx-d0ada46de86ca64b font-medium text-[{{ template.secondaryColor }}]">Message écrit</h3>
                             <textarea id="textMessage" required
                                     class="flex w-full rounded-md border bg-background px-3 py-2 text-base ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm min-h-32 border-[{{ template.primaryColor }}]/30 focus:border-[{{ template.primaryColor }}]"
-                                    placeholder="Mr Daniel Mwema, laissez-nous un message..."></textarea>
+                                    placeholder="{{ invitation.fullname }}, laissez-nous un message..."></textarea>
                             {% else %}
                                 {% if invitation.book.message != null %}
                                     <p class="jsx-d0ada46de86ca64b text-left text-[{{ template.secondaryColor }}]/70">{{ invitation.book.message }}</p>
@@ -1269,7 +1265,7 @@
                         </svg>Demandes musicales</div>
                 </div>
                 <div class="p-6 pt-0 space-y-4">
-                    <p class="jsx-d0ada46de86ca64b text-center text-[{{ template.secondaryColor }}]/70">Mr Daniel Mwema, la musique sera
+                    <p class="jsx-d0ada46de86ca64b text-center text-[{{ template.secondaryColor }}]/70">{{ invitation.fullname }}, la musique sera
                         l'âme de notre soirée ! Suggérez vos chansons favorites pour créer ensemble une playlist
                         mémorable qui fera danser tous nos invités. Que ce soit pour l'ambiance, la danse ou
                         l'émotion, vos suggestions nous aideront à créer la bande sonore parfaite de notre mariage.
@@ -1302,7 +1298,7 @@
                         </svg>Partage de photos</div>
                 </div>
                 <div class="p-6 pt-0 text-center space-y-4">
-                    <p class="jsx-d0ada46de86ca64b text-[{{ template.secondaryColor }}]/70">Mr Daniel Mwema, cette invitation restera
+                    <p class="jsx-d0ada46de86ca64b text-[{{ template.secondaryColor }}]/70">{{ invitation.fullname }}, cette invitation restera
                         accessible pour toujours comme un précieux souvenir ! Partagez vos anciennes photos avec
                         nous (souvenirs communs, moments partagés) mais surtout, n'oubliez pas de télécharger ici
                         toutes les photos que vous prendrez pendant l'événement. Créons ensemble un album photo
@@ -1326,6 +1322,7 @@
                             </svg>Télécharger des photos</button></div>
                 </div>
             </div>
+            {% if event.hasQuiz == true %}
             <div class="rounded-lg border bg-card text-card-foreground border-[{{ template.primaryColor }}]/20 shadow-lg">
                 <div class="flex flex-col space-y-1.5 p-6 text-center">
                     <div
@@ -1341,7 +1338,7 @@
                         </svg>Suggestions de cadeaux</div>
                 </div>
                 <div class="p-6 pt-0 space-y-6">
-                    <p class="jsx-d0ada46de86ca64b text-center text-[{{ template.secondaryColor }}]/70">Mr Daniel Mwema, votre présence
+                    <p class="jsx-d0ada46de86ca64b text-center text-[{{ template.secondaryColor }}]/70">{{ invitation.fullname }}, votre présence
                         est déjà le plus beau des cadeaux ! Cependant, si vous souhaitez nous faire plaisir, voici
                         quelques suggestions qui nous aideraient à bien commencer notre vie de couple. Choisissez ce
                         qui vous inspire le plus et laissez-nous un petit message pour nous expliquer votre choix.
@@ -1429,6 +1426,8 @@
                         </button></div>
                 </div>
             </div>
+            {% endif %}
+            {% if event.eventSpecifications|length > 0 %}
             <div class="rounded-lg border bg-card text-card-foreground border-[{{ template.primaryColor }}]/20 shadow-lg">
                 <div class="flex flex-col space-y-1.5 p-6 text-center">
                     <div
@@ -1446,7 +1445,7 @@
                         </svg>Informations pratiques</div>
                 </div>
                 <div class="p-6 pt-0 space-y-6">
-                    <p class="jsx-d0ada46de86ca64b text-center text-[{{ template.secondaryColor }}]/70">Mr Daniel Mwema, voici quelques
+                    <p class="jsx-d0ada46de86ca64b text-center text-[{{ template.secondaryColor }}]/70">{{ invitation.fullname }}, voici quelques
                         informations importantes pour que cette journée se déroule parfaitement et que vous puissiez
                         en profiter pleinement.</p>
                     <div class="jsx-d0ada46de86ca64b grid md:grid-cols-2 gap-6">
@@ -1551,17 +1550,18 @@
                     </div>
                 </div>
             </div>
-            <div
-                    class="rounded-lg border bg-card text-card-foreground border-[{{ template.primaryColor }}]/20 shadow-lg bg-gradient-to-br from-[{{ template.primaryColor }}]/50 to-purple-50">
+            {% endif %}
+            <div class="rounded-lg border bg-card text-card-foreground border-[{{ template.primaryColor }}]/20 shadow-lg bg-gradient-to-br from-[{{ template.primaryColor }}]/50 to-purple-50">
                 <div class="p-6 text-center py-8"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                       viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                                       stroke-linecap="round" stroke-linejoin="round"
-                                                       class="lucide lucide-heart w-12 h-12 text-[{{ template.primaryColor }}] mx-auto mb-4">
+                       viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                       stroke-linecap="round" stroke-linejoin="round"
+                       class="lucide lucide-heart w-12 h-12 text-[{{ template.primaryColor }}] mx-auto mb-4">
                         <path
                                 d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z">
                         </path>
                     </svg>
-                    <h3 class="jsx-d0ada46de86ca64b text-2xl font-serif text-[{{ template.secondaryColor }}] mb-4">Merci Mr Daniel Mwema
+                    <h3 class="jsx-d0ada46de86ca64b text-2xl font-serif text-[{{ template.secondaryColor }}] mb-4">Merci
+                        {{ invitation.fullname }}
                         de partager ce moment avec nous</h3>
                     <p class="jsx-d0ada46de86ca64b text-[{{ template.secondaryColor }}]/70 max-w-md mx-auto">Votre présence est le plus
                         beau des cadeaux. Nous avons hâte de célébrer ce jour spécial en votre compagnie et de créer
@@ -1570,8 +1570,8 @@
             </div>
             <div class="jsx-d0ada46de86ca64b text-center py-8">
                 <p class="jsx-d0ada46de86ca64b text-[{{ template.secondaryColor }}]/60">Créez des invitations électroniques avec <a
-                            href="#"
-                            class="jsx-d0ada46de86ca64b text-[{{ template.primaryColor }}] font-semibold hover:underline">KuuWaa</a></p>
+                href="#"
+                class="jsx-d0ada46de86ca64b text-[{{ template.primaryColor }}] font-semibold hover:underline">KuuWaa</a></p>
             </div>
         </div>
     </section>

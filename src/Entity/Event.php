@@ -461,6 +461,12 @@ class Event
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $templateImage = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?bool $hasQuiz = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?bool $hasGift = null;
+
     public function getImagePath(): ?string
     {
         return $this->imagePath;
@@ -1018,6 +1024,30 @@ class Event
     public function setTemplateImage(?string $templateImage): static
     {
         $this->templateImage = $templateImage;
+
+        return $this;
+    }
+
+    public function hasQuiz(): ?bool
+    {
+        return $this->hasQuiz;
+    }
+
+    public function setHasQuiz(?bool $hasQuiz): static
+    {
+        $this->hasQuiz = $hasQuiz;
+
+        return $this;
+    }
+
+    public function hasGift(): ?bool
+    {
+        return $this->hasGift;
+    }
+
+    public function setHasGift(?bool $hasGift): static
+    {
+        $this->hasGift = $hasGift;
 
         return $this;
     }
