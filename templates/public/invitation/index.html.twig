@@ -1221,7 +1221,7 @@
                                         </div>
                                     </div>
 
-                                    <audio id="audio-player" src="{{ asset('events/invitations/audios/' ~ invitation.book.audioPath) }}"></audio>
+                                    <audio id="audio-player" src="{{ asset(invitation.book.audioPath) }}"></audio>
                                 {% endif %}
                             </div>
 
