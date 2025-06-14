@@ -1158,7 +1158,7 @@
                                     placeholder="Mr Daniel Mwema, laissez-nous un message..."></textarea>
                             {% else %}
                                 {% if invitation.book.message != null %}
-                                    <p class="jsx-d0ada46de86ca64b text-left text-[{{ template.secondaryColor }}]/70">{{ invitation.book.message }}</p>
+                                    <p style="margin-bottom:0" class="jsx-d0ada46de86ca64b text-left text-[{{ template.secondaryColor }}]/70">{{ invitation.book.message }}</p>
                                     <p class="jsx-d0ada46de86ca64b text-left text-[{{ template.primaryColor }}]"><b>{{ invitation.fullname }}</b></p>
                                 {% endif %}
                             {% endif %}
@@ -1211,6 +1211,7 @@
                                 {% endif %}
                             </div>
 
+                            {% if invitation.book == null %}
                             <button
                                     id="sendBookBtn"
                                 class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 text-primary-foreground h-10 px-4 py-2 w-full bg-[{{ template.primaryColor }}] hover:bg-[{{ template.primaryColor }}]/90"><svg
@@ -1221,7 +1222,9 @@
                                         d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z">
                                 </path>
                                 <path d="m21.854 2.147-10.94 10.939"></path>
-                                </svg>Envoyer le message</button>
+                                </svg>Envoyer le message
+                            </button>
+                            {% endif %}
                         </div>
                     </div>
                     <div class="jsx-d0ada46de86ca64b text-center pt-4 border-t border-[{{ template.primaryColor }}]/20"><button
