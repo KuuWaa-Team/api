@@ -172,6 +172,29 @@ class InvitationController extends AbstractController
         ]);
     }
 
+
+    #[Route('/api/invitations/{slug}/music-choice', name: 'app_invitation_music_choice', methods: ['POST'])]
+    public function musicChoice(
+        string $slug,
+        Request $request,
+        InvitationRepository $invitationRepository,
+    ): JsonResponse {
+        $invitation = $invitationRepository->findOneBy(['slug' => $slug]);
+
+        if (!$invitation) {
+            return new JsonResponse(['success' => false, 'message' => 'Invitation non trouvée.'], 404);
+        }
+
+        $musicChoice = $request->request->get('music_choice');
+        $invitation->setMusicChoice($musicChoice);
+
+        $invitationRepository->save($invitation);
+
+        return new JsonResponse([
+            'success' => true,
+        ]);
+    }
+
     #[Route('/api/invitations/{slug}/send-book-messages', name: 'app_invitation_send_book_messages', methods: ['POST'])]
     public function sendBookMessages(
         string $slug,

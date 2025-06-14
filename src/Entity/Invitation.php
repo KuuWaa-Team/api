@@ -271,6 +271,9 @@ class Invitation
     #[ORM\OneToOne(inversedBy: 'invitation', cascade: ['persist', 'remove'])]
     private ?Book $book = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $musicChoice = null;
+
     public function __construct()
     {
         $this->invitations = new ArrayCollection();
@@ -565,6 +568,18 @@ class Invitation
     public function setBook(?Book $book): static
     {
         $this->book = $book;
+
+        return $this;
+    }
+
+    public function getMusicChoice(): ?string
+    {
+        return $this->musicChoice;
+    }
+
+    public function setMusicChoice(?string $musicChoice): static
+    {
+        $this->musicChoice = $musicChoice;
 
         return $this;
     }
