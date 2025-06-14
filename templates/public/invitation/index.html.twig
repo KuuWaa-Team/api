@@ -1309,10 +1309,10 @@
                 <input id="photo-upload" type="file" accept="image/*" multiple class="hidden">
                 <div id="preview-container" class="flex flex-wrap gap-2 justify-center mb-6">
                     {% for photo in invitation.photos %}
-                        <div class="relative group">
+                        <a href="{{ photo.path }}" class="relative group" target="_blank">
                             <img alt="photo{{ photo.id }}" src="{{ photo.path }}" class="w-24 h-24 object-cover rounded-lg border"/>
                             <button class="absolute top-0 right-0 bg-black bg-opacity-50 text-white w-6 h-6 rounded-full hidden group-hover:block">×</button>
-                        </div>
+                        </a>
                     {% endfor %}
                 </div>
                 <div class="p-6 pt-0 text-center space-y-4">
@@ -2228,8 +2228,10 @@
 
                 const reader = new FileReader();
                 reader.onload = e => {
-                    const wrapper = document.createElement('div');
+                    const wrapper = document.createElement('a');
                     wrapper.className = 'relative group';
+                    wrapper.href = e.target.result; // lien vers l’image
+                    wrapper.target = '_blank';      // pour ouvrir dans un nouvel onglet
 
                     const img = document.createElement('img');
                     img.src = e.target.result;
@@ -2238,7 +2240,8 @@
                     const removeBtn = document.createElement('button');
                     removeBtn.innerHTML = '&times;';
                     removeBtn.className = 'absolute top-0 right-0 bg-black bg-opacity-50 text-white w-6 h-6 rounded-full hidden group-hover:block';
-                    removeBtn.onclick = () => {
+                    removeBtn.onclick = (event) => {
+                        event.preventDefault(); // empêche d’ouvrir le lien quand on clique sur le bouton
                         previewContainer.removeChild(wrapper);
                         uploadedFiles = uploadedFiles.filter(f => f !== file);
                     };
@@ -2247,6 +2250,7 @@
                     wrapper.appendChild(removeBtn);
                     previewContainer.appendChild(wrapper);
                 };
+
                 reader.readAsDataURL(file);
             });
 
