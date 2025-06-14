@@ -2,10 +2,11 @@
 
 namespace App\Service;
 
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\String\Slugger\SluggerInterface;
 
-class MediaUploaderService
+class MediaUploaderService extends AbstractController
 {
     private SluggerInterface $slugger;
 
@@ -20,7 +21,7 @@ class MediaUploaderService
         $safeFilename = $this->slugger->slug($originalFilename);
         $newFilename = $safeFilename . '-' . uniqid() . '.' . $file->guessExtension();
 
-        $uploadDir = '%kernel.project_dir%/public/' . $folder;
+        $uploadDir = $this->getParameter('kernel.project_dir') . '/public/' . $folder;
 
         if (!is_dir($uploadDir)) {
             mkdir($uploadDir, 0775, true);
@@ -29,10 +30,5 @@ class MediaUploaderService
         $file->move($uploadDir, $newFilename);
 
         return ($folder ? "/$folder/" : '/') . $newFilename;
-    }
-
-    public function getTargetDirectory(): string
-    {
-        return $this->targetDirectory;
     }
 }
