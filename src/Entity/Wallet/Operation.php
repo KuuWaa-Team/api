@@ -81,6 +81,7 @@ class Operation
     private ?string $status = null;
 
     #[ORM\Column(length: 500, nullable: true)]
+    #[Groups(['operation:pRead'])]
     private ?string $redirectUrl = null;
 
     public function getId(): ?int
