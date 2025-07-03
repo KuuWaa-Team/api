@@ -54,7 +54,7 @@ class RechargeController extends AbstractController
         } else if (WalletService::$MOBILE_PAYMENT !== $paymentMethod && WalletService::$CARD_PAYMENT !== $paymentMethod) {
             $message = "Methode de paiement inconnue";
             $success = false;
-        } else if (!$this->phoneService->isValidPhoneNumber($phoneNumber)) {
+        } else if (WalletService::$MOBILE_PAYMENT === $paymentMethod && !$this->phoneService->isValidPhoneNumber($phoneNumber)) {
             $message = "Numero de telephone invalide";
             $success = false;
         } else {
