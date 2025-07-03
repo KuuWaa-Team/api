@@ -97,6 +97,7 @@ class PaymentService
         curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 300);
 
         $response = curl_exec($ch);
+        $redirectUrl = '';
 
         $orderNumber = "";
         if (curl_errno($ch)) {
@@ -107,7 +108,7 @@ class PaymentService
             $jsonRes = json_decode($response, false, 512, JSON_THROW_ON_ERROR);
             $code = $jsonRes->code;
             $message = $jsonRes->message ?? 'Impossible de traiter la demande, veuillez réessayer';
-            $message = $jsonRes->url ?? '';
+            $redirectUrl = $jsonRes->url ?? '';
             if ($code . "" !== "0") {
                 $success = false;
             } else {
@@ -120,7 +121,7 @@ class PaymentService
             "success" => $success, 
             "orderNumber" => $orderNumber, 
             "message" => $message,
-            "redirectUrl" => $url
+            "redirectUrl" => $redirectUrl
         ];
     }
 
