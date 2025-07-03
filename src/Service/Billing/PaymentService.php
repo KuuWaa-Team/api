@@ -32,7 +32,7 @@ class PaymentService
             "reference"     => $operation->getReference(),
             "amount"        => $operation->getAmount(),
             "currency"      => "USD",
-            "callbackUrl"   => "https://kuuwaa.com",
+            "callbackUrl"   => "https://kuuwaa.com/callback",
         ];
 
         $data = json_encode($data, JSON_THROW_ON_ERROR);
@@ -76,10 +76,10 @@ class PaymentService
             "reference"     => $operation->getReference(),
             "amount"        => $operation->getAmount(),
             "currency"      => "USD",
-            "callback_url"   => "https://kuuwaa.com",
-            "approve_url"   => "https://kuuwaa.com",
-            "cancel_url"   => "https://kuuwaa.com",
-            "decline_url"   => "https://kuuwaa.com",
+            "callback_url"   => "https://kuuwaa.com/callback",
+            "approve_url"   => "https://kuuwaa.com/approve",
+            "cancel_url"   => "https://kuuwaa.com/cancel",
+            "decline_url"   => "https://kuuwaa.com/decline",
             "authorization" => $this->token,
             "description"   => $operation->getReference(),
         ];
