@@ -80,6 +80,9 @@ class Operation
     #[Groups(['operation:pRead'])]
     private ?string $status = null;
 
+    #[ORM\Column(length: 500, nullable: true)]
+    private ?string $redirectUrl = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -218,5 +221,17 @@ class Operation
 
     public function isPaid (): bool {
         return $this->getStatus() === WalletService::$STATUS_PAID;
+    }
+
+    public function getRedirectUrl(): ?string
+    {
+        return $this->redirectUrl;
+    }
+
+    public function setRedirectUrl(?string $redirectUrl): static
+    {
+        $this->redirectUrl = $redirectUrl;
+
+        return $this;
     }
 }

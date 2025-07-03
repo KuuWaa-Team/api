@@ -7,6 +7,7 @@ use App\Entity\Wallet\Operation;
 use App\Repository\Wallet\OperationRepository;
 use App\Service\Billing\PaymentService;
 use App\Service\CreditService;
+use App\Repository\UserRepository;
 use App\Service\PhoneService;
 use App\Service\WalletService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -24,24 +25,31 @@ class RechargeController extends AbstractController
         private readonly OperationRepository $operationRepository,
         private readonly NormalizerInterface $normalizer,
         private readonly PaymentService      $paymentService,
+        private readonly UserRepository      $userRepository,
     ){}
 
     /**
      * @throws \JsonException
      * @throws ExceptionInterface
      */
-    public function __invoke(User $user, Request $request): JsonResponse
+    public function __invoke(Request $request): JsonResponse
     {
         $content = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
         $amount = $content['amount'];
         $paymentMethod = $content['payment_method'];
         $phoneNumber = $content['phone_number'];
+        $userId = $content['user_id'];
+
+        $user = $userRepository->find($userId);
 
         $success = true;
         $operation = null;
 
         if ($amount < WalletService::$MIN_RECHARGE) {
             $message = "Vous devez recharger au moins " . WalletService::$MIN_RECHARGE . " USD";
+            $success = false;
+        } if ($amount > WalletService::$MIN_RECHARGE * 100) {
+            $message = "Vous devez recharger au plus " . (WalletService::$MIN_RECHARGE * 100) . " USD en une fois";
             $success = false;
         } else if (WalletService::$MOBILE_PAYMENT !== $paymentMethod && WalletService::$CARD_PAYMENT !== $paymentMethod) {
             $message = "Methode de paiement inconnue";
@@ -68,10 +76,12 @@ class RechargeController extends AbstractController
                 ->setAmount($amount);
             $this->operationRepository->save($operation);
 
+            $redirectUrl = ""; 
             if ($paymentMethod === WalletService::$MOBILE_PAYMENT) {
                 $payment = $this->paymentService->mobilePayment($operation);
             } else if ($paymentMethod === WalletService::$CARD_PAYMENT) {
                 $payment = $this->paymentService->cardPayment($operation);
+                $redirectUrl = $payment['redirectUrl'];
             } else {
                 $payment = [];
             }
@@ -80,6 +90,7 @@ class RechargeController extends AbstractController
                 $orderNumber = $payment['orderNumber'];
                 $message = $payment["message"];
                 $operation->setOrderNumber($orderNumber);
+                $operation->setRedirectUrl($redirectUrl);
                 $this->operationRepository->save($operation);
             } else {
                 $success = false;
