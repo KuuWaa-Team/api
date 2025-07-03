@@ -40,7 +40,7 @@ class RechargeController extends AbstractController
         $phoneNumber = $content['phone_number'];
         $userId = $content['user_id'];
 
-        $user = $userRepository->find($userId);
+        $user = $this->userRepository->find($userId);
 
         $success = true;
         $operation = null;
