@@ -31,7 +31,7 @@ class WalletService
         try {
             $response = $this->paymentService->checkPaymentStatus($operation);
             $waiting = $response['waiting'];
-            if (!$waiting) {
+            if (!$waiting && $operation->getOrderNumber() !== null) {
                 if ($response['success']) {
                     $operation->setStatus(self::$STATUS_PAID);
                     $this->creditService->rechargeUser($operation->getUser(), $operation->getCredits());
