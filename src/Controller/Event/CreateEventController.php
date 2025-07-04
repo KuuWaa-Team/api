@@ -100,7 +100,7 @@ class CreateEventController extends AbstractController
         $event = (new Event())
             ->setTitle($title)
             ->setStartDate(new \DateTime($startDate))
-            ->setEndDate(new \DateTime($endDate))
+            ->setEndDate($endDate == null ? null : new \DateTime($endDate))
             ->setCategory($category)
             ->setDetails($details)
             ->setAddress($address)
