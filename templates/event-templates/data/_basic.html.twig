@@ -64,11 +64,15 @@
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        background-color: #fffdf6; /* couleur du fond pour masquer la ligne */
+        background-color: #fffdf6; /* pour "masquer" la ligne derrière */
         padding: 0 0.25rem;
         z-index: 2;
-        width: 40px;
     }
+
+    .bottom-icon {
+        width: 45px; /* légèrement agrandi */
+    }
+
 
     .top-icon {
         top: 1rem;
@@ -131,10 +135,12 @@
 </style>
 
 <div class="invitation-card">
+    <!-- Top Divider with Icon -->
     <div class="divider-container">
         <img src="{{ asset('templates/basic/top.png') }}" alt="top icon" class="icon-over-divider" />
     </div>
 
+    <!-- Texts -->
     <div class="heading">
         YOU ARE INVITED TO CELEBRATE<br />
         THE WEDDING OF
@@ -149,10 +155,10 @@
         AT 5:00 PM
     </div>
 
-    <div class="divider-container" style="margin-top: 2.5rem;">
-        <img src="{{ asset('templates/basic/bottom.png') }}" alt="bottom icon" class="icon-over-divider" style="width: 35px;" />
-    </div>
+    <!-- Divider (milieu) -->
+    <div class="divider-container" style="margin-top: 2.5rem;"></div>
 
+    <!-- Address & RSVP -->
     <div class="event-location">
         123 ANYWHERE ST., ANY<br />
         CITY
@@ -161,5 +167,11 @@
     <div class="rsvp">RSVP TO: 123-456-7890</div>
 
     <div class="reception">Reception to follow</div>
+
+    <!-- Bottom Divider with Icon -->
+    <div class="divider-container" style="margin-top: 3rem;">
+        <img src="{{ asset('templates/basic/bottom.png') }}" alt="bottom icon" class="icon-over-divider bottom-icon" />
+    </div>
 </div>
+
 
