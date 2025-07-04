@@ -81,6 +81,8 @@ final class PreviewController extends AbstractController
             ->setEvent($event)
             ->setCodePath('/templates/code.png')
             ->setCode('TESTE')
+            ->setCivility('Mr.')
+            ->setName('John Doe')
         ;
 
         $date = $this->dateService->getFullDate($invitation->getEvent()->getStartDate(), true, true);
