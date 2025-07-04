@@ -59,7 +59,7 @@ class InvitationController extends AbstractController
 
             $bookRepository->save($book, true);
 
-            $invitation->setBookSent(true);
+//            $invitation->setBookSent(true);
             $invitationRepository->save($invitation, true);
             $this->addFlash('notice', 'Message envoyé avec succès');
         }
