@@ -72,7 +72,7 @@ final class PreviewController extends AbstractController
             ->setImagePath($imagePath)
             ->setTemplate($template);
 
-        if (!empty($endDate) && $endDate !== "NULL") {
+        if (!empty($endDate) && strtoupper($endDate) != "NULL") {
             dd($endDate);
             $event->setEndDate(new \DateTime($endDate));
         };
