@@ -3,6 +3,7 @@
 namespace App\Service\Billing;
 
 use App\Entity\Wallet\Operation;
+use App\Service\WalletService;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
@@ -134,9 +135,12 @@ class PaymentService
      */
     public function checkPaymentStatus(Operation $operation): array
     {
+        $baseUrl = $operation->getPaymentMethod() === WalletService::$CARD_PAYMENT ?
+            $this->cardBaseUrlFlexPay : $this->mobileBaseUrlFlexPay;
+
         $response = $this->client->request(
             'GET',
-            $this->baseUrlFlexPay . 'check/' . $operation->getOrderNumber(),
+            $baseUrl . 'check/' . $operation->getOrderNumber(),
             [
                 'headers' => [
                     'Accept: */*',
