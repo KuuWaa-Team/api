@@ -62,7 +62,7 @@ class RechargeController extends AbstractController
             $position = str_pad($this->operationRepository->countItems() + 1, 4, '0', STR_PAD_LEFT);
 
             $ref = "KW-R-$year-$position";
-            $credits = floor($amount / $this->creditService->getCreditPrice());
+            $credits = floor($amount * $this->creditService->getCreditPrice());
             $operation = (new Operation())
                 ->setUser($user)
                 ->setCredits($credits)
