@@ -104,8 +104,8 @@ class User implements UserInterface
 
     /**
      * @var Collection<int, Operation>
-     * @ORM\OneToMany(mappedBy="user", targetEntity=Operation::class, orderBy={"createdAt" = "DESC"})
      */
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Operation::class)]
     private Collection $operations;
 
     #[ORM\Column(length: 255, nullable: true)]
