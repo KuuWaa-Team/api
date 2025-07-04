@@ -50,12 +50,30 @@
         transform: translateX(-50%);
     }
 
+    .invitation-card {
+        position: relative;
+        background-color: #fffdf6;
+        padding: 2rem 1rem; /* padding réduit */
+        border: 1px solid {{ template.primaryColor }};
+        max-width: 600px;
+        margin: auto;
+        text-align: center;
+        font-family: 'FairDisplay', serif;
+        color: {{ template.primaryColor }};
+        overflow: hidden;
+        z-index: 2;
+        border-radius: 5px;
+        box-shadow:
+                0 4px 6px rgba(0, 0, 0, 0.05),
+                0 8px 20px rgba(0, 0, 0, 0.08);
+    }
+
     .divider-container {
         position: relative;
         width: 100%;
         max-width: 300px;
         height: 1px;
-        background-color: #384b7c;
+        background-color: {{ template.primaryColor }};
         margin: 2rem auto;
     }
 
@@ -64,15 +82,24 @@
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        background-color: #fffdf6; /* pour "masquer" la ligne derrière */
+        background-color: #fffdf6;
         padding: 0 0.25rem;
         z-index: 2;
     }
 
     .bottom-icon {
-        width: 45px; /* légèrement agrandi */
+        width: 45px;
     }
 
+    .heading,
+    .names,
+    .ampersand,
+    .event-date,
+    .event-location,
+    .rsvp,
+    .reception {
+        color: {{ template.primaryColor }};
+    }
 
     .top-icon {
         top: 1rem;
