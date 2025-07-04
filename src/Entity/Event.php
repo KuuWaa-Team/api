@@ -450,6 +450,7 @@ class Event
      * @var Collection<int, Question>
      */
     #[ORM\OneToMany(mappedBy: 'event', targetEntity: Question::class)]
+    #[Groups(['invitation:fRead'])]
     private Collection $questions;
 
     /**
