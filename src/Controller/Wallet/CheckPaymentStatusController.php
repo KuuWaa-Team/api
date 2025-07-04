@@ -20,24 +20,22 @@ class CheckPaymentStatusController extends AbstractController
 {
     public function __construct(
         private readonly WalletService $walletService,
+        private readonly OperationRepository $operationRepository,
     ) {}
 
-    public function __invoke(Operation $operation, Request $request): JsonResponse
+    public function __invoke(): JsonResponse
     {
-        /**
-         * @var User $user
-         */
-        $user    = $this->getUser();
+        $operations = $this->operationRepository->findBy([
+            'status' => WalletService::$STATUS_WAITING
+        ]);
+
         $waiting = true;
         $success = false;
         $message = "";
 
-
-        if ($operation->isPaid()) {
-            return new JsonResponse(['message' => 'Invalid payment process'], Response::HTTP_BAD_REQUEST);
+        foreach ($operations as $operation) {
+            $this->walletService->checkPaymentStatus($operation);
         }
-
-        $this->walletService->checkPaymentStatus($operation);
 
         $response = [
             'success' => $success,
