@@ -781,6 +781,7 @@
                         </svg>Lieu de la cérémonie</div>
                 </div>
                 <div class="p-0">
+                    {% if invitation.event.placeLatitude is not null and invitation.event.placeLongitude is not null %}
                     <div class="w-full h-80 bg-gray-100">
                         <iframe
                                 src="https://maps.google.com/maps?q={{ invitation.event.placeLatitude }},{{ invitation.event.placeLongitude }}&z=15&output=embed"
@@ -789,6 +790,7 @@
                                 style="border: 0;">
                         </iframe>
                     </div>
+                    {% endif %}
 
                     <div class="jsx-d0ada46de86ca64b p-4 bg-gradient-to-r from-[{{ template.primaryColor }}]/5 to-[{{ template.secondaryColor }}]/5">
                         <p class="jsx-d0ada46de86ca64b text-[{{ template.secondaryColor }}] font-medium">{{ invitation.event.placeName|upper }}<br>{{ invitation.event.address }}
