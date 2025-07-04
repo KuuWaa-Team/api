@@ -71,12 +71,15 @@ class EventTemplate
     private Collection $events;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['event:pRead', 'event:fRead', 'invitation:fRead', 'templates:fRead'])]
     private ?bool $imageRequired = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['event:pRead', 'event:fRead', 'invitation:fRead', 'templates:fRead'])]
     private ?string $primaryColor = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['event:pRead', 'event:fRead', 'invitation:fRead', 'templates:fRead'])]
     private ?string $secondaryColor = null;
 
     public function __construct()
