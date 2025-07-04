@@ -135,12 +135,9 @@ class PaymentService
      */
     public function checkPaymentStatus(Operation $operation): array
     {
-        $baseUrl = $operation->getPaymentMethod() === WalletService::$CARD_PAYMENT ?
-            $this->cardBaseUrlFlexPay : $this->mobileBaseUrlFlexPay;
-
         $response = $this->client->request(
             'GET',
-            $baseUrl . 'check/' . $operation->getOrderNumber(),
+            $this->mobileBaseUrlFlexPay . 'check/' . $operation->getOrderNumber(),
             [
                 'headers' => [
                     'Accept: */*',
