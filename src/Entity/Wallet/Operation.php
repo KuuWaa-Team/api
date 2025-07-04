@@ -23,9 +23,9 @@ use Symfony\Component\Serializer\Attribute\Groups;
         new Get(),
         new GetCollection(),
         new Post(
-            uriTemplate: '/operations/{id}/check-payment-status',
+            uriTemplate: '/operations/check-payment-status',
             controller: CheckPaymentStatusController::class,
-            description: "Check payment Status",
+            description: "Check payments Status",
         ),
     ]
 )]
