@@ -50,6 +50,26 @@
         transform: translateX(-50%);
     }
 
+    .divider-container {
+        position: relative;
+        width: 100%;
+        max-width: 300px;
+        height: 1px;
+        background-color: #384b7c;
+        margin: 2rem auto;
+    }
+
+    .icon-over-divider {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: #fffdf6; /* couleur du fond pour masquer la ligne */
+        padding: 0 0.25rem;
+        z-index: 2;
+        width: 40px;
+    }
+
     .top-icon {
         top: 1rem;
         width: 40px;
@@ -111,9 +131,9 @@
 </style>
 
 <div class="invitation-card">
-    <img src="{{ asset('templates/basic/top.png') }}" alt="top icon" class="top-icon" />
-
-    <div class="divider"></div>
+    <div class="divider-container">
+        <img src="{{ asset('templates/basic/top.png') }}" alt="top icon" class="icon-over-divider" />
+    </div>
 
     <div class="heading">
         YOU ARE INVITED TO CELEBRATE<br />
@@ -129,7 +149,9 @@
         AT 5:00 PM
     </div>
 
-    <div class="divider" style="margin-top: 2rem;"></div>
+    <div class="divider-container" style="margin-top: 2.5rem;">
+        <img src="{{ asset('templates/basic/bottom.png') }}" alt="bottom icon" class="icon-over-divider" style="width: 35px;" />
+    </div>
 
     <div class="event-location">
         123 ANYWHERE ST., ANY<br />
@@ -139,6 +161,5 @@
     <div class="rsvp">RSVP TO: 123-456-7890</div>
 
     <div class="reception">Reception to follow</div>
-
-    <img src="{{ asset('templates/basic/bottom.png') }}" alt="bottom icon" class="bottom-icon" />
 </div>
+
