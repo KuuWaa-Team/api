@@ -62,11 +62,12 @@ final class PreviewController extends AbstractController
             $imagePath = '/uploads/previews/' . $safeName;
         }
 
+        $endDateObj = $endDate == null ? null : new \DateTime($endDate);
         $invitation = (new Invitation())
             ->setEvent((new Event())
                 ->setTitle($title)
                 ->setStartDate(new \DateTime($startDate))
-                ->setEndDate($endDate == null ? null : new \DateTime($endDate))
+                ->setEndDate($endDateObj)
                 ->setAddress($address)
                 ->setPlaceLatitude($placeName)
                 ->setDetails($details)

@@ -97,10 +97,11 @@ class CreateEventController extends AbstractController
 
         $template = $this->templateRepository->find($templateId);
 
+        $endDateObj = $endDate == null ? null : new \DateTime($endDate);
         $event = (new Event())
             ->setTitle($title)
             ->setStartDate(new \DateTime($startDate))
-            ->setEndDate($endDate == null ? null : new \DateTime($endDate))
+            ->setEndDate($endDateObj)
             ->setCategory($category)
             ->setDetails($details)
             ->setAddress($address)
