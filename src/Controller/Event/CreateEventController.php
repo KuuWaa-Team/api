@@ -75,6 +75,7 @@ class CreateEventController extends AbstractController
                 ->setName($content['category_name'] ?? 'Non défini')
                 ->setValidated(false)
             ;
+            $this->categoryRepository->save($category);
         } else {
             $category = $this->categoryRepository->find($category_id);
         }
