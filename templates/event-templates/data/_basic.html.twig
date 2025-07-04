@@ -1,18 +1,22 @@
 <style>
     @font-face {
-        font-family: 'TheSeason';
-        src: url('{{ asset('templates/basic/the-season.otf') }}') format('opentype');
+        font-family: 'Fraunces';
+        src: url('{{ asset('templates/basic/Fraunces/Fraunces-VariableFont_SOFT,WONK,opsz,wght.ttf') }}') format('truetype');
+        font-weight: normal;
+        font-style: normal;
     }
 
     @font-face {
-        font-family: 'Faunces';
-        src: url('{{ asset('templates/basic/faunces.otf') }}') format('opentype');
+        font-family: 'TheSeasons';
+        src: url('{{ asset('templates/basic/TheSeasons/Fontspring-DEMO-theseasons-reg.otf') }}') format('opentype');
+        font-weight: normal;
+        font-style: normal;
     }
 
     body {
         margin: 0;
         background-color: #fffdf6;
-        font-family: 'Faunces', serif;
+        font-family: 'Fraunces', serif;
         color: #384b7c;
     }
 
@@ -24,7 +28,7 @@
         max-width: 600px;
         margin: auto;
         text-align: center;
-        font-family: 'FairDisplay', serif;
+        font-family: 'Fraunces', serif;
         color: #a77b00;
         overflow: hidden;
         z-index: 2;
@@ -124,13 +128,14 @@
     }
 
     .names {
-        font-family: 'TheSeason', cursive;
-        font-size: 3rem;
+        font-family: 'TheSeasons', cursive;
+        font-size: 2.5rem;
         margin: 0.5rem 0;
+        line-height: 1.1;
     }
 
     .ampersand {
-        font-family: 'Faunces', serif;
+        font-family: 'Fraunces', serif;
         font-size: 2rem;
         margin: 0.5rem 0;
     }
