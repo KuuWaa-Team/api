@@ -334,7 +334,7 @@ class Event
 
     #[ORM\OneToMany(mappedBy: 'event', targetEntity: Table::class, cascade: ['remove'])]
     private Collection $tables;
-
+    
     #[ORM\Column(length: 255, nullable: true)]
     #[Groups(['event:pRead', 'event:fRead', 'invitation:fRead'])]
     private ?string $imagePath = null;

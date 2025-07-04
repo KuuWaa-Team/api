@@ -2,13 +2,16 @@
 
 namespace App\Controller\Template;
 
-use App\Entity\Event;
+use App\Entity\Event\Book;
 use App\Entity\Event\EventTemplate;
-use App\Entity\EventCategory;
 use App\Entity\Invitation;
+use App\Form\Invitation\BookMessageFormType;
+use App\Repository\Event\BookRepository;
 use App\Repository\EventCategoryRepository;
 use App\Service\ApiService;
 use App\Service\DateService;
+use Proxies\__CG__\App\Entity\Event;
+use App\Entity\EventCategory;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -33,7 +36,10 @@ final class PreviewController extends AbstractController
         $details = $request->request->get('details');
         $categoryId = $request->request->get('category_id') ?? 1;
         $startDate = $request->request->get('start_date');
+
         $endDate = $request->request->get('end_date');
+        $placeLatitude = $request->request->get('place_latitude');
+        $placeLongitude = $request->request->get('place_longitude');
 
         $imageBase64 = $request->request->get('image_base64');
         $imageName = $request->request->get('image_name');

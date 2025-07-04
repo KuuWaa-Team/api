@@ -1,0 +1,120 @@
+<style>
+    @font-face {
+        font-family: 'TheSeason';
+        src: url('{{ asset('templates/basic/the-season.otf') }}') format('opentype');
+    }
+
+    @font-face {
+        font-family: 'Faunces';
+        src: url('{{ asset('templates/basic/faunces.otf') }}') format('opentype');
+    }
+
+    body {
+        margin: 0;
+        background-color: #fffdf6;
+        font-family: 'Faunces', serif;
+        color: #384b7c;
+    }
+
+    .invitation-card {
+        max-width: 600px;
+        margin: auto;
+        padding: 3rem 1rem;
+        text-align: center;
+        position: relative;
+    }
+
+    .top-icon {
+        width: 40px;
+        margin-bottom: 1rem;
+    }
+
+    .divider {
+        width: 100%;
+        max-width: 300px;
+        height: 1px;
+        background-color: #384b7c;
+        margin: 1rem auto;
+    }
+
+    .heading {
+        font-size: 0.75rem;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        margin-bottom: 2rem;
+    }
+
+    .names {
+        font-family: 'TheSeason', cursive;
+        font-size: 3rem;
+        margin: 0.5rem 0;
+    }
+
+    .ampersand {
+        font-family: 'Faunces', serif;
+        font-size: 2rem;
+        margin: 0.5rem 0;
+    }
+
+    .event-date {
+        margin-top: 2rem;
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+    }
+
+    .event-location {
+        margin-top: 1.5rem;
+        font-size: 0.9rem;
+        line-height: 1.6;
+    }
+
+    .rsvp {
+        margin-top: 1.5rem;
+        font-size: 0.9rem;
+    }
+
+    .reception {
+        margin-top: 1.5rem;
+        font-style: italic;
+        font-size: 0.85rem;
+    }
+
+    .bottom-icon {
+        width: 35px;
+        margin: 2rem auto 0;
+    }
+</style>
+
+<div class="invitation-card">
+    <img src="{{ asset('templates/basic/top.png') }}" alt="top icon" class="top-icon" />
+
+    <div class="divider"></div>
+
+    <div class="heading">
+        YOU ARE INVITED YOU TO CELEBRATE<br />
+        THE WEDDING OF
+    </div>
+
+    <div class="names">OLIVIA</div>
+    <div class="ampersand">&</div>
+    <div class="names">DANIEL</div>
+
+    <div class="event-date">
+        SATURDAY, AUGUST 10, 2024<br />
+        AT 5:00 PM
+    </div>
+
+    <div class="divider" style="margin-top: 2rem;"></div>
+
+    <div class="event-location">
+        123 ANYWHERE ST., ANY<br />
+        CITY
+    </div>
+
+    <div class="rsvp">RSVP TO: 123-456-7890</div>
+
+    <div class="reception">Reception to follow</div>
+
+    <img src="{{ asset('templates/basix/bottom.png') }}" alt="bottom icon" class="bottom-icon" />
+</div>
