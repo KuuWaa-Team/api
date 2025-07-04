@@ -17,11 +17,21 @@
     }
 
     .invitation-card {
+        position: relative;
+        background-color: #fff;
+        padding: 1.5rem 1rem;
+        border: 1px solid {{ template.primaryColor }};
         max-width: 600px;
         margin: auto;
-        padding: 3rem 1rem;
         text-align: center;
-        position: relative;
+        font-family: 'FairDisplay', serif;
+        color: #a77b00;
+        overflow: hidden;
+        z-index: 2;
+        border-radius: 5px;
+        box-shadow:
+                0 4px 6px rgba(0, 0, 0, 0.05),
+                0 8px 20px rgba(0, 0, 0, 0.08);
     }
 
     .top-icon {
