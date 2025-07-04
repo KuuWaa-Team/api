@@ -21,6 +21,13 @@ class EventCategoryRepository extends ServiceEntityRepository
         parent::__construct($registry, EventCategory::class);
     }
 
+    public function save (EventCategory $category, bool $flush = true) {
+        $this->getEntityManager()->persist($category);
+        if ($flush) {
+            $this->getEntityManager()->flush();
+        }
+    }
+
 //    /**
 //     * @return EventCategory[] Returns an array of EventCategory objects
 //     */
