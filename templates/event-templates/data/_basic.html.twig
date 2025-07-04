@@ -18,8 +18,8 @@
 
     .invitation-card {
         position: relative;
-        background-color: #fff;
-        padding: 1.5rem 1rem;
+        background-color: #fffdf6;
+        padding: 4rem 1rem 4.5rem;
         border: 1px solid {{ template.primaryColor }};
         max-width: 600px;
         margin: auto;
@@ -34,17 +34,35 @@
                 0 8px 20px rgba(0, 0, 0, 0.08);
     }
 
-    .top-icon {
-        width: 40px;
-        margin-bottom: 1rem;
-    }
-
     .divider {
         width: 100%;
         max-width: 300px;
         height: 1px;
         background-color: #384b7c;
         margin: 1rem auto;
+        position: relative;
+    }
+
+    .top-icon,
+    .bottom-icon {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    .top-icon {
+        top: 1rem;
+        width: 40px;
+    }
+
+    .bottom-icon {
+        bottom: 1.2rem;
+        width: 35px;
+    }
+
+    .top-icon {
+        width: 40px;
+        margin-bottom: 1rem;
     }
 
     .heading {
@@ -90,10 +108,6 @@
         font-size: 0.85rem;
     }
 
-    .bottom-icon {
-        width: 35px;
-        margin: 2rem auto 0;
-    }
 </style>
 
 <div class="invitation-card">
@@ -102,7 +116,7 @@
     <div class="divider"></div>
 
     <div class="heading">
-        YOU ARE INVITED YOU TO CELEBRATE<br />
+        YOU ARE INVITED TO CELEBRATE<br />
         THE WEDDING OF
     </div>
 
@@ -126,5 +140,5 @@
 
     <div class="reception">Reception to follow</div>
 
-    <img src="{{ asset('templates/basix/bottom.png') }}" alt="bottom icon" class="bottom-icon" />
+    <img src="{{ asset('templates/basic/bottom.png') }}" alt="bottom icon" class="bottom-icon" />
 </div>
