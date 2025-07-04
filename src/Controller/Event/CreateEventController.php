@@ -70,15 +70,15 @@ class CreateEventController extends AbstractController
 
         $category_id = $content['category_id'] ?? null;
 
-        if ($category_id === null) {
+        $category = $this->categoryRepository->find($category_id ?? 0);
+        if ($category === null) {
             $category = (new EventCategory())
                 ->setName($content['category_name'] ?? 'Non défini')
                 ->setValidated(false)
             ;
-        } else {
-            $category = $this->categoryRepository->find($category_id);
+            $this->categoryRepository->save($category);
         }
-
+        
         $image = $request->files->get('image');
         $fileName = uniqid('', true) . '.' . $image->guessExtension();
         $destinationPath = $kernel->getProjectDir() . '/public/events/images';
@@ -100,7 +100,6 @@ class CreateEventController extends AbstractController
         $event = (new Event())
             ->setTitle($title)
             ->setStartDate(new \DateTime($startDate))
-            ->setEndDate(new \DateTime($endDate))
             ->setCategory($category)
             ->setDetails($details)
             ->setAddress($address)
@@ -113,6 +112,10 @@ class CreateEventController extends AbstractController
             ->setImagePath($imagePath)
             ->setThumbPath($thumbnailPath)
         ;
+
+        if ($endDate !== null) {
+            $event->setEndDate(new \DateTime($endDate));
+        };
 
         foreach ($specifications as $specification) {
             $event->addEventSpecification((new Event\EventSpecification())->setName($specification));

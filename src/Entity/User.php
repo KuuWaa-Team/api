@@ -249,7 +249,7 @@ class User implements UserInterface
     {
         if (!$this->events->contains($event)) {
             $this->events->add($event);
-            $event->setUser($this);
+            $event->setOwner($this);
         }
 
         return $this;
@@ -258,9 +258,8 @@ class User implements UserInterface
     public function removeEvent(Event $event): static
     {
         if ($this->events->removeElement($event)) {
-            // set the owning side to null (unless already changed)
             if ($event->getUser() === $this) {
-                $event->setUser(null);
+                $event->setOwner(null);
             }
         }
 

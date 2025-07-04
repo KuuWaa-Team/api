@@ -3,6 +3,7 @@
 namespace App\Service\Billing;
 
 use App\Entity\Wallet\Operation;
+use App\Service\WalletService;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
@@ -17,8 +18,9 @@ class PaymentService
     ) {
     }
 
-    private $baseUrlFlexPay = 'https://backend.flexpay.cd/api/rest/v1/';
-    private $token = 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJcL2xvZ2luIiwicm9sZXMiOlsiTUVSQ0hBTlQiXSwiZXhwIjoxNzcwODE5NjExLCJzdWIiOiI2NjBmOWI0MGIzMmIzMjNhZjU2ZmMwYjFlMGI3OTc5NyJ9.0N2RaMA6SFdMqJVARUeVBSTxgEH9ru2G4VFGyVlhzD4.';
+    private $mobileBaseUrlFlexPay = 'https://backend.flexpay.cd/api/rest/v1/';
+    private $cardBaseUrlFlexPay = 'https://cardpayment.flexpay.cd/v1.1/pay';
+    private $token = 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJcL2xvZ2luIiwicm9sZXMiOlsiTUVSQ0hBTlQiXSwiZXhwIjoxNzcwODE5NjExLCJzdWIiOiI2NjBmOWI0MGIzMmIzMjNhZjU2ZmMwYjFlMGI3OTc5NyJ9.0N2RaMA6SFdMqJVARUeVBSTxgEH9ru2G4VFGyVlhzD4';
     /**
      * @throws \JsonException
      */
@@ -31,11 +33,11 @@ class PaymentService
             "reference"     => $operation->getReference(),
             "amount"        => $operation->getAmount(),
             "currency"      => "USD",
-            "callbackUrl"   => "https://kuuwaa.com",
+            "callbackUrl"   => "https://kuuwaa.com/callback",
         ];
 
         $data = json_encode($data, JSON_THROW_ON_ERROR);
-        $gateway = $this->baseUrlFlexPay . "paymentService";
+        $gateway = $this->mobileBaseUrlFlexPay . "paymentService";
 
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $gateway);
@@ -68,9 +70,60 @@ class PaymentService
         return ["success" => $success, "orderNumber" => $orderNumber, "message" => $message];
     }
 
-    public function cardPayment(Operation $operation): array {
-        // TODO : handle card payment
-        return [];
+    public function cardPayment(Operation $operation): array
+    {
+        $data = [
+            "merchant"      => "KUUWAA",
+            "reference"     => $operation->getReference(),
+            "amount"        => $operation->getAmount(),
+            "currency"      => "USD",
+            "callback_url"   => "https://kuuwaa.com/callback",
+            "approve_url"   => "https://kuuwaa.com/approve",
+            "cancel_url"   => "https://kuuwaa.com/cancel",
+            "decline_url"   => "https://kuuwaa.com/decline",
+            "authorization" => $this->token,
+            "description"   => $operation->getReference(),
+        ];
+
+        $data = json_encode($data, JSON_THROW_ON_ERROR);
+        $gateway = $this->cardBaseUrlFlexPay;
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $gateway);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array("Content-Type: application/json", "Authorization: " . $this->token));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 300);
+
+        $response = curl_exec($ch);
+        $redirectUrl = '';
+
+        $orderNumber = "";
+        if (curl_errno($ch)) {
+            $message = 'Une erreur lors du traitement de votre requête';
+            $success = false;
+        } else {
+            curl_close($ch);
+            $jsonRes = json_decode($response, false, 512, JSON_THROW_ON_ERROR);
+            $code = $jsonRes->code;
+            $message = $jsonRes->message ?? 'Impossible de traiter la demande, veuillez réessayer';
+            $redirectUrl = $jsonRes->url ?? '';
+            if ($code . "" !== "0") {
+                $success = false;
+            } else {
+                $success = true;
+                $orderNumber = $jsonRes->orderNumber;
+            }
+        }
+
+        return [
+            "success" => $success, 
+            "orderNumber" => $orderNumber, 
+            "message" => $message,
+            "redirectUrl" => $redirectUrl
+        ];
     }
 
     /**
@@ -84,7 +137,7 @@ class PaymentService
     {
         $response = $this->client->request(
             'GET',
-            $this->baseUrlFlexPay . 'check/' . $operation->getOrderNumber(),
+            $this->mobileBaseUrlFlexPay . 'check/' . $operation->getOrderNumber(),
             [
                 'headers' => [
                     'Accept: */*',

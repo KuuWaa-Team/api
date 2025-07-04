@@ -23,9 +23,9 @@ use Symfony\Component\Serializer\Attribute\Groups;
         new Get(),
         new GetCollection(),
         new Post(
-            uriTemplate: '/operations/{id}/check-payment-status',
+            uriTemplate: '/operations/check-payment-status',
             controller: CheckPaymentStatusController::class,
-            description: "Check payment Status",
+            description: "Check payments Status",
         ),
     ]
 )]
@@ -79,6 +79,10 @@ class Operation
     #[ORM\Column(length: 255, nullable: true)]
     #[Groups(['operation:pRead'])]
     private ?string $status = null;
+
+    #[ORM\Column(length: 500, nullable: true)]
+    #[Groups(['operation:pRead'])]
+    private ?string $redirectUrl = null;
 
     public function getId(): ?int
     {
@@ -218,5 +222,17 @@ class Operation
 
     public function isPaid (): bool {
         return $this->getStatus() === WalletService::$STATUS_PAID;
+    }
+
+    public function getRedirectUrl(): ?string
+    {
+        return $this->redirectUrl;
+    }
+
+    public function setRedirectUrl(?string $redirectUrl): static
+    {
+        $this->redirectUrl = $redirectUrl;
+
+        return $this;
     }
 }

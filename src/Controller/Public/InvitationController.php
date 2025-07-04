@@ -36,6 +36,9 @@ class InvitationController extends AbstractController
     public function index($slug, Request $request, BeverageRepository $beverageRepository, BookRepository $bookRepository, InvitationRepository $invitationRepository, DateService $dateService, KernelInterface $kernel): Response
     {
         $invitation = $invitationRepository->findBySlug($slug);
+        if ($invitation === null) {
+            return $this->redirect('https://kuuwaa.com/invitation-introuvable');
+        }
         $date = $dateService->getFullDate($invitation->getEvent()->getStartDate(), true, true);
         $year = $invitation->getEvent()->getStartDate()->format("Y");
         $hour = $invitation->getEvent()->getStartDate()->format("H");
