@@ -113,9 +113,9 @@ class CreateEventController extends AbstractController
             ->setThumbPath($thumbnailPath)
         ;
 
-        if ($endDate !== null) {
+        if (!empty($endDate) && strtoupper($endDate) != "NULL") {
             $event->setEndDate(new \DateTime($endDate));
-        };
+        }
 
         foreach ($specifications as $specification) {
             $event->addEventSpecification((new Event\EventSpecification())->setName($specification));

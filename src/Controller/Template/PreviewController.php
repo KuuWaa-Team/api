@@ -79,9 +79,8 @@ final class PreviewController extends AbstractController
             ->setTemplate($template);
 
         if (!empty($endDate) && strtoupper($endDate) != "NULL") {
-            dd($endDate);
             $event->setEndDate(new \DateTime($endDate));
-        };
+        }
             
         $invitation = (new Invitation())
             ->setEvent($event)
