@@ -135,7 +135,7 @@ class AddInvitationController extends AbstractController
         $invitMessage = "Bonjour " . $civility . " " . $name;
         $invitMessage .= ",\nVous êtes invité à l'évenement \"{$event->getCategory()->getName()} - {$event->getTitle()}\" le " . $this->dateService->getFullDate($event->getStartDate(), true, true)  . " à {$event->getStartDate()->format('H:i')}.";
         $invitMessage .= "\n\nPour accéder à votre invitation, veuillez ouvrir le lien suivant.";
-        $invitMessage .= "\n" . $apiUrl . "com/invitations/" . $invitation->getSlug();
+        $invitMessage .= "\n" . $apiUrl . "/invitations/" . $invitation->getSlug();
         $invitMessage .= "\n\nSi vous rencontrez des difficultés pour ouvrir le lien, veuillez retenir le code d'invitation à 6 chiffres ({$invitation->getCode()}) et présentez-le lors de la vérification à l'entrée de l'évenement.";
 
         $invitation->setMessage($invitMessage);
