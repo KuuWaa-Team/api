@@ -101,9 +101,12 @@ class EventAdmin
     private ?string $status = null;
 
     #[ORM\Column(length: 500, nullable: true)]
+    #[Groups(['event:pRead', 'event:fRead', 'admin:pRead'])]
     private ?string $roles = null;
 
+    
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['event:pRead', 'event:fRead', 'admin:pRead'])]
     private ?string $invitationCode = null;
 
     public function getId(): ?int
