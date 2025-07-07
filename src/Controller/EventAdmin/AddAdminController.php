@@ -5,6 +5,7 @@ namespace App\Controller\EventAdmin;
 use App\Entity\Event\EventAdmin;
 use App\Repository\Event\EventAdminRepository;
 use App\Repository\EventRepository;
+use App\Service\EventAdminRoles;
 use App\Service\PhoneService;
 use App\Service\SmsService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -34,13 +35,9 @@ class AddAdminController extends AbstractController
         $eventId = $content["eventId"] ?? null;
 
         $event = $this->eventRepository->find($eventId);
-        
-        if (empty($data['name'])) {
-            return new JsonResponse(['success' => false, 'message' => 'Nom requis'], Response::HTTP_BAD_REQUEST);
-        }
 
-        if (!in_array('verifier_invitations', $roles)) {
-            $roles[] = 'verifier_invitations';
+        if (!in_array(EventAdminRoles::$VERIFY_INVITATIONS, $roles)) {
+            $roles[] = EventAdminRoles::$VERIFY_INVITATIONS;
         }
 
         $rolesString = implode(',', array_unique($roles));
