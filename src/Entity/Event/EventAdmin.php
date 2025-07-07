@@ -104,6 +104,7 @@ class EventAdmin
     #[Groups(['event:pRead', 'event:fRead', 'admin:pRead'])]
     private ?string $roles = null;
 
+    
     #[ORM\Column(length: 255, nullable: true)]
     #[Groups(['event:pRead', 'event:fRead', 'admin:pRead'])]
     private ?string $invitationCode = null;
