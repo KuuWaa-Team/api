@@ -11,7 +11,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 class AddAdminController extends AbstractController
@@ -27,41 +26,36 @@ class AddAdminController extends AbstractController
     /**
      * @throws \JsonException
      */
-    public function __invoke(Request $request, UserInterface $user): JsonResponse
+    public function __invoke(Request $request): JsonResponse
     {
         $content = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
         $name = $content["name"] ?? null;
-        $phone = $content["phoneNumber"] ?? null;
+        $roles = $content['permissions'] ?? [];
         $eventId = $content["eventId"] ?? null;
 
         $event = $this->eventRepository->find($eventId);
-
-        if ($phone === $user->getPhoneNumber()) {
-            $admins = $this->adminRepository->findByEvent($event);
-            $response = [
-                'success'   => false,
-                'admins' => $this->normalizer->normalize($admins, null, ['groups' => ['admin:pRead']]),
-                'message'   => "Vous ne pouvez pas ajouter ce numéro comme protocoleur",
-            ];
-
-            return new JsonResponse($response, Response::HTTP_OK);
+        
+        if (empty($data['name'])) {
+            return new JsonResponse(['success' => false, 'message' => 'Nom requis'], Response::HTTP_BAD_REQUEST);
         }
 
-        if ($this->adminRepository->adminExists($phone)) {
-            $admins = $this->adminRepository->findByEvent($event);
-            $response = [
-                'success'   => false,
-                'admins' => $this->normalizer->normalize($admins, null, ['groups' => ['admin:pRead']]),
-                'message'   => "Vous avez déjà ajouté ce numéro comme protocoleur",
-            ];
-
-            return new JsonResponse($response, Response::HTTP_OK);
+        if (!in_array('verifier_invitations', $roles)) {
+            $roles[] = 'verifier_invitations';
         }
+
+        $rolesString = implode(',', array_unique($roles));
+
+        $code = strtoupper(bin2hex(random_bytes(3)));
+        do {
+            $code = strtoupper(bin2hex(random_bytes(3))); // 6 caractères hexadécimaux
+            $exists = $this->adminRepository->findOneBy(['invitationCode' => $code]);
+        } while ($exists !== null);
 
         $admin = (new EventAdmin())
             ->setName($name)
-            ->setPhoneNumber($phone)
+            ->setRoles($rolesString)
             ->setEvent($event)
+            ->setInvitationCode($code)
             ->setStatus('waiting')
         ;
 
@@ -72,12 +66,12 @@ class AddAdminController extends AbstractController
         $event->setAdminsCount($eventAdminsCount + 1);
         $this->eventRepository->save($event, true);
 
-        $message = "Salut " . $name . "\n" . $user->getFirstname() . " " . $user->getLastname() . " vous invite à être protocoleur à son évenement ". '"' . $event->getName() .  '"'
-            . " prévu pour le " . $event->getDate()->format("d/m/Y") . " \n\nVeuillez lancer ou télécharger l'application KuuWaa pour accépter l'invitation\n\nPour télécharger l'application KuuWaa, cliquez sur l'un de liens suivant : "
+        $user = $event->getUser();
+
+        $message = "Salut " . $name . "\n" . $user->getDisplayName() . " vous invite à gerer à son évenement ". '"' . $event->getTitle() .  '"'
+            . " prévu pour le " . $event->getStartDate()->format("d/m/Y") . " \n\nVeuillez lancer ou télécharger l'application KuuWaa pour accépter l'invitation\n\nPour télécharger l'application KuuWaa, cliquez sur l'un de liens suivant : "
             . "\n\nPour iOS\nhttps://apps.apple.com/ca/app/kuuwaa/id6476254390?l=fr-CA\n\nPour android\nhttps://play.google.com/store/apps/details?id=com.app.kuuwaa"
         ;
-
-        $this->smsService->send($this->phoneService->format($phone), $message);
 
         $admins = $this->adminRepository->findByEvent($event);
         $response = [
