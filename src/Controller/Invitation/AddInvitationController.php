@@ -132,11 +132,18 @@ class AddInvitationController extends AbstractController
         $result->saveToFile($destinationPath . "/" . $fileName);
         $invitation->setCodePath("/events/invitations/qr_code/" . $fileName);
 
-        $invitMessage = "Bonjour " . $civility . " " . $name;
-        $invitMessage .= ",\nVous êtes invité à l'évenement \"{$event->getCategory()->getName()} - {$event->getTitle()}\" le " . $this->dateService->getFullDate($event->getStartDate(), true, true)  . " à {$event->getStartDate()->format('H:i')}.";
-        $invitMessage .= "\n\nPour accéder à votre invitation, veuillez ouvrir le lien suivant.";
-        $invitMessage .= "\n" . $apiUrl . "/invitations/" . $invitation->getSlug();
-        $invitMessage .= "\n\nSi vous rencontrez des difficultés pour ouvrir le lien, veuillez retenir le code d'invitation à 6 chiffres ({$invitation->getCode()}) et présentez-le lors de la vérification à l'entrée de l'évenement.";
+        $invitMessage  = "Bonjour " . $civility . " " . $name . ",\n\n";
+        $invitMessage .= "Vous êtes cordialement invité à l’événement « " . $event->getCategory()->getName() . " - " . $event->getTitle() . " », qui se tiendra le ";
+        $invitMessage .= $this->dateService->getFullDate($event->getStartDate(), true, true) . " à " . $event->getStartDate()->format('H:i') . ".\n\n";
+
+        $invitMessage .= "🎟️ Pour accéder à votre invitation personnalisée, veuillez cliquer sur le lien ci-dessous :\n";
+        $invitMessage .= $apiUrl . "/invitations/" . $invitation->getSlug() . "\n\n";
+
+        $invitMessage .= "🔐 En cas de difficulté pour ouvrir le lien, veuillez conserver le code d'invitation à 6 chiffres suivant : ";
+        $invitMessage .= $invitation->getCode() . ". Il vous sera demandé lors du contrôle à l’entrée de l’événement.\n\n";
+
+        $invitMessage .= "Au plaisir de vous compter parmi nous pour célébrer cet instant unique.\n\n";
+        $invitMessage .= $event->getTitle(); 
 
         $invitation->setMessage($invitMessage);
 
