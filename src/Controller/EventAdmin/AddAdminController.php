@@ -42,11 +42,11 @@ class AddAdminController extends AbstractController
 
         $rolesString = implode(',', array_unique($roles));
 
-        $code = strtoupper(bin2hex(random_bytes(3)));
         do {
-            $code = strtoupper(bin2hex(random_bytes(3))); // 6 caractères hexadécimaux
+            $code = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT); 
+            $isRepeated = strlen(count_chars($code, 3)) === 1;
             $exists = $this->adminRepository->findOneBy(['invitationCode' => $code]);
-        } while ($exists !== null);
+        } while ($isRepeated || $exists !== null);
 
         $admin = (new EventAdmin())
             ->setName($name)
