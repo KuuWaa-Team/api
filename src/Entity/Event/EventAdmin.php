@@ -103,6 +103,9 @@ class EventAdmin
     #[ORM\Column(length: 500, nullable: true)]
     private ?string $roles = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $invitationCode = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -152,6 +155,18 @@ class EventAdmin
     public function setRoles(?string $roles): static
     {
         $this->roles = $roles;
+
+        return $this;
+    }
+
+    public function getInvitationCode(): ?string
+    {
+        return $this->invitationCode;
+    }
+
+    public function setInvitationCode(?string $invitationCode): static
+    {
+        $this->invitationCode = $invitationCode;
 
         return $this;
     }
