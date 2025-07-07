@@ -89,10 +89,6 @@ class EventAdmin
     #[Groups(['event:pRead', 'event:fRead', 'admin:pRead'])]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['event:pRead', 'event:fRead', 'admin:pRead'])]
-    private ?string $phoneNumber = null;
-
     #[ORM\ManyToOne(inversedBy: 'eventAdmins')]
     private ?Event $event = null;
 
@@ -104,21 +100,12 @@ class EventAdmin
     #[Groups(['event:pRead', 'event:fRead', 'admin:pRead'])]
     private ?string $status = null;
 
+    #[ORM\Column(length: 500, nullable: true)]
+    private ?string $roles = null;
+
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getPhoneNumber(): ?string
-    {
-        return $this->phoneNumber;
-    }
-
-    public function setPhoneNumber(?string $phoneNumber): static
-    {
-        $this->phoneNumber = $phoneNumber;
-
-        return $this;
     }
 
     public function getEvent(): ?Event
@@ -153,6 +140,18 @@ class EventAdmin
     public function setStatus(?string $status): static
     {
         $this->status = $status;
+
+        return $this;
+    }
+
+    public function getRoles(): ?string
+    {
+        return $this->roles;
+    }
+
+    public function setRoles(?string $roles): static
+    {
+        $this->roles = $roles;
 
         return $this;
     }
