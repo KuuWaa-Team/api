@@ -148,7 +148,7 @@ class InvitationController extends AbstractController
         }
 
         $beverageId = $request->request->get('beverageId');
-        $action = $request->request->get('action'); // "add" ou "remove"
+        $action = $request->request->get('action');
 
         $beverage = $beverageRepository->find($beverageId);
 
