@@ -1295,7 +1295,7 @@
                     {% endif %}
                 </div>
             </div>
-            <div class="rounded-lg border bg-card text-card-foreground border-[{{ template.primaryColor }}]/20 shadow-lg">
+            {# <div class="rounded-lg border bg-card text-card-foreground border-[{{ template.primaryColor }}]/20 shadow-lg">
                 <div class="flex flex-col space-y-1.5 p-6 text-center">
                     <div
                             class="font-semibold tracking-tight text-2xl text-[{{ template.secondaryColor }}] flex items-center justify-center gap-2">
@@ -1343,7 +1343,7 @@
                         </button>
                     </div>
                 </div>
-            </div>
+            </div> #}
             {% if invitation.event.hasQuiz == true %}
             <div class="rounded-lg border bg-card text-card-foreground border-[{{ template.primaryColor }}]/20 shadow-lg">
                 <div class="flex flex-col space-y-1.5 p-6 text-center">
@@ -1470,106 +1470,28 @@
                     <p class="jsx-d0ada46de86ca64b text-center text-[{{ template.secondaryColor }}]/70">{{ invitation.fullname }}, voici quelques
                         informations importantes pour que cette journée se déroule parfaitement et que vous puissiez
                         en profiter pleinement.</p>
-                    <div class="jsx-d0ada46de86ca64b grid md:grid-cols-2 gap-6">
-                        <div
-                                class="jsx-d0ada46de86ca64b bg-gradient-to-br from-[{{ template.primaryColor }}]/5 to-[{{ template.secondaryColor }}]/5 rounded-lg p-6">
-                            <div class="jsx-d0ada46de86ca64b flex items-center gap-2 mb-4"><svg
-                                        xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                        stroke-linejoin="round" class="lucide lucide-sparkles w-5 h-5 text-[{{ template.primaryColor }}]">
-                                    <path
-                                            d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z">
-                                    </path>
-                                    <path d="M20 3v4"></path>
-                                    <path d="M22 5h-4"></path>
-                                    <path d="M4 17v2"></path>
-                                    <path d="M5 18H3"></path>
-                                </svg>
-                                <h3 class="jsx-d0ada46de86ca64b font-semibold text-[{{ template.secondaryColor }}]">Code vestimentaire
-                                </h3>
-                            </div>
-                            <div class="jsx-d0ada46de86ca64b space-y-2 text-[{{ template.secondaryColor }}]/80">
-                                <p class="jsx-d0ada46de86ca64b"><strong class="jsx-d0ada46de86ca64b">Tenue
-                                        :</strong> Élégante et festive</p>
-                                <p class="jsx-d0ada46de86ca64b"><strong class="jsx-d0ada46de86ca64b">Couleurs
-                                        :</strong> Évitez le blanc et l'ivoire</p>
-                                <p class="jsx-d0ada46de86ca64b"><strong class="jsx-d0ada46de86ca64b">Style
-                                        :</strong> Cocktail / Semi-formel</p>
-                                <p class="jsx-d0ada46de86ca64b text-sm text-[{{ template.secondaryColor }}]/60 mt-3">Pensez à des
-                                    chaussures confortables pour danser !</p>
+                        {% for spec in event.eventSpecifications %}
+                        <div class="jsx-d0ada46de86ca64b grid md:grid-cols-2 gap-6">
+                            <div
+                                class="jsx-d0ada46de86ca64b bg-gradient-to-br from-[{{ template.primaryColor }}]/5 to-[{{ template.secondaryColor }}]/5 rounded-lg p-2">
+                                <div class="jsx-d0ada46de86ca64b flex items-center gap-2 mb-4"><svg
+                                            xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                            stroke-linejoin="round" class="lucide lucide-sparkles w-5 h-5 text-[{{ template.primaryColor }}]">
+                                        <path
+                                                d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z">
+                                        </path>
+                                        <path d="M20 3v4"></path>
+                                        <path d="M22 5h-4"></path>
+                                        <path d="M4 17v2"></path>
+                                        <path d="M5 18H3"></path>
+                                    </svg>
+                                    <h3 class="jsx-d0ada46de86ca64b font-semibold text-[{{ template.secondaryColor }}]">{{ spec.name }}
+                                    </h3>
+                                </div>
                             </div>
                         </div>
-                        <div
-                                class="jsx-d0ada46de86ca64b bg-gradient-to-br from-[{{ template.primaryColor }}]/5 to-[{{ template.secondaryColor }}]/5 rounded-lg p-6">
-                            <div class="jsx-d0ada46de86ca64b flex items-center gap-2 mb-4"><svg
-                                        xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                        stroke-linejoin="round" class="lucide lucide-clock w-5 h-5 text-[{{ template.primaryColor }}]">
-                                    <circle cx="12" cy="12" r="10"></circle>
-                                    <polyline points="12 6 12 12 16 14"></polyline>
-                                </svg>
-                                <h3 class="jsx-d0ada46de86ca64b font-semibold text-[{{ template.secondaryColor }}]">Informations pratiques
-                                </h3>
-                            </div>
-                            <div class="jsx-d0ada46de86ca64b space-y-2 text-[{{ template.secondaryColor }}]/80">
-                                <p class="jsx-d0ada46de86ca64b"><strong class="jsx-d0ada46de86ca64b">Arrivée
-                                        :</strong> 16h30 - 17h00</p>
-                                <p class="jsx-d0ada46de86ca64b"><strong class="jsx-d0ada46de86ca64b">Cocktail
-                                        :</strong> 18h30 - 20h00</p>
-                                <p class="jsx-d0ada46de86ca64b"><strong class="jsx-d0ada46de86ca64b">Dîner
-                                        :</strong> 20h00 - 22h30</p>
-                                <p class="jsx-d0ada46de86ca64b"><strong class="jsx-d0ada46de86ca64b">Soirée dansante
-                                        :</strong> 22h30 - 2h00</p>
-                            </div>
-                        </div>
-                        <div
-                                class="jsx-d0ada46de86ca64b bg-gradient-to-br from-[{{ template.primaryColor }}]/5 to-[{{ template.secondaryColor }}]/5 rounded-lg p-6">
-                            <div class="jsx-d0ada46de86ca64b flex items-center gap-2 mb-4"><svg
-                                        xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                        stroke-linejoin="round" class="lucide lucide-heart w-5 h-5 text-[{{ template.primaryColor }}]">
-                                    <path
-                                            d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z">
-                                    </path>
-                                </svg>
-                                <h3 class="jsx-d0ada46de86ca64b font-semibold text-[{{ template.secondaryColor }}]">Notes spéciales</h3>
-                            </div>
-                            <div class="jsx-d0ada46de86ca64b space-y-2 text-[{{ template.secondaryColor }}]/80">
-                                <p class="jsx-d0ada46de86ca64b"><strong class="jsx-d0ada46de86ca64b">Allergies
-                                        :</strong> Merci de nous prévenir</p>
-                                <p class="jsx-d0ada46de86ca64b"><strong class="jsx-d0ada46de86ca64b">Enfants
-                                        :</strong> Bienvenus avec plaisir</p>
-                                <p class="jsx-d0ada46de86ca64b"><strong class="jsx-d0ada46de86ca64b">Photos
-                                        :</strong> Autorisées pendant la réception</p>
-                                <p class="jsx-d0ada46de86ca64b text-sm text-[{{ template.secondaryColor }}]/60 mt-3">Cérémonie religieuse
-                                    : photos interdites pendant l'office</p>
-                            </div>
-                        </div>
-                        <div
-                                class="jsx-d0ada46de86ca64b bg-gradient-to-br from-[{{ template.primaryColor }}]/5 to-[{{ template.secondaryColor }}]/5 rounded-lg p-6">
-                            <div class="jsx-d0ada46de86ca64b flex items-center gap-2 mb-4"><svg
-                                        xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                        stroke-linejoin="round" class="lucide lucide-map-pin w-5 h-5 text-[{{ template.primaryColor }}]">
-                                    <path
-                                            d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0">
-                                    </path>
-                                    <circle cx="12" cy="10" r="3"></circle>
-                                </svg>
-                                <h3 class="jsx-d0ada46de86ca64b font-semibold text-[{{ template.secondaryColor }}]">Contact d'urgence</h3>
-                            </div>
-                            <div class="jsx-d0ada46de86ca64b space-y-2 text-[{{ template.secondaryColor }}]/80">
-                                <p class="jsx-d0ada46de86ca64b"><strong class="jsx-d0ada46de86ca64b">Témoin Serge
-                                        :</strong> +33 6 12 34 56 78</p>
-                                <p class="jsx-d0ada46de86ca64b"><strong class="jsx-d0ada46de86ca64b">Témoin Deborah
-                                        :</strong> +33 6 87 65 43 21</p>
-                                <p class="jsx-d0ada46de86ca64b"><strong class="jsx-d0ada46de86ca64b">Organisateur
-                                        :</strong> +33 6 11 22 33 44</p>
-                                <p class="jsx-d0ada46de86ca64b text-sm text-[{{ template.secondaryColor }}]/60 mt-3">N'hésitez pas à nous
-                                    contacter pour toute question</p>
-                            </div>
-                        </div>
-                    </div>
+                        {% endfor %}
                 </div>
             </div>
             {% endif %}
