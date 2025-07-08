@@ -32,12 +32,14 @@ class AddBeverageController extends AbstractController
     {
         $content = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
         $name = $content["name"] ?? null;
+        $type = $content["type"] ?? null;
         $eventId = $content["eventId"] ?? null;
 
         $event = $this->eventRepository->find($eventId);
 
         $beverage = (new Beverage())
             ->setName($name)
+            ->setType($type)
             ->setEvent($event)
             ->setCountTaken(0)
         ;
