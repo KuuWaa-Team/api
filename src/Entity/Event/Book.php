@@ -59,6 +59,7 @@ class Book
     private ?string $message = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['event:pRead', 'event:fRead'])]
     private ?bool $public = null;
 
     #[ORM\OneToOne(mappedBy: 'book', cascade: ['persist', 'remove'])]
@@ -66,6 +67,7 @@ class Book
     private ?Invitation $invitation = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['event:pRead', 'event:fRead'])]
     private ?string $audioPath = null;
 
     #[ORM\Column(length: 255)]
