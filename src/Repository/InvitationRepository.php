@@ -110,16 +110,22 @@ class InvitationRepository extends ServiceEntityRepository
     /**
      * @return Invitation[] Returns an array of Invitation objects
      */
-    public function findByEvent(Event $event): array
+    public function findByEvent(Event $event, bool $wm): array
     {
-        return $this->createQueryBuilder('i')
+        $qb = $this->createQueryBuilder('i')
             ->andWhere('i.event = :event')
-            ->setParameter('event', $event)
+            ->setParameter('event', $event);
+
+        if ($wm) {
+            $qb->andWhere('i.musicChoice IS NOT NULL');
+        }
+
+        return $qb
             ->orderBy('i.name', 'ASC')
             ->getQuery()
-            ->getResult()
-            ;
+            ->getResult();
     }
+
 
     /**
      * @return Invitation[] Returns an array of Invitation objects
