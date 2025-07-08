@@ -269,7 +269,7 @@ class InvitationController extends AbstractController
             $notificationMessage = $book->getInvitation()->getFullname() . " a ajouté ";
             $bookRepository->save($book);
             if (!empty($book->getMessage())) {
-                $notificationMessage = 'un message écrit' + !empty($book->getAudioPath()) ? ' et ' : '';
+                $notificationMessage = 'un message écrit' + (!empty($book->getAudioPath()) ? ' et ' : '');
             }
             if (!empty($book->getAudioPath())) {
                 $notificationMessage = 'un message vocal';
