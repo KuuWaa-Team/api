@@ -273,6 +273,7 @@ class Invitation
     private ?Book $book = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(["invitation:pRead", 'table:pRead', 'invitation:fRead', 'event:pRead', 'event:fRead'])]
     private ?string $musicChoice = null;
 
     /**
