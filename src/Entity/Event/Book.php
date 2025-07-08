@@ -62,6 +62,7 @@ class Book
     private ?bool $public = null;
 
     #[ORM\OneToOne(mappedBy: 'book', cascade: ['persist', 'remove'])]
+    #[Groups(['event:pRead', 'event:fRead'])]
     private ?Invitation $invitation = null;
 
     #[ORM\Column(length: 255, nullable: true)]
