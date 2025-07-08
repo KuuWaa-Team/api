@@ -1470,7 +1470,7 @@
                     <p class="jsx-d0ada46de86ca64b text-center text-[{{ template.secondaryColor }}]/70">{{ invitation.fullname }}, voici quelques
                         informations importantes pour que cette journée se déroule parfaitement et que vous puissiez
                         en profiter pleinement.</p>
-                        {% for spec in event.eventSpecifications %}
+                        {% for spec in invitation.event.eventSpecifications %}
                         <div class="jsx-d0ada46de86ca64b grid md:grid-cols-2 gap-6">
                             <div
                                 class="jsx-d0ada46de86ca64b bg-gradient-to-br from-[{{ template.primaryColor }}]/5 to-[{{ template.secondaryColor }}]/5 rounded-lg p-2">
