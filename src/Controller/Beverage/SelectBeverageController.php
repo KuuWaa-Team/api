@@ -30,7 +30,7 @@ class SelectBeverageController extends AbstractController
         $id = $content["id"] ?? null;
         $beverage = $this->beverageRepository->find($id);
         $beverage->setCountTaken($beverage->getCountTaken() === null ? 1 :  $beverage->getCountTaken() + 1);
-        $invitation->setBeverage($beverage);
+        // $invitation->setBeverage($beverage);
         $this->invitationRepository->save($invitation, true);
         $this->beverageRepository->save($beverage, true);
 

@@ -9,6 +9,7 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use App\Controller\Beverage\AddBeverageController;
+use App\Controller\Beverage\RemoveBeverageController;
 use App\Controller\Table\AddTableController;
 use App\Repository\BeverageRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -39,6 +40,24 @@ use Symfony\Component\Serializer\Annotation\Groups;
             description: 'add beverage',
             name: 'addBeverage',
         ),
+        new Post(
+            uriTemplate: '/beverages/{id}/remove',
+            controller: RemoveBeverageController::class,
+            openapiContext: [
+                'summary' => 'remove beverage',
+                'requestBody' => [
+                    'content' => [
+                        'application/json' => [
+                            'schema' => [
+                                'type' => 'object',
+                            ]
+                        ]
+                    ]
+                ],
+            ],
+            description: 'remove beverage',
+            name: 'removeBeverage',
+        ),
         new Put(),
         new Delete()
     ],
@@ -64,7 +83,7 @@ class Beverage
     private ?Event $event = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(["beverage:pRead", 'invitation:fRead', 'event:fRead'])]
+    #[Groups(["beverage:pRead", 'event:pRead', 'event:fRead', 'invitation:fRead', "invitation:pRead"])]
     private ?string $type = null;
 
     /**
