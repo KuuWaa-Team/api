@@ -20,6 +20,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelInterface;
+use Symfony\Component\Process\Exception\ProcessFailedException;
+use Symfony\Component\Process\Process;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\String\Slugger\SluggerInterface;
 
@@ -231,15 +233,30 @@ class InvitationController extends AbstractController
             if ($audioFile->isValid()) {
                 $originalFilename = pathinfo($audioFile->getClientOriginalName(), PATHINFO_FILENAME);
                 $safeFilename = $slugger->slug($originalFilename);
-                $newFilename = $safeFilename . '-' . uniqid() . '.' . $audioFile->guessExtension();
 
                 $destination = $this->getParameter('kernel.project_dir') . '/public/events/invitations/audios';
 
+                $tempFilename = $safeFilename . '-' . uniqid() . '.' . $audioFile->guessExtension();
+
                 try {
-                    $audioFile->move($destination, $newFilename);
-                    $book->setAudioPath('/events/invitations/audios/' . $newFilename);
+                    $audioFile->move($destination, $tempFilename);
+                    $mp3Filename = $safeFilename . '-' . uniqid() . '.mp3';
+                    $webmFilePath = $destination . '/' . $tempFilename;
+                    $mp3FilePath = $destination . '/' . $mp3Filename;
+
+                    $process = new Process(['ffmpeg', '-i', $webmFilePath, '-vn', '-acodec', 'libmp3lame', $mp3FilePath]);
+                    $process->run();
+
+                    if (!$process->isSuccessful()) {
+                        throw new ProcessFailedException($process);
+                    }
+
+                    unlink($webmFilePath);
+
+                    $book->setAudioPath('/events/invitations/audios/' . $mp3Filename);
+
                 } catch (\Exception $e) {
-                    return new JsonResponse(['success' => false, 'message' => "Erreur lors du téléchargement du fichier audio.\n" . $e->getMessage()], 500);
+                    return new JsonResponse(['success' => false, 'message' => "Erreur lors du traitement du fichier audio : " . $e->getMessage()], 500);
                 }
             } else {
                 return new JsonResponse(['success' => false, 'message' => 'Fichier audio invalide.'], 400);
