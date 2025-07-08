@@ -14,6 +14,7 @@ use App\Repository\Event\BookRepository;
 use App\Repository\InvitationRepository;
 use App\Service\ApiService;
 use App\Service\DateService;
+use App\Service\NotificationService;
 use Doctrine\ORM\NonUniqueResultException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -29,6 +30,7 @@ class InvitationController extends AbstractController
 {
     public function __construct(
         private readonly ApiService $apiService,
+        private readonly NotificationService $notificationService,
     ){}
 
     /**
@@ -264,7 +266,28 @@ class InvitationController extends AbstractController
                 }
             }
 
+            $notificationMessage = $book->getInvitation()->getFullname() . " a ajouté ";
             $bookRepository->save($book);
+            if (!empty($book->getMessage())) {
+                $notificationMessage = 'un message écrit' + !empty($book->getAudioPath()) ? ' et ' : '';
+            }
+            if (!empty($book->getAudioPath())) {
+                $notificationMessage = 'un message vocal';
+            }
+
+            $tokens = [];
+            $tokens[] = $book->getEvent()->getUser()->getPhoneId();
+
+            $admins = $book->getEvent()->getEventAdmins();
+            foreach ($admins as $admin) {
+                if ($admin->getUser() !== null) {
+                    $tokens[] = $admin->getUser()->getPhoneId();
+                }
+            }
+
+            $this->notificationService->sendToMany(
+                [], 'Livre d\'or', $notificationMessage
+            );
 
             return new JsonResponse(['success' => true, 'message' => 'Message enregistré avec succès.']);
         } catch (\Exception $e) {
