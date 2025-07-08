@@ -211,61 +211,65 @@ class InvitationController extends AbstractController
         BookRepository $bookRepository,
         SluggerInterface $slugger
     ): JsonResponse {
-        $invitation = $invitationRepository->findOneBy(['slug' => $slug]);
+        try {
+            $invitation = $invitationRepository->findOneBy(['slug' => $slug]);
 
-        if (!$invitation) {
-            return new JsonResponse(['success' => false, 'message' => 'Invitation non trouvée.'], 404);
-        }
-
-        $message = $request->request->get('message');
-        $hasAudio = filter_var($request->request->get('hasAudio'), FILTER_VALIDATE_BOOLEAN);
-        $visibility = $request->request->get('visibility');
-
-        $book = $invitation->getBook() ?? new Book();
-        $book->setInvitation($invitation);
-        $book->setEvent($invitation->getEvent());
-        $book->setMessage($message);
-        $book->setVisibility($visibility);
-
-        if ($hasAudio && $request->files->get('audio')) {
-            $audioFile = $request->files->get('audio');
-
-            if ($audioFile->isValid()) {
-                $originalFilename = pathinfo($audioFile->getClientOriginalName(), PATHINFO_FILENAME);
-                $safeFilename = $slugger->slug($originalFilename);
-
-                $destination = $this->getParameter('kernel.project_dir') . '/public/events/invitations/audios';
-
-                $tempFilename = $safeFilename . '-' . uniqid() . '.' . $audioFile->guessExtension();
-
-                try {
-                    $audioFile->move($destination, $tempFilename);
-                    $mp3Filename = $safeFilename . '-' . uniqid() . '.mp3';
-                    $webmFilePath = $destination . '/' . $tempFilename;
-                    $mp3FilePath = $destination . '/' . $mp3Filename;
-
-                    $process = new Process(['ffmpeg', '-i', $webmFilePath, '-vn', '-acodec', 'libmp3lame', $mp3FilePath]);
-                    $process->run();
-
-                    if (!$process->isSuccessful()) {
-                        throw new ProcessFailedException($process);
-                    }
-
-                    unlink($webmFilePath);
-
-                    $book->setAudioPath('/events/invitations/audios/' . $mp3Filename);
-
-                } catch (\Exception $e) {
-                    return new JsonResponse(['success' => false, 'message' => "Erreur lors du traitement du fichier audio : " . $e->getMessage()], 500);
-                }
-            } else {
-                return new JsonResponse(['success' => false, 'message' => 'Fichier audio invalide.'], 400);
+            if (!$invitation) {
+                return new JsonResponse(['success' => false, 'message' => 'Invitation non trouvée.'], 404);
             }
+
+            $message = $request->request->get('message');
+            $hasAudio = filter_var($request->request->get('hasAudio'), FILTER_VALIDATE_BOOLEAN);
+            $visibility = $request->request->get('visibility');
+
+            $book = $invitation->getBook() ?? new Book();
+            $book->setInvitation($invitation);
+            $book->setEvent($invitation->getEvent());
+            $book->setMessage($message);
+            $book->setVisibility($visibility);
+
+            if ($hasAudio && $request->files->get('audio')) {
+                $audioFile = $request->files->get('audio');
+
+                if ($audioFile->isValid()) {
+                    $originalFilename = pathinfo($audioFile->getClientOriginalName(), PATHINFO_FILENAME);
+                    $safeFilename = $slugger->slug($originalFilename);
+
+                    $destination = $this->getParameter('kernel.project_dir') . '/public/events/invitations/audios';
+
+                    $tempFilename = $safeFilename . '-' . uniqid() . '.' . $audioFile->guessExtension();
+
+                    try {
+                        $audioFile->move($destination, $tempFilename);
+                        $mp3Filename = $safeFilename . '-' . uniqid() . '.mp3';
+                        $webmFilePath = $destination . '/' . $tempFilename;
+                        $mp3FilePath = $destination . '/' . $mp3Filename;
+
+                        $process = new Process(['ffmpeg', '-i', $webmFilePath, '-vn', '-acodec', 'libmp3lame', $mp3FilePath]);
+                        $process->run();
+
+                        if (!$process->isSuccessful()) {
+                            throw new ProcessFailedException($process);
+                        }
+
+                        unlink($webmFilePath);
+
+                        $book->setAudioPath('/events/invitations/audios/' . $mp3Filename);
+
+                    } catch (\Exception $e) {
+                        return new JsonResponse(['success' => false, 'message' => "Erreur lors du traitement du fichier audio : " . $e->getMessage()], 500);
+                    }
+                } else {
+                    return new JsonResponse(['success' => false, 'message' => 'Fichier audio invalide.'], 400);
+                }
+            }
+
+            $bookRepository->save($book);
+
+            return new JsonResponse(['success' => true, 'message' => 'Message enregistré avec succès.']);
+        } catch (\Exception $e) {
+            return new JsonResponse(['success' => false, 'message' => 'Erreur serveur : ' . $e->getMessage()], 500);
         }
-
-        $bookRepository->save($book);
-
-        return new JsonResponse(['success' => true, 'message' => 'Message enregistré avec succès.']);
     }
 
     #[Route('/api/invitations/{slug}/upload-photos', name: 'app_invitation_upload_photos', methods: ['POST'])]
