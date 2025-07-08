@@ -13,6 +13,7 @@ use App\Controller\EventAdmin\AcceptInvitationController;
 use App\Controller\EventAdmin\AddAdminController;
 use App\Controller\EventAdmin\RefuseInvitationController;
 use App\Entity\Event;
+use App\Entity\User;
 use App\Repository\Event\EventAdminRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -109,6 +110,9 @@ class EventAdmin
     #[Groups(['event:pRead', 'event:fRead', 'admin:pRead'])]
     private ?string $invitationCode = null;
 
+    #[ORM\ManyToOne(inversedBy: 'admins')]
+    private ?User $user = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -170,6 +174,18 @@ class EventAdmin
     public function setInvitationCode(?string $invitationCode): static
     {
         $this->invitationCode = $invitationCode;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
 
         return $this;
     }

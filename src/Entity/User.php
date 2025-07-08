@@ -10,6 +10,7 @@ use App\Controller\Auth\LoginController;
 use App\Controller\Event\ListingUserEventController;
 use App\Controller\Wallet\ListingOperationsController;
 use App\Controller\Wallet\RechargeController;
+use App\Entity\Event\EventAdmin;
 use App\Entity\Wallet\Operation;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -111,10 +112,17 @@ class User implements UserInterface
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $phoneId = null;
 
+    /**
+     * @var Collection<int, EventAdmin>
+     */
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: EventAdmin::class)]
+    private Collection $admins;
+
     public function __construct()
     {
         $this->events = new ArrayCollection();
         $this->operations = new ArrayCollection();
+        $this->admins = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -304,6 +312,36 @@ class User implements UserInterface
     public function setPhoneId(?string $phoneId): static
     {
         $this->phoneId = $phoneId;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, EventAdmin>
+     */
+    public function getAdmins(): Collection
+    {
+        return $this->admins;
+    }
+
+    public function addAdmin(EventAdmin $admin): static
+    {
+        if (!$this->admins->contains($admin)) {
+            $this->admins->add($admin);
+            $admin->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAdmin(EventAdmin $admin): static
+    {
+        if ($this->admins->removeElement($admin)) {
+            // set the owning side to null (unless already changed)
+            if ($admin->getUser() === $this) {
+                $admin->setUser(null);
+            }
+        }
 
         return $this;
     }
