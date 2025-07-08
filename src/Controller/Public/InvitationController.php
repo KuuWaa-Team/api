@@ -221,6 +221,7 @@ class InvitationController extends AbstractController
 
         $book = $invitation->getBook() ?? new Book();
         $book->setInvitation($invitation);
+        $book->setEvent($invitation->getEvent());
         $book->setMessage($message);
         $book->setVisibility($visibility);
 
