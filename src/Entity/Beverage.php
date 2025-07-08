@@ -64,6 +64,7 @@ class Beverage
     private ?Event $event = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(["beverage:pRead", 'invitation:fRead', 'event:fRead'])]
     private ?string $type = null;
 
     /**
