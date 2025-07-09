@@ -1,0 +1,1310 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Livre d'or - Serge & Deborah</title>
+    <link rel="stylesheet" href="guestbook-styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+      * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            background: linear-gradient(135deg, #fdf2f8 0%, #f3e8ff 100%);
+            min-height: 100vh;
+        }
+
+        /* Decorative Background */
+        .decorative-bg {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+        }
+
+        .bg-circle {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(3rem);
+            animation: pulse 4s infinite;
+        }
+
+        .bg-circle-1 {
+            top: 2.5rem;
+            left: 2.5rem;
+            width: 18rem;
+            height: 18rem;
+            background: linear-gradient(135deg, rgba(242, 65, 115, 0.2) 0%, rgba(244, 114, 182, 0.2) 100%);
+        }
+
+        .bg-circle-2 {
+            bottom: 2.5rem;
+            right: 2.5rem;
+            width: 24rem;
+            height: 24rem;
+            background: linear-gradient(135deg, rgba(47, 38, 68, 0.15) 0%, rgba(139, 92, 246, 0.15) 100%);
+            animation-delay: 1s;
+        }
+
+        .bg-circle-3 {
+            top: 50%;
+            left: 25%;
+            width: 12rem;
+            height: 12rem;
+            background: linear-gradient(135deg, rgba(242, 65, 115, 0.1) 0%, rgba(251, 113, 133, 0.1) 100%);
+            animation-delay: 0.5s;
+        }
+
+        /* Header */
+        .header {
+            position: relative;
+            z-index: 10;
+            padding: 2rem 0 1rem;
+        }
+
+        .header-container {
+            max-width: 64rem;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .header-nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+        }
+
+        .back-btn {
+            background: transparent;
+            border: 1px solid #2f2644;
+            color: #2f2644;
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .back-btn:hover {
+            background: #2f2644;
+            color: white;
+        }
+
+        .header-title {
+            text-align: center;
+        }
+
+        .header-title h1 {
+            font-size: 2.5rem;
+            color: #2f2644;
+            font-weight: 300;
+            margin-bottom: 0.5rem;
+        }
+
+        .title-underline {
+            width: 6rem;
+            height: 0.125rem;
+            background: linear-gradient(to right, transparent, #f24173, transparent);
+            margin: 0 auto;
+        }
+
+        .spacer {
+            width: 8rem;
+        }
+
+        .header-subtitle {
+            text-align: center;
+        }
+
+        .subtitle-main {
+            color: rgba(47, 38, 68, 0.7);
+            font-size: 1.125rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .subtitle-count {
+            color: rgba(47, 38, 68, 0.5);
+            font-size: 0.875rem;
+        }
+
+        /* Filters Section */
+        .filters-section {
+            position: relative;
+            z-index: 10;
+            margin-bottom: 2rem;
+        }
+
+        .filters-container {
+            max-width: 64rem;
+            margin: 0 auto;
+            padding: 0 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .search-container {
+            flex: 1;
+            max-width: 28rem;
+            width: 100%;
+        }
+
+        .search-input-wrapper {
+            position: relative;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 0.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: rgba(47, 38, 68, 0.5);
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 0.75rem 0.75rem 0.75rem 2.5rem;
+            border: 1px solid rgba(242, 65, 115, 0.3);
+            border-radius: 0.375rem;
+            font-size: 1rem;
+            font-family: inherit;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #f24173;
+            box-shadow: 0 0 0 3px rgba(242, 65, 115, 0.1);
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .filter-btn {
+            padding: 0.5rem 1rem;
+            border: 1px solid #f24173;
+            background: transparent;
+            color: #f24173;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.875rem;
+        }
+
+        .filter-btn:hover,
+        .filter-btn.active {
+            background: #f24173;
+            color: white;
+        }
+
+        /* Messages Section */
+        .messages-section {
+            position: relative;
+            z-index: 10;
+            padding-bottom: 4rem;
+        }
+
+        .messages-container {
+            max-width: 64rem;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .messages-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            opacity: 0;
+            transform: translateY(2.5rem);
+            animation: fadeIn 1s ease-out 0.5s forwards;
+        }
+
+        .message-card {
+            background: linear-gradient(135deg, white 0%, rgba(253, 242, 248, 0.3) 50%, rgba(243, 232, 255, 0.2) 100%);
+            border: 1px solid rgba(242, 65, 115, 0.2);
+            border-radius: 0.5rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .message-header {
+            padding: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid rgba(242, 65, 115, 0.1);
+        }
+
+        .message-author {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .author-avatar {
+            width: 3rem;
+            height: 3rem;
+            background: linear-gradient(135deg, #f24173 0%, #2f2644 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 500;
+            font-size: 0.875rem;
+        }
+
+        .author-info h3 {
+            color: #2f2644;
+            font-size: 1.125rem;
+            font-weight: 400;
+            margin-bottom: 0.25rem;
+        }
+
+        .message-time {
+            color: rgba(47, 38, 68, 0.6);
+            font-size: 0.875rem;
+        }
+
+        .message-indicators {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .indicator {
+            width: 0.5rem;
+            height: 0.5rem;
+            border-radius: 50%;
+        }
+
+        .written-indicator {
+            background: #f24173;
+        }
+
+        .voice-indicator {
+            background: #2f2644;
+        }
+
+        .message-content {
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        /* Written Message */
+        .written-message {
+            background: linear-gradient(to right, rgba(242, 65, 115, 0.05), transparent);
+            padding: 1rem;
+            border-radius: 0.5rem;
+            border-left: 4px solid #f24173;
+        }
+
+        .message-type-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .written-message .message-type-header i {
+            color: #f24173;
+        }
+
+        .written-message .message-type-header span {
+            color: #2f2644;
+            font-weight: 500;
+            font-size: 0.875rem;
+        }
+
+        .message-text {
+            color: rgba(47, 38, 68, 0.8);
+            line-height: 1.6;
+        }
+
+        /* Voice Message */
+        .voice-message {
+            background: linear-gradient(to right, rgba(47, 38, 68, 0.05), transparent);
+            padding: 1rem;
+            border-radius: 0.5rem;
+            border-left: 4px solid #2f2644;
+        }
+
+        .voice-message .message-type-header i {
+            color: #2f2644;
+        }
+
+        .voice-message .message-type-header span {
+            color: #2f2644;
+            font-weight: 500;
+            font-size: 0.875rem;
+        }
+
+        .voice-player {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 0.75rem;
+        }
+
+        .play-btn {
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 50%;
+            border: none;
+            background: rgba(47, 38, 68, 0.2);
+            color: #2f2644;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .play-btn:hover,
+        .play-btn.playing {
+            background: #2f2644;
+            color: white;
+        }
+
+        .play-btn.playing i::before {
+            content: "\f04c";
+        }
+
+        .waveform {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 0.125rem;
+            height: 2rem;
+        }
+
+        .wave-bar {
+            width: 0.25rem;
+            background: rgba(47, 38, 68, 0.3);
+            border-radius: 9999px;
+            transition: all 0.15s ease;
+        }
+
+        .wave-bar.active {
+            background: #2f2644;
+            animation: pulse 0.5s ease-in-out;
+        }
+
+        .voice-info {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: rgba(47, 38, 68, 0.7);
+            font-size: 0.875rem;
+            font-family: 'Courier New', monospace;
+        }
+
+        /* No Results */
+        .no-results {
+            text-align: center;
+            padding: 3rem 1rem;
+        }
+
+        .no-results-content {
+            background: white;
+            border: 1px solid rgba(242, 65, 115, 0.2);
+            border-radius: 0.5rem;
+            padding: 3rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .no-results i {
+            font-size: 3rem;
+            color: rgba(242, 65, 115, 0.5);
+            margin-bottom: 1rem;
+        }
+
+        .no-results-title {
+            color: rgba(47, 38, 68, 0.7);
+            font-size: 1.125rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .no-results-subtitle {
+            color: rgba(47, 38, 68, 0.5);
+            font-size: 0.875rem;
+        }
+
+        /* Footer */
+        .footer {
+            position: relative;
+            z-index: 10;
+            border-top: 1px solid rgba(242, 65, 115, 0.1);
+            background: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(4px);
+            padding: 2rem 0;
+        }
+
+        .footer-container {
+            max-width: 64rem;
+            margin: 0 auto;
+            padding: 0 1rem;
+            text-align: center;
+        }
+
+        .footer-heart {
+            font-size: 2rem;
+            color: #f24173;
+            margin-bottom: 0.75rem;
+        }
+
+        .footer-message {
+            color: rgba(47, 38, 68, 0.7);
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-credit {
+            color: rgba(47, 38, 68, 0.5);
+            font-size: 0.875rem;
+        }
+
+        .kuuwaa-link {
+            color: #f24173;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .kuuwaa-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Utility Classes */
+        .hidden {
+            display: none !important;
+        }
+
+        /* Animations */
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(1.25rem);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive Design */
+        @media (min-width: 640px) {
+            .filters-container {
+                flex-direction: row;
+                justify-content: space-between;
+            }
+            
+            .header-title h1 {
+                font-size: 3rem;
+            }
+            
+            .spacer {
+                display: block;
+            }
+        }
+
+        @media (min-width: 768px) {
+            .message-content {
+                padding: 2rem;
+            }
+            
+            .header-nav {
+                margin-bottom: 2rem;
+            }
+        }
+
+        @media (max-width: 639px) {
+            .spacer {
+                display: none;
+            }
+            
+            .header-nav {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+            
+            .back-btn {
+                align-self: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Decorative Background -->
+    <div class="decorative-bg">
+        <div class="bg-circle bg-circle-1"></div>
+        <div class="bg-circle bg-circle-2"></div>
+        <div class="bg-circle bg-circle-3"></div>
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-container">
+            <div class="header-nav">
+                <button class="back-btn" onclick="window.history.back()">
+                    <i class="fas fa-arrow-left"></i> Retour à l'invitation
+                </button>
+                <div class="header-title">
+                    <h1>Livre d'or</h1>
+                    <div class="title-underline"></div>
+                </div>
+                <div class="spacer"></div>
+            </div>
+            
+            <div class="header-subtitle">
+                <p class="subtitle-main">Messages d'amour pour Serge & Deborah</p>
+                <p class="subtitle-count"><span id="message-count">6</span> messages</p>
+            </div>
+        </div>
+    </header>
+
+    <!-- Filters and Search -->
+    <section class="filters-section">
+        <div class="filters-container">
+            <div class="search-container">
+                <div class="search-input-wrapper">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" id="search-input" placeholder="Rechercher dans les messages..." class="search-input">
+                </div>
+            </div>
+            
+            <div class="filter-buttons">
+                <button class="filter-btn active" data-filter="all">Tous</button>
+                <button class="filter-btn" data-filter="written">Écrits</button>
+                <button class="filter-btn" data-filter="voice">Vocaux</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Messages -->
+    <main class="messages-section">
+        <div class="messages-container">
+            <div id="messages-list" class="messages-list">
+                <!-- Message 1 -->
+                <div class="message-card" data-type="both">
+                    <div class="message-header">
+                        <div class="message-author">
+                            <div class="author-avatar">MD</div>
+                            <div class="author-info">
+                                <h3 class="author-name">Marie & Pierre Dubois</h3>
+                                <p class="message-time">Il y a 2 heures</p>
+                            </div>
+                        </div>
+                        <div class="message-indicators">
+                            <div class="indicator written-indicator"></div>
+                            <div class="indicator voice-indicator"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="message-content">
+                        <!-- Written Message -->
+                        <div class="written-message">
+                            <div class="message-type-header">
+                                <i class="fas fa-heart"></i>
+                                <span>Message écrit</span>
+                            </div>
+                            <p class="message-text">Félicitations à vous deux ! Nous sommes si heureux de partager ce moment magique avec vous. Que votre amour grandisse chaque jour davantage ! Nous avons hâte de danser à votre mariage et de célébrer votre union. Vous formez un couple magnifique ! ❤️</p>
+                        </div>
+                        
+                        <!-- Voice Message -->
+                        <div class="voice-message">
+                            <div class="message-type-header">
+                                <i class="fas fa-microphone"></i>
+                                <span>Message vocal</span>
+                            </div>
+                            <div class="voice-player">
+                                <button class="play-btn" data-message-id="1">
+                                    <i class="fas fa-play"></i>
+                                </button>
+                                <div class="waveform">
+                                    <div class="wave-bar" style="height: 12px;"></div>
+                                    <div class="wave-bar" style="height: 20px;"></div>
+                                    <div class="wave-bar" style="height: 16px;"></div>
+                                    <div class="wave-bar" style="height: 24px;"></div>
+                                    <div class="wave-bar" style="height: 18px;"></div>
+                                    <div class="wave-bar" style="height: 22px;"></div>
+                                    <div class="wave-bar" style="height: 14px;"></div>
+                                    <div class="wave-bar" style="height: 28px;"></div>
+                                    <div class="wave-bar" style="height: 16px;"></div>
+                                    <div class="wave-bar" style="height: 20px;"></div>
+                                    <div class="wave-bar" style="height: 12px;"></div>
+                                    <div class="wave-bar" style="height: 26px;"></div>
+                                    <div class="wave-bar" style="height: 18px;"></div>
+                                    <div class="wave-bar" style="height: 22px;"></div>
+                                    <div class="wave-bar" style="height: 14px;"></div>
+                                    <div class="wave-bar" style="height: 20px;"></div>
+                                    <div class="wave-bar" style="height: 16px;"></div>
+                                    <div class="wave-bar" style="height: 24px;"></div>
+                                    <div class="wave-bar" style="height: 12px;"></div>
+                                    <div class="wave-bar" style="height: 18px;"></div>
+                                </div>
+                                <div class="voice-info">
+                                    <i class="fas fa-volume-up"></i>
+                                    <span class="duration">2:15</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Message 2 -->
+                <div class="message-card" data-type="written">
+                    <div class="message-header">
+                        <div class="message-author">
+                            <div class="author-avatar">FM</div>
+                            <div class="author-info">
+                                <h3 class="author-name">Famille Martin</h3>
+                                <p class="message-time">Il y a 5 heures</p>
+                            </div>
+                        </div>
+                        <div class="message-indicators">
+                            <div class="indicator written-indicator"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="message-content">
+                        <div class="written-message">
+                            <div class="message-type-header">
+                                <i class="fas fa-heart"></i>
+                                <span>Message écrit</span>
+                            </div>
+                            <p class="message-text">Toutes nos félicitations pour cette belle union ! Nous vous souhaitons tout le bonheur du monde. Vivement la fête ! Que cette journée soit remplie de joie, d'amour et de moments inoubliables. 🎉</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Message 3 -->
+                <div class="message-card" data-type="both">
+                    <div class="message-header">
+                        <div class="message-author">
+                            <div class="author-avatar">SL</div>
+                            <div class="author-info">
+                                <h3 class="author-name">Sophie Leroy</h3>
+                                <p class="message-time">Il y a 1 jour</p>
+                            </div>
+                        </div>
+                        <div class="message-indicators">
+                            <div class="indicator written-indicator"></div>
+                            <div class="indicator voice-indicator"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="message-content">
+                        <div class="written-message">
+                            <div class="message-type-header">
+                                <i class="fas fa-heart"></i>
+                                <span>Message écrit</span>
+                            </div>
+                            <p class="message-text">Mes chers amis, je suis émue aux larmes ! Votre histoire d'amour est si belle. J'ai hâte de danser à votre mariage ! Vous méritez tout le bonheur du monde. 💃</p>
+                        </div>
+                        
+                        <div class="voice-message">
+                            <div class="message-type-header">
+                                <i class="fas fa-microphone"></i>
+                                <span>Message vocal</span>
+                            </div>
+                            <div class="voice-player">
+                                <button class="play-btn" data-message-id="3">
+                                    <i class="fas fa-play"></i>
+                                </button>
+                                <div class="waveform">
+                                    <div class="wave-bar" style="height: 16px;"></div>
+                                    <div class="wave-bar" style="height: 24px;"></div>
+                                    <div class="wave-bar" style="height: 18px;"></div>
+                                    <div class="wave-bar" style="height: 22px;"></div>
+                                    <div class="wave-bar" style="height: 14px;"></div>
+                                    <div class="wave-bar" style="height: 28px;"></div>
+                                    <div class="wave-bar" style="height: 20px;"></div>
+                                    <div class="wave-bar" style="height: 26px;"></div>
+                                    <div class="wave-bar" style="height: 12px;"></div>
+                                    <div class="wave-bar" style="height: 24px;"></div>
+                                    <div class="wave-bar" style="height: 18px;"></div>
+                                    <div class="wave-bar" style="height: 22px;"></div>
+                                    <div class="wave-bar" style="height: 16px;"></div>
+                                    <div class="wave-bar" style="height: 20px;"></div>
+                                    <div class="wave-bar" style="height: 14px;"></div>
+                                    <div class="wave-bar" style="height: 26px;"></div>
+                                    <div class="wave-bar" style="height: 18px;"></div>
+                                    <div class="wave-bar" style="height: 24px;"></div>
+                                    <div class="wave-bar" style="height: 12px;"></div>
+                                    <div class="wave-bar" style="height: 20px;"></div>
+                                </div>
+                                <div class="voice-info">
+                                    <i class="fas fa-volume-up"></i>
+                                    <span class="duration">1:45</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Message 4 -->
+                <div class="message-card" data-type="voice">
+                    <div class="message-header">
+                        <div class="message-author">
+                            <div class="author-avatar">GJ</div>
+                            <div class="author-info">
+                                <h3 class="author-name">Grand-mère Jeanne</h3>
+                                <p class="message-time">Il y a 2 jours</p>
+                            </div>
+                        </div>
+                        <div class="message-indicators">
+                            <div class="indicator voice-indicator"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="message-content">
+                        <div class="voice-message">
+                            <div class="message-type-header">
+                                <i class="fas fa-microphone"></i>
+                                <span>Message vocal</span>
+                            </div>
+                            <div class="voice-player">
+                                <button class="play-btn" data-message-id="4">
+                                    <i class="fas fa-play"></i>
+                                </button>
+                                <div class="waveform">
+                                    <div class="wave-bar" style="height: 20px;"></div>
+                                    <div class="wave-bar" style="height: 28px;"></div>
+                                    <div class="wave-bar" style="height: 16px;"></div>
+                                    <div class="wave-bar" style="height: 24px;"></div>
+                                    <div class="wave-bar" style="height: 18px;"></div>
+                                    <div class="wave-bar" style="height: 26px;"></div>
+                                    <div class="wave-bar" style="height: 14px;"></div>
+                                    <div class="wave-bar" style="height: 30px;"></div>
+                                    <div class="wave-bar" style="height: 22px;"></div>
+                                    <div class="wave-bar" style="height: 28px;"></div>
+                                    <div class="wave-bar" style="height: 16px;"></div>
+                                    <div class="wave-bar" style="height: 24px;"></div>
+                                    <div class="wave-bar" style="height: 20px;"></div>
+                                    <div class="wave-bar" style="height: 26px;"></div>
+                                    <div class="wave-bar" style="height: 18px;"></div>
+                                    <div class="wave-bar" style="height: 22px;"></div>
+                                    <div class="wave-bar" style="height: 14px;"></div>
+                                    <div class="wave-bar" style="height: 28px;"></div>
+                                    <div class="wave-bar" style="height: 16px;"></div>
+                                    <div class="wave-bar" style="height: 24px;"></div>
+                                </div>
+                                <div class="voice-info">
+                                    <i class="fas fa-volume-up"></i>
+                                    <span class="duration">3:22</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Message 5 -->
+                <div class="message-card" data-type="written">
+                    <div class="message-header">
+                        <div class="message-author">
+                            <div class="author-avatar">CB</div>
+                            <div class="author-info">
+                                <h3 class="author-name">Les Collègues de Bureau</h3>
+                                <p class="message-time">Il y a 3 jours</p>
+                            </div>
+                        </div>
+                        <div class="message-indicators">
+                            <div class="indicator written-indicator"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="message-content">
+                        <div class="written-message">
+                            <div class="message-type-header">
+                                <i class="fas fa-heart"></i>
+                                <span>Message écrit</span>
+                            </div>
+                            <p class="message-text">Félicitations de toute l'équipe ! Nous sommes ravis pour vous deux. Profitez bien de cette journée exceptionnelle et de votre lune de miel ! On a hâte de voir les photos ! 📸</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Message 6 -->
+                <div class="message-card" data-type="both">
+                    <div class="message-header">
+                        <div class="message-author">
+                            <div class="author-avatar">TI</div>
+                            <div class="author-info">
+                                <h3 class="author-name">Tante Isabelle</h3>
+                                <p class="message-time">Il y a 4 jours</p>
+                            </div>
+                        </div>
+                        <div class="message-indicators">
+                            <div class="indicator written-indicator"></div>
+                            <div class="indicator voice-indicator"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="message-content">
+                        <div class="written-message">
+                            <div class="message-type-header">
+                                <i class="fas fa-heart"></i>
+                                <span>Message écrit</span>
+                            </div>
+                            <p class="message-text">Mes chéris, je suis si fière de vous voir unis ! Que Dieu bénisse votre mariage et vous accorde une vie remplie d'amour, de joie et de prospérité. Vous avez toute ma tendresse. 🙏</p>
+                        </div>
+                        
+                        <div class="voice-message">
+                            <div class="message-type-header">
+                                <i class="fas fa-microphone"></i>
+                                <span>Message vocal</span>
+                            </div>
+                            <div class="voice-player">
+                                <button class="play-btn" data-message-id="6">
+                                    <i class="fas fa-play"></i>
+                                </button>
+                                <div class="waveform">
+                                    <div class="wave-bar" style="height: 18px;"></div>
+                                    <div class="wave-bar" style="height: 26px;"></div>
+                                    <div class="wave-bar" style="height: 22px;"></div>
+                                    <div class="wave-bar" style="height: 30px;"></div>
+                                    <div class="wave-bar" style="height: 16px;"></div>
+                                    <div class="wave-bar" style="height: 24px;"></div>
+                                    <div class="wave-bar" style="height: 20px;"></div>
+                                    <div class="wave-bar" style="height: 28px;"></div>
+                                    <div class="wave-bar" style="height: 14px;"></div>
+                                    <div class="wave-bar" style="height: 26px;"></div>
+                                    <div class="wave-bar" style="height: 18px;"></div>
+                                    <div class="wave-bar" style="height: 24px;"></div>
+                                    <div class="wave-bar" style="height: 22px;"></div>
+                                    <div class="wave-bar" style="height: 28px;"></div>
+                                    <div class="wave-bar" style="height: 16px;"></div>
+                                    <div class="wave-bar" style="height: 30px;"></div>
+                                    <div class="wave-bar" style="height: 20px;"></div>
+                                    <div class="wave-bar" style="height: 26px;"></div>
+                                    <div class="wave-bar" style="height: 18px;"></div>
+                                    <div class="wave-bar" style="height: 24px;"></div>
+                                </div>
+                                <div class="voice-info">
+                                    <i class="fas fa-volume-up"></i>
+                                    <span class="duration">2:58</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- No Results Message -->
+            <div id="no-results" class="no-results hidden">
+                <div class="no-results-content">
+                    <i class="fas fa-heart"></i>
+                    <p class="no-results-title">Aucun message trouvé</p>
+                    <p class="no-results-subtitle">Essayez de modifier vos critères de recherche</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <i class="fas fa-heart footer-heart"></i>
+            <p class="footer-message">Merci à tous nos invités pour ces magnifiques messages d'amour</p>
+            <p class="footer-credit">
+                Créé avec <a href="https://kuuwaa.com" target="_blank" rel="noopener noreferrer" class="kuuwaa-link">KuuWaa</a>
+            </p>
+        </div>
+    </footer>
+
+    <script>
+      // Global variables
+      let showGreeting = true;
+      let isLoading = false;
+      let isOpen = false;
+      let showContent = false;
+      let isRecording = false;
+      let rsvpConfirmed = false;
+      let rsvpResponse = '';
+
+      // Initialize the application
+      document.addEventListener('DOMContentLoaded', function() {
+          initializeInvitation();
+      });
+
+      function initializeInvitation() {
+          // Start the sequence
+          setTimeout(() => {
+              showGreeting = false;
+              document.getElementById('greeting-screen').classList.add('hidden');
+              
+              isLoading = true;
+              document.getElementById('loader-screen').classList.remove('hidden');
+              
+              // Loading phase (2 seconds)
+              setTimeout(() => {
+                  isLoading = false;
+                  document.getElementById('loader-screen').classList.add('hidden');
+                  
+                  setTimeout(() => {
+                      isOpen = true;
+                      document.getElementById('opening-animation').classList.remove('hidden');
+                      startOpeningAnimation();
+                      
+                      setTimeout(() => {
+                          showContent = true;
+                          document.getElementById('guest-name').classList.remove('hidden');
+                          document.getElementById('main-content').classList.remove('hidden');
+                          document.getElementById('main-content').classList.add('show');
+                          document.getElementById('opening-animation').classList.add('hidden');
+                      }, 1500);
+                  }, 500);
+              }, 2000);
+          }, 3000);
+      }
+
+      function startOpeningAnimation() {
+          const kaleidoscope = document.querySelector('.kaleidoscope');
+          const curtains = document.querySelectorAll('.curtain');
+          const centralReveal = document.querySelector('.central-reveal');
+          
+          // Animate kaleidoscope
+          setTimeout(() => {
+              kaleidoscope.style.opacity = '0';
+              kaleidoscope.style.transform = 'scale(1.5) rotate(180deg)';
+          }, 100);
+          
+          // Animate curtains
+          setTimeout(() => {
+              curtains[0].style.transform = 'translateY(-100%)';
+              curtains[1].style.transform = 'translateY(100%)';
+          }, 200);
+          
+          // Show central reveal
+          setTimeout(() => {
+              centralReveal.style.opacity = '1';
+          }, 800);
+          
+          // Create sparkles
+          createSparkles();
+      }
+
+      function createSparkles() {
+          const sparklesContainer = document.querySelector('.sparkles');
+          for (let i = 0; i < 20; i++) {
+              const sparkle = document.createElement('div');
+              sparkle.style.position = 'absolute';
+              sparkle.style.width = '0.5rem';
+              sparkle.style.height = '0.5rem';
+              sparkle.style.background = 'white';
+              sparkle.style.borderRadius = '50%';
+              sparkle.style.left = Math.random() * 100 + '%';
+              sparkle.style.top = Math.random() * 100 + '%';
+              sparkle.style.animation = `ping ${1 + Math.random()}s infinite`;
+              sparkle.style.animationDelay = Math.random() * 2 + 's';
+              sparklesContainer.appendChild(sparkle);
+          }
+      }
+
+      function scrollToContent() {
+          document.getElementById('interactive-content').scrollIntoView({
+              behavior: 'smooth'
+          });
+      }
+
+      function handleRSVP(response) {
+          rsvpConfirmed = true;
+          rsvpResponse = response;
+          
+          const rsvpForm = document.getElementById('rsvp-form');
+          const rsvpConfirmedDiv = document.getElementById('rsvp-confirmed');
+          const rsvpMessage = document.getElementById('rsvp-message');
+          
+          rsvpForm.classList.add('hidden');
+          rsvpConfirmedDiv.classList.remove('hidden');
+          
+          if (response === 'present') {
+              rsvpMessage.className = 'rsvp-message present';
+              rsvpMessage.innerHTML = `
+                  <i class="fas fa-check"></i>
+                  <div class="message-title">Merci Mr Daniel Mwema ! Nous sommes ravis de savoir que vous serez présent(e) pour partager ce moment unique avec nous.</div>
+                  <div class="message-subtitle">Votre présence confirmée • Nous avons hâte de vous voir !</div>
+              `;
+          } else {
+              rsvpMessage.className = 'rsvp-message absent';
+              rsvpMessage.innerHTML = `
+                  <i class="fas fa-times"></i>
+                  <div class="message-title">Merci Mr Daniel Mwema pour votre réponse. Nous regrettons que vous ne puissiez pas être présent(e), mais nous comprenons parfaitement.</div>
+                  <div class="message-subtitle">Absence confirmée • Vous serez dans nos pensées</div>
+              `;
+          }
+      }
+
+      function modifyRSVP() {
+          rsvpConfirmed = false;
+          rsvpResponse = '';
+          
+          const rsvpForm = document.getElementById('rsvp-form');
+          const rsvpConfirmedDiv = document.getElementById('rsvp-confirmed');
+          
+          rsvpForm.classList.remove('hidden');
+          rsvpConfirmedDiv.classList.add('hidden');
+      }
+
+      function toggleRecording() {
+          isRecording = !isRecording;
+          
+          const recordBtn = document.getElementById('record-btn');
+          const recordingIndicator = document.getElementById('recording-indicator');
+          
+          if (isRecording) {
+              recordBtn.innerHTML = '<i class="fas fa-microphone-slash"></i> Arrêter l\'enregistrement';
+              recordBtn.classList.add('recording');
+              recordingIndicator.classList.remove('hidden');
+          } else {
+              recordBtn.innerHTML = '<i class="fas fa-microphone"></i> Enregistrer un message';
+              recordBtn.classList.remove('recording');
+              recordingIndicator.classList.add('hidden');
+          }
+      }
+
+      function submitWrittenMessage() {
+          const textarea = document.getElementById('written-message');
+          const message = textarea.value.trim();
+          
+          if (message) {
+              // Here you would typically send the message to a server
+              alert('Message envoyé avec succès !');
+              textarea.value = '';
+          } else {
+              alert('Veuillez écrire un message avant de l\'envoyer.');
+          }
+      }
+
+      // Add smooth scrolling for all anchor links
+      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+          anchor.addEventListener('click', function (e) {
+              e.preventDefault();
+              const target = document.querySelector(this.getAttribute('href'));
+              if (target) {
+                  target.scrollIntoView({
+                      behavior: 'smooth'
+                  });
+              }
+          });
+      });
+    </script>
+    <script>
+      // Global variables
+      let currentFilter = 'all';
+      let searchTerm = '';
+      let playingVoice = null;
+
+      // Initialize the guestbook
+      document.addEventListener('DOMContentLoaded', function() {
+          initializeGuestbook();
+          setupEventListeners();
+      });
+
+      function initializeGuestbook() {
+          updateMessageCount();
+          
+          // Show content with animation
+          setTimeout(() => {
+              const messagesList = document.querySelector('.messages-list');
+              messagesList.style.opacity = '1';
+              messagesList.style.transform = 'translateY(0)';
+          }, 500);
+      }
+
+      function setupEventListeners() {
+          // Search functionality
+          const searchInput = document.getElementById('search-input');
+          searchInput.addEventListener('input', function(e) {
+              searchTerm = e.target.value.toLowerCase();
+              filterMessages();
+          });
+          
+          // Filter buttons
+          const filterButtons = document.querySelectorAll('.filter-btn');
+          filterButtons.forEach(button => {
+              button.addEventListener('click', function() {
+                  // Remove active class from all buttons
+                  filterButtons.forEach(btn => btn.classList.remove('active'));
+                  
+                  // Add active class to clicked button
+                  this.classList.add('active');
+                  
+                  // Update filter
+                  currentFilter = this.dataset.filter;
+                  filterMessages();
+              });
+          });
+          
+          // Voice player buttons
+          const playButtons = document.querySelectorAll('.play-btn');
+          playButtons.forEach(button => {
+              button.addEventListener('click', function() {
+                  const messageId = this.dataset.messageId;
+                  toggleVoicePlay(messageId, this);
+              });
+          });
+      }
+
+      function filterMessages() {
+          const messageCards = document.querySelectorAll('.message-card');
+          const noResults = document.getElementById('no-results');
+          let visibleCount = 0;
+          
+          messageCards.forEach(card => {
+              const authorName = card.querySelector('.author-name').textContent.toLowerCase();
+              const messageText = card.querySelector('.message-text');
+              const messageContent = messageText ? messageText.textContent.toLowerCase() : '';
+              const messageType = card.dataset.type;
+              
+              // Check search term
+              const matchesSearch = searchTerm === '' || 
+                  authorName.includes(searchTerm) || 
+                  messageContent.includes(searchTerm);
+              
+              // Check filter
+              const matchesFilter = currentFilter === 'all' ||
+                  (currentFilter === 'written' && (messageType === 'written' || messageType === 'both')) ||
+                  (currentFilter === 'voice' && (messageType === 'voice' || messageType === 'both'));
+              
+              if (matchesSearch && matchesFilter) {
+                  card.style.display = 'block';
+                  visibleCount++;
+              } else {
+                  card.style.display = 'none';
+              }
+          });
+          
+          // Show/hide no results message
+          if (visibleCount === 0) {
+              noResults.classList.remove('hidden');
+          } else {
+              noResults.classList.add('hidden');
+          }
+          
+          // Update message count
+          document.getElementById('message-count').textContent = visibleCount;
+      }
+
+      function toggleVoicePlay(messageId, button) {
+          const waveform = button.parentElement.querySelector('.waveform');
+          const waveBars = waveform.querySelectorAll('.wave-bar');
+          
+          if (playingVoice === messageId) {
+              // Stop playing
+              playingVoice = null;
+              button.classList.remove('playing');
+              button.innerHTML = '<i class="fas fa-play"></i>';
+              
+              // Stop wave animation
+              waveBars.forEach(bar => {
+                  bar.classList.remove('active');
+              });
+          } else {
+              // Stop any currently playing voice
+              if (playingVoice) {
+                  const currentButton = document.querySelector(`[data-message-id="${playingVoice}"]`);
+                  if (currentButton) {
+                      currentButton.classList.remove('playing');
+                      currentButton.innerHTML = '<i class="fas fa-play"></i>';
+                      
+                      const currentWaveform = currentButton.parentElement.querySelector('.waveform');
+                      const currentWaveBars = currentWaveform.querySelectorAll('.wave-bar');
+                      currentWaveBars.forEach(bar => {
+                          bar.classList.remove('active');
+                      });
+                  }
+              }
+              
+              // Start playing
+              playingVoice = messageId;
+              button.classList.add('playing');
+              button.innerHTML = '<i class="fas fa-pause"></i>';
+              
+              // Start wave animation
+              animateWaveform(waveBars);
+              
+              // Simulate audio duration (in a real app, this would be based on actual audio)
+              const duration = getDurationForMessage(messageId);
+              setTimeout(() => {
+                  if (playingVoice === messageId) {
+                      playingVoice = null;
+                      button.classList.remove('playing');
+                      button.innerHTML = '<i class="fas fa-play"></i>';
+                      
+                      waveBars.forEach(bar => {
+                          bar.classList.remove('active');
+                      });
+                  }
+              }, duration);
+          }
+      }
+
+      function animateWaveform(waveBars) {
+          let currentBar = 0;
+          const interval = setInterval(() => {
+              if (playingVoice === null) {
+                  clearInterval(interval);
+                  return;
+              }
+              
+              // Remove active class from previous bars
+              waveBars.forEach(bar => bar.classList.remove('active'));
+              
+              // Add active class to current bars
+              for (let i = 0; i <= currentBar && i < waveBars.length; i++) {
+                  if (Math.random() > 0.3) { // Random activation for more natural look
+                      waveBars[i].classList.add('active');
+                  }
+              }
+              
+              currentBar = (currentBar + 1) % waveBars.length;
+          }, 100);
+      }
+
+      function getDurationForMessage(messageId) {
+          // Simulate different durations for different messages
+          const durations = {
+              '1': 135000, // 2:15
+              '3': 105000, // 1:45
+              '4': 202000, // 3:22
+              '6': 178000  // 2:58
+          };
+          return durations[messageId] || 120000; // Default 2 minutes
+      }
+
+      function updateMessageCount() {
+          const messageCards = document.querySelectorAll('.message-card');
+          document.getElementById('message-count').textContent = messageCards.length;
+      }
+
+      // Add smooth scrolling
+      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+          anchor.addEventListener('click', function (e) {
+              e.preventDefault();
+              const target = document.querySelector(this.getAttribute('href'));
+              if (target) {
+                  target.scrollIntoView({
+                      behavior: 'smooth'
+                  });
+              }
+          });
+      });
+    </script>
+</body>
+</html>

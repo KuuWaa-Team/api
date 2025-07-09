@@ -182,7 +182,6 @@ class InvitationController extends AbstractController
         ]);
     }
 
-
     #[Route('/api/invitations/{slug}/music-choice', name: 'app_invitation_music_choice', methods: ['POST'])]
     public function musicChoice(
         string $slug,
@@ -198,6 +197,45 @@ class InvitationController extends AbstractController
         $musicChoice = $request->request->get('music_choice');
         $invitation->setMusicChoice($musicChoice);
 
+        $invitationRepository->save($invitation);
+
+        return new JsonResponse([
+            'success' => true,
+        ]);
+    }
+
+    #[Route('/api/invitations/{slug}/play-music', name: 'app_invitation_play_music', methods: ['POST'])]
+    public function playMusic(
+        string $slug,
+        InvitationRepository $invitationRepository,
+    ): JsonResponse {
+        $invitation = $invitationRepository->findOneBy(['slug' => $slug]);
+
+        if (!$invitation) {
+            return new JsonResponse(['success' => false, 'message' => 'Invitation non trouvée.'], 404);
+        }
+
+        $invitation->setMusicPlayed(true);
+        $invitationRepository->save($invitation);
+
+        return new JsonResponse([
+            'success' => true,
+        ]);
+    }
+
+
+    #[Route('/api/invitations/{slug}/unplay-music', name: 'app_invitation_unplay_music', methods: ['POST'])]
+    public function unplayMusic(
+        string $slug,
+        InvitationRepository $invitationRepository,
+    ): JsonResponse {
+        $invitation = $invitationRepository->findOneBy(['slug' => $slug]);
+
+        if (!$invitation) {
+            return new JsonResponse(['success' => false, 'message' => 'Invitation non trouvée.'], 404);
+        }
+
+        $invitation->setMusicPlayed(false);
         $invitationRepository->save($invitation);
 
         return new JsonResponse([

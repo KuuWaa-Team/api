@@ -31,7 +31,6 @@ use App\Controller\Event\CreateEventController;
 use App\Controller\Event\DeleteEventController;
 use App\Controller\Event\ListingEventInvitationsController;
 use App\Controller\Event\ListingEventTablesController;
-use App\Entity\Question\Question;
 use App\Repository\EventRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -447,13 +446,6 @@ class Event
     private ?string $placeLatitude = null;
 
     /**
-     * @var Collection<int, Question>
-     */
-    #[ORM\OneToMany(mappedBy: 'event', targetEntity: Question::class)]
-    #[Groups(['invitation:fRead'])]
-    private Collection $questions;
-
-    /**
      * @var Collection<int, Gift>
      */
     #[ORM\OneToMany(mappedBy: 'event', targetEntity: Gift::class)]
@@ -488,7 +480,6 @@ class Event
         $this->beverages = new ArrayCollection();
         $this->eventAdmins = new ArrayCollection();
         $this->books = new ArrayCollection();
-        $this->questions = new ArrayCollection();
         $this->gifts = new ArrayCollection();
         $this->eventSpecifications = new ArrayCollection();
     }
@@ -953,36 +944,6 @@ class Event
     public function setPlaceLatitude(?string $placeLatitude): static
     {
         $this->placeLatitude = $placeLatitude;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Question>
-     */
-    public function getQuestions(): Collection
-    {
-        return $this->questions;
-    }
-
-    public function addQuestion(Question $question): static
-    {
-        if (!$this->questions->contains($question)) {
-            $this->questions->add($question);
-            $question->setEvent($this);
-        }
-
-        return $this;
-    }
-
-    public function removeQuestion(Question $question): static
-    {
-        if ($this->questions->removeElement($question)) {
-            // set the owning side to null (unless already changed)
-            if ($question->getEvent() === $this) {
-                $question->setEvent(null);
-            }
-        }
 
         return $this;
     }
