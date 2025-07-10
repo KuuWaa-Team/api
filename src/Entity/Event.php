@@ -18,6 +18,7 @@ use App\Controller\Event\OpenBookController;
 use App\Controller\Event\OpenTablesController;
 use App\Entity\Event\Book;
 use App\Entity\Event\EventAdmin;
+use App\Entity\Event\GameQuestion;
 use App\Entity\Event\Gift;
 use App\Entity\Event\EventSpecification;
 use App\Entity\Event\EventTemplate;
@@ -460,6 +461,12 @@ class Event
     #[ORM\Column(nullable: true)]
     private ?bool $hasGift = null;
 
+    /**
+     * @var Collection<int, GameQuestion>
+     */
+    #[ORM\OneToMany(mappedBy: 'event', targetEntity: GameQuestion::class)]
+    private Collection $questions;
+
     public function getImagePath(): ?string
     {
         return $this->imagePath;
@@ -482,6 +489,7 @@ class Event
         $this->books = new ArrayCollection();
         $this->gifts = new ArrayCollection();
         $this->eventSpecifications = new ArrayCollection();
+        $this->questions = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -1010,6 +1018,36 @@ class Event
     public function setHasGift(?bool $hasGift): static
     {
         $this->hasGift = $hasGift;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, GameQuestion>
+     */
+    public function getQuestions(): Collection
+    {
+        return $this->questions;
+    }
+
+    public function addQuestion(GameQuestion $question): static
+    {
+        if (!$this->questions->contains($question)) {
+            $this->questions->add($question);
+            $question->setEvent($this);
+        }
+
+        return $this;
+    }
+
+    public function removeQuestion(GameQuestion $question): static
+    {
+        if ($this->questions->removeElement($question)) {
+            // set the owning side to null (unless already changed)
+            if ($question->getEvent() === $this) {
+                $question->setEvent(null);
+            }
+        }
 
         return $this;
     }

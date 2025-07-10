@@ -3,6 +3,8 @@
 namespace App\Entity\Event;
 
 use App\Repository\Event\GameAssertionRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: GameAssertionRepository::class)]
@@ -21,6 +23,17 @@ class GameAssertion
 
     #[ORM\Column(nullable: true)]
     private ?bool $isCorrect = null;
+
+    /**
+     * @var Collection<int, GameResponse>
+     */
+    #[ORM\OneToMany(mappedBy: 'assertion', targetEntity: GameResponse::class)]
+    private Collection $gameResponses;
+
+    public function __construct()
+    {
+        $this->gameResponses = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -59,6 +72,36 @@ class GameAssertion
     public function setIsCorrect(?bool $isCorrect): static
     {
         $this->isCorrect = $isCorrect;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, GameResponse>
+     */
+    public function getGameResponses(): Collection
+    {
+        return $this->gameResponses;
+    }
+
+    public function addGameResponse(GameResponse $gameResponse): static
+    {
+        if (!$this->gameResponses->contains($gameResponse)) {
+            $this->gameResponses->add($gameResponse);
+            $gameResponse->setAssertion($this);
+        }
+
+        return $this;
+    }
+
+    public function removeGameResponse(GameResponse $gameResponse): static
+    {
+        if ($this->gameResponses->removeElement($gameResponse)) {
+            // set the owning side to null (unless already changed)
+            if ($gameResponse->getAssertion() === $this) {
+                $gameResponse->setAssertion(null);
+            }
+        }
 
         return $this;
     }

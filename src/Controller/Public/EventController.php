@@ -28,7 +28,7 @@ use Symfony\Component\Process\Process;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\String\Slugger\SluggerInterface;
 
-class InvitationController extends AbstractController
+class EventController extends AbstractController
 {
     public function __construct(
         private readonly ApiService $apiService,

@@ -17,6 +17,7 @@ use App\Controller\Invitation\SendAllController;
 use App\Controller\Invitation\SendInvitationController;
 use App\Controller\Invitation\ValidateController;
 use App\Entity\Event\Book;
+use App\Entity\Event\GameResponse;
 use App\Entity\Event\Gift;
 use App\Entity\Event\Photo;
 use App\Repository\InvitationRepository;
@@ -279,12 +280,19 @@ class Invitation
     #[Groups(["invitation:pRead", 'table:pRead', 'invitation:fRead', 'event:pRead', 'event:fRead'])]
     private ?bool $musicPlayed = null;
 
+    /**
+     * @var Collection<int, GameResponse>
+     */
+    #[ORM\OneToMany(mappedBy: 'invitation', targetEntity: GameResponse::class)]
+    private Collection $gameResponses;
+
     public function __construct()
     {
         $this->invitations = new ArrayCollection();
         $this->gifts = new ArrayCollection();
         $this->beverages = new ArrayCollection();
         $this->photos = new ArrayCollection();
+        $this->gameResponses = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -596,6 +604,36 @@ class Invitation
     public function setMusicPlayed(?bool $musicPlayed): static
     {
         $this->musicPlayed = $musicPlayed;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, GameResponse>
+     */
+    public function getGameResponses(): Collection
+    {
+        return $this->gameResponses;
+    }
+
+    public function addGameResponse(GameResponse $gameResponse): static
+    {
+        if (!$this->gameResponses->contains($gameResponse)) {
+            $this->gameResponses->add($gameResponse);
+            $gameResponse->setInvitation($this);
+        }
+
+        return $this;
+    }
+
+    public function removeGameResponse(GameResponse $gameResponse): static
+    {
+        if ($this->gameResponses->removeElement($gameResponse)) {
+            // set the owning side to null (unless already changed)
+            if ($gameResponse->getInvitation() === $this) {
+                $gameResponse->setInvitation(null);
+            }
+        }
 
         return $this;
     }

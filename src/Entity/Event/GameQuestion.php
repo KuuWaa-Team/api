@@ -2,6 +2,7 @@
 
 namespace App\Entity\Event;
 
+use App\Entity\Event;
 use App\Repository\Event\GameQuestionRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -24,9 +25,19 @@ class GameQuestion
     #[ORM\OneToMany(mappedBy: 'question', targetEntity: GameAssertion::class)]
     private Collection $gameAssertions;
 
+    #[ORM\ManyToOne(inversedBy: 'questions')]
+    private ?Event $event = null;
+
+    /**
+     * @var Collection<int, GameResponse>
+     */
+    #[ORM\OneToMany(mappedBy: 'question', targetEntity: GameResponse::class)]
+    private Collection $gameResponse;
+
     public function __construct()
     {
         $this->gameAssertions = new ArrayCollection();
+        $this->gameResponse = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -70,6 +81,48 @@ class GameQuestion
             // set the owning side to null (unless already changed)
             if ($gameAssertion->getQuestion() === $this) {
                 $gameAssertion->setQuestion(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getEvent(): ?Event
+    {
+        return $this->event;
+    }
+
+    public function setEvent(?Event $event): static
+    {
+        $this->event = $event;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, GameResponse>
+     */
+    public function getAssertion(): Collection
+    {
+        return $this->gameResponse;
+    }
+
+    public function addAssertion(GameResponse $gameResponse): static
+    {
+        if (!$this->gameResponse->contains($gameResponse)) {
+            $this->gameResponse->add($gameResponse);
+            $gameResponse->setQuestion($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAssertion(GameResponse $gameResponse): static
+    {
+        if ($this->gameResponse->removeElement($gameResponse)) {
+            // set the owning side to null (unless already changed)
+            if ($gameResponse->getQuestion() === $this) {
+                $gameResponse->setQuestion(null);
             }
         }
 

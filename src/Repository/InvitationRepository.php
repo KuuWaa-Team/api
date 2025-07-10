@@ -110,7 +110,7 @@ class InvitationRepository extends ServiceEntityRepository
     /**
      * @return Invitation[] Returns an array of Invitation objects
      */
-    public function findByEvent(Event $event, bool $wm): array
+    public function findByEvent(Event $event, bool $wm = false): array
     {
         $qb = $this->createQueryBuilder('i')
             ->andWhere('i.event = :event')

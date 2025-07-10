@@ -42,7 +42,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
             name: 'addAdmin',
         ),
         new Post(
-            uriTemplate: '/event-admins/{id}/accept',
+            uriTemplate: '/event-admins/accept',
             controller: AcceptInvitationController::class,
             openapiContext: [
                 'summary' => 'accept invitation',
