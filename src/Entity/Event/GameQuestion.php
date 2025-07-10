@@ -2,30 +2,42 @@
 
 namespace App\Entity\Event;
 
+use ApiPlatform\Metadata\ApiResource;
 use App\Entity\Event;
 use App\Repository\Event\GameQuestionRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: GameQuestionRepository::class)]
+#[ApiResource(
+    collectionOperations: ['post'],
+    itemOperations: [],
+    normalizationContext: ['groups' => ['question:read']],
+    denormalizationContext: ['groups' => ['question:write']]
+)]
 class GameQuestion
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['question:read'])]
     private ?int $id = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['question:read', 'question:write'])]
     private ?int $position = null;
 
     /**
      * @var Collection<int, GameAssertion>
      */
     #[ORM\OneToMany(mappedBy: 'question', targetEntity: GameAssertion::class)]
+    #[Groups(['question:read'])]
     private Collection $gameAssertions;
 
     #[ORM\ManyToOne(inversedBy: 'questions')]
+    #[Groups(['question:read'])]
     private ?Event $event = null;
 
     /**
@@ -33,6 +45,10 @@ class GameQuestion
      */
     #[ORM\OneToMany(mappedBy: 'question', targetEntity: GameResponse::class)]
     private Collection $gameResponse;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['question:read', 'question:write'])]
+    private ?string $title = null;
 
     public function __construct()
     {
@@ -125,6 +141,18 @@ class GameQuestion
                 $gameResponse->setQuestion(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getTitle(): ?string
+    {
+        return $this->title;
+    }
+
+    public function setTitle(?string $title): static
+    {
+        $this->title = $title;
 
         return $this;
     }
