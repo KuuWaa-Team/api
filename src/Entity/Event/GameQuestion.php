@@ -3,6 +3,12 @@
 namespace App\Entity\Event;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Post;
+use App\Controller\Event\Game\AddAssertionToQuestion;
+use App\Controller\Event\Game\DeleteGameQuestionController;
+use App\Controller\Event\Game\EditGameQuestion;
+use App\Controller\Event\Game\RemoveGameAssertion;
+use App\Controller\Event\Game\SetGameAssertionCorrect;
 use App\Entity\Event;
 use App\Repository\Event\GameQuestionRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -11,11 +17,28 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: GameQuestionRepository::class)]
+
 #[ApiResource(
-    collectionOperations: ['post'],
-    itemOperations: [],
-    normalizationContext: ['groups' => ['question:read']],
-    denormalizationContext: ['groups' => ['question:write']]
+    operations: [
+        new Post(
+            uriTemplate: '/game-questions/{id}/add-assertion',
+            controller: AddAssertionToQuestion::class,
+            description: 'add assertion to question',
+            name: 'addAssertionToQuestion',
+        ),
+        new Post(
+            uriTemplate: '/game-questions/{id}/edit',
+            controller: EditGameQuestion::class,
+            description: 'edit game question',
+            name: 'editGameQuestion',
+        ),
+        new Post(
+            uriTemplate: '/game-questions/{id}/remove',
+            controller: DeleteGameQuestionController::class,
+            description: 'remove game question',
+            name: 'removeGameQuestion',
+        ),
+    ]
 )]
 class GameQuestion
 {
@@ -47,7 +70,6 @@ class GameQuestion
     private Collection $gameResponse;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['question:read', 'question:write'])]
     private ?string $title = null;
 
     public function __construct()

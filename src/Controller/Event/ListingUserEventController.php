@@ -7,6 +7,7 @@ use App\Entity\EventCategory;
 use App\Entity\User;
 use App\Repository\Event\EventAdminRepository;
 use App\Repository\EventRepository;
+use App\Repository\UserRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -20,6 +21,7 @@ class ListingUserEventController extends AbstractController
 {
     public function __construct(
         private readonly EventRepository $eventRepository,
+        private readonly UserRepository $userRepository,
         private readonly NormalizerInterface $normalizerInterface,
     ) {
     }
@@ -28,12 +30,21 @@ class ListingUserEventController extends AbstractController
      * @throws ExceptionInterface
      * @throws NonUniqueResultException
      */
-    public function __invoke(User $user): JsonResponse
+    public function __invoke(User $user, Request $request): JsonResponse
     {
         $data = $this->eventRepository->findListableEvents($user);
+        $userData = $this->userRepository->find($user->getId());
+
+        foreach ($data as $event) {
+            if ($event->getUser()->getId() !== $user->getId()) {
+                $event->setShared(true);
+            }
+        }
+
 
         $response = [
             'success' => true,
+            'user'      => $this->normalizerInterface->normalize($userData, null, ['groups' => ['user:pRead']]),
             'data'    => $this->normalizerInterface->normalize($data, null, ['groups' => ['event:pRead']])
         ];
 

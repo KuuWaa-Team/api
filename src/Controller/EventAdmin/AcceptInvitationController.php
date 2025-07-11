@@ -25,7 +25,7 @@ class AcceptInvitationController extends AbstractController
             return $this->json([
                 'success' => false,
                 'message' => 'Requête JSON invalide.'
-            ], Response::HTTP_BAD_REQUEST);
+            ], Response::HTTP_OK);
         }
 
         $code = $content['invitationCode'] ?? null;
@@ -35,7 +35,7 @@ class AcceptInvitationController extends AbstractController
             return $this->json([
                 'success' => false,
                 'message' => 'Le code d\'invitation et l\'identifiant utilisateur sont requis.'
-            ], Response::HTTP_BAD_REQUEST);
+            ], Response::HTTP_OK);
         }
 
         $user = $this->userRepository->find($userId);
@@ -43,7 +43,7 @@ class AcceptInvitationController extends AbstractController
             return $this->json([
                 'success' => false,
                 'message' => 'Utilisateur introuvable.'
-            ], Response::HTTP_NOT_FOUND);
+            ], Response::HTTP_OK);
         }
 
         $eventAdmin = $this->adminRepository->findOneBy(['invitationCode' => $code]);
@@ -51,14 +51,28 @@ class AcceptInvitationController extends AbstractController
             return $this->json([
                 'success' => false,
                 'message' => 'Invitation introuvable.'
-            ], Response::HTTP_NOT_FOUND);
+            ], Response::HTTP_OK);
+        }
+
+        if ($eventAdmin->getUser() !== null) {
+            return $this->json([
+                'success' => false,
+                'message' => 'Invitation expirée.'
+            ], Response::HTTP_OK);
+        }
+
+        if ($user->getId() === $eventAdmin->getEvent()?->getUser()?->getId()) {
+            return $this->json([
+                'success' => false,
+                'message' => 'Vous ne pouvez pas accepter une invitation à votre propre évènement.'
+            ], Response::HTTP_OK);
         }
 
         if ($eventAdmin->getStatus() === 'accepted') {
             return $this->json([
                 'success' => false,
                 'message' => 'Cette invitation a déjà été acceptée.'
-            ], Response::HTTP_CONFLICT);
+            ], Response::HTTP_OK);
         }
 
         $eventAdmin->setUser($user);

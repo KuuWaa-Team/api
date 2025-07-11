@@ -16,6 +16,12 @@ class GameAssertionRepository extends ServiceEntityRepository
         parent::__construct($registry, GameAssertion::class);
     }
 
+    public function save (GameAssertion $assertion, bool $flush = true): void
+    {
+        $this->getEntityManager()->persist($assertion);
+        $this->getEntityManager()->flush();
+    }
+
 //    /**
 //     * @return GameAssertion[] Returns an array of GameAssertion objects
 //     */

@@ -2,12 +2,33 @@
 
 namespace App\Entity\Event;
 
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Post;
+use App\Controller\Event\Game\RemoveGameAssertion;
+use App\Controller\Event\Game\SetGameAssertionCorrect;
 use App\Repository\Event\GameAssertionRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: GameAssertionRepository::class)]
+
+#[ApiResource(
+    operations: [
+        new Post(
+            uriTemplate: '/game-assertions/{id}/set-correct',
+            controller: SetGameAssertionCorrect::class,
+            description: 'Set assertion correct',
+            name: 'setGameAssertionCorrect',
+        ),
+        new Post(
+            uriTemplate: '/game-assertions/{id}/remove',
+            controller: RemoveGameAssertion::class,
+            description: 'Add game question',
+            name: 'removeGameAssertion',
+        ),
+    ]
+)]
 class GameAssertion
 {
     #[ORM\Id]

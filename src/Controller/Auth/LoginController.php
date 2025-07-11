@@ -67,7 +67,7 @@ class LoginController extends AbstractController
             }
 
             $user->setPhoneId($phoneId);
-            $this->userRepository->save($user, true);
+            $this->userRepository->save($user);
 
             if ($new) {
                 $welcomeMessage = "Bienvenue chez KuuWaa!\nLa meuilleur application de gestion d'evenement";

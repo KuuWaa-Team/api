@@ -10,6 +10,8 @@ use App\Controller\Book\AddController;
 use App\Controller\Event\EditEventController;
 use App\Controller\Event\EditEventImageController;
 use App\Controller\Event\EventDetailController;
+use App\Controller\Event\Game\AddGameQuestionController;
+use App\Controller\Event\Game\GameQuestionListController;
 use App\Controller\Event\GenerateBookController;
 use App\Controller\Event\ListingAdminsController;
 use App\Controller\Event\ListingEventBeveragesController;
@@ -287,6 +289,19 @@ use Symfony\Component\Serializer\Annotation\Groups;
             description: 'Generate book',
             name: 'generateBook',
         ),
+        new Get(
+            uriTemplate: '/events/{id}/questions-list',
+            controller: GameQuestionListController::class,
+            description: 'Game Questions List',
+            name: 'gameQuestionsList',
+        ),
+        new Post(
+            uriTemplate: '/events/{id}/add-game-question',
+            controller: AddGameQuestionController::class,
+            description: 'Add game question',
+            deserialize: false,
+            name: 'addGameQuestion'
+        ),
         new Post(
             inputFormats: ['multipart' => ['multipart/form-data']],
             controller: CreateEventController::class,
@@ -379,6 +394,9 @@ class Event
 
     #[Groups(['event:pRead', 'event:fRead'])]
     private ?string $adminStatus = null;
+
+    #[Groups(['event:pRead', 'event:fRead'])]
+    private ?string $adminRoles = null;
 
     #[Groups(['event:pRead', 'event:fRead'])]
     private ?int $adminId = null;
@@ -711,6 +729,19 @@ class Event
         $this->adminStatus = $adminStatus;
 
         return $this;
+    }
+
+
+    public function setAdminRoles(?string $adminRoles): static
+    {
+        $this->adminRoles = $adminRoles;
+
+        return $this;
+    }
+
+    public function getAdminRoles(): ?string
+    {
+        return $this->adminRoles;
     }
 
     public function getAdminId(): ?int

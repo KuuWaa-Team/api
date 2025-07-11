@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-class GameQuestionController extends AbstractController
+class AddGameQuestionController extends AbstractController
 {
     public function __construct(
         private readonly EventRepository $eventRepository,
@@ -23,11 +23,7 @@ class GameQuestionController extends AbstractController
         Request $request,
         Event $event
     ): JsonResponse {
-        if (!$event) {
-            return new JsonResponse(['error' => 'Event not found'], 404);
-        }
-
-        $data = json_decode($request->getContent(), true);
+        $data = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
 
         if (!$data || !isset($data['title']) || !isset($data['assertions']) || !is_array($data['assertions'])) {
             return new JsonResponse(['error' => 'Invalid payload'], 400);
@@ -55,6 +51,7 @@ class GameQuestionController extends AbstractController
         $this->em->flush();
 
         return new JsonResponse([
+            'success' => true,
             'message' => 'Question ajoutée avec succès',
             'question_id' => $question->getId()
         ], 201);

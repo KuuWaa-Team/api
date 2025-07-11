@@ -9,16 +9,13 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class GameQuestionListController extends AbstractController
 {
-    #[Route('/api/event/{id}/questions', name: 'list_game_questions', methods: ['GET'])]
     public function __invoke(Event $event): JsonResponse
     {
-        if (!$event) {
-            return new JsonResponse(['error' => 'Event not found'], 404);
-        }
-
         $questions = $event->getQuestions();
-
-        $response = [];
+        $response = [
+            'success' => true,
+            'data' => []
+        ];
 
         foreach ($questions as $q) {
             $assertions = [];
@@ -31,7 +28,7 @@ class GameQuestionListController extends AbstractController
                 ];
             }
 
-            $response[] = [
+            $response['data'][] = [
                 'id' => $q->getId(),
                 'title' => $q->getTitle(),
                 'position' => $q->getPosition(),

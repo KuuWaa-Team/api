@@ -4,7 +4,9 @@ namespace App\Controller\Invitation;
 
 use App\Entity\Invitation;
 use App\Repository\InvitationRepository;
+use App\Repository\UserRepository;
 use App\Service\ApiService;
+use App\Service\CreditService;
 use App\Service\DateService;
 use App\Service\PhoneService;
 use App\Service\SmsService;
@@ -23,13 +25,11 @@ use Twilio\Exceptions\TwilioException;
 class SendInvitationController extends AbstractController
 {
     public function __construct(
-        private readonly PhoneService  $phoneService,
-        private readonly SmsService $smsService,
         private readonly InvitationRepository $invitationRepository,
         private readonly NormalizerInterface $normalizer,
-        private readonly WhatsappService $whatsappService,
-        private readonly DateService $dateService,
+        private readonly CreditService $creditService,
         private readonly ApiService $apiService,
+        private readonly UserRepository $userRepository,
     )
     {
     }
@@ -42,51 +42,24 @@ class SendInvitationController extends AbstractController
     public function __invoke(Request $request, Invitation $invitation): JsonResponse
     {
         $content = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
-        $method = $content["method"] ?? null;
-        $apiUrl = $this->apiService->getApiUrl();
+        $userId = $content['userId'];
+        $user = $this->userRepository->find($userId);
 
-        if ($invitation->getEvent()->getPaymentStatus() === 'paid') {
-            $phoneNumber = $this->phoneService->format($invitation->getPhoneNumber());
-            if ($method === "sms") {
-                $message = "Bonjour " . $invitation->getCivility() . " " . $invitation->getName();
-                $message .= ",\nVous etes invite a l'evenement \"{$invitation->getEvent()->getName()}\" le " . $this->dateService->getFullDate($invitation->getEvent()->getDate(), true, true) . " a {$invitation->getEvent()->getDate()->format('H:i')}.";
-                $message .= "\n\nPour acceder e votre invitation, veuillez ouvrir le lien suivant.";
-                $message .= "\n" . $apiUrl . "/invitations/" . $invitation->getCode();
-                $message .= "\n\nSi vous rencontrez des difficultes pour ouvrir le lien, veuillez retenir le code d'invitation a 6 chiffres ({$invitation->getCode()}) et présentez-le lors de la vérification a l'entree de l'evenement.";
-                // $this->smsService->send($phoneNumber, $body);
-            } else if ($method === "wpp") {
-                $to = "whatsapp:+$phoneNumber";
-                $message = "Bonjour " . $invitation->getCivility() . " " . $invitation->getName();
-                $message .= ",\nVous êtes invité à l'évenement \"{$invitation->getEvent()->getCategory()->getName()} - {$invitation->getEvent()->getName()}\" le " . $this->dateService->getFullDate($invitation->getEvent()->getDate(), true, true)  . " à {$invitation->getEvent()->getDate()->format('H:i')}.";
-                $message .= "\n\nPour accéder à votre invitation, veuillez ouvrir le lien suivant.";
-                $message .= "\n" . $apiUrl . "/invitations/" . $invitation->getCode();
-                $message .= "\n\nSi vous rencontrez des difficultés pour ouvrir le lien, veuillez retenir le code d'invitation à 6 chiffres ({$invitation->getCode()}) et présentez-le lors de la vérification à l'entrée de l'évenement.";
-                try {
-                    // $messageSid = $this->whatsappService->sendWhatsAppMessage($to, $body);
-                } catch (ConfigurationException|TwilioException $e) {
-
-                }
-            } else {
-                // error
-            }
-
-            $invitation->setStatus("sent");
-            $this->invitationRepository->save($invitation, true);
-            $success = true;
-            $notpaid = false;
-            $message = "Invitation envoyée avec succès";
-        } else {
+        if ($user === null || $user->getCredits() < $invitation->getEvent()->getTemplate()->getPrice()) {
+            $message = "Solde insifussant";
             $success = false;
-            $notpaid = true;
-            $message = "Une erreur est survenue";
+        } else {
+            $message = '';
+            $success = true;
+            $this->creditService->reduce($user, $invitation->getEvent()->getTemplate()->getPrice());
+            $invitation->setStatus("sent");
+            $this->invitationRepository->save($invitation);
         }
 
-        $invitations = $this->invitationRepository->findByEvent($invitation->getEvent());
         $response = [
             'success'   => $success,
-            'notpaid' => $notpaid,
-            'invitations' => $this->normalizer->normalize($invitations, null, ['groups' => ['invitation:pRead']]),
-            'message'   => $message,
+            'credits'   => $user->getCredits(),
+            'message'   => $message
         ];
 
         return new JsonResponse($response, Response::HTTP_OK);

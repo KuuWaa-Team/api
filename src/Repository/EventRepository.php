@@ -50,7 +50,9 @@ class EventRepository extends ServiceEntityRepository
     public function findListableEvents(User $user): array
     {
         return $this->createQueryBuilder('e')
-            ->where(predicates: 'e.owner = :u')
+            ->leftJoin('e.eventAdmins', 'ea')
+            ->where('e.owner = :u')
+            ->orWhere('ea.user = :u')
             ->setParameter('u', $user)
             ->orderBy('e.startDate', 'DESC')
             ->getQuery()
