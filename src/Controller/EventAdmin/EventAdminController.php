@@ -25,7 +25,6 @@ class EventAdminController extends AbstractController
         $eventAdmin = $this->adminRepository->findOneBy([
             'invitationCode' => $code
         ]);
-
         
         $apiUrl = $this->apiService->getApiUrl();
 
