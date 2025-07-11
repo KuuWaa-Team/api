@@ -9,6 +9,7 @@ use App\Service\DateService;
 use App\Service\Utils;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class EventAdminController extends AbstractController
@@ -20,7 +21,7 @@ class EventAdminController extends AbstractController
     ){}
 
     #[Route('/event-admins/{code}', name: 'app_event_admin_invitation')]
-    public function eventAdminInvitation(string $code): JsonResponse
+    public function eventAdminInvitation(string $code): Response
     {
         $eventAdmin = $this->adminRepository->findOneBy([
             'invitationCode' => $code
