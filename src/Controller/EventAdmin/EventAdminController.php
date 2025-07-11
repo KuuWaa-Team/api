@@ -25,8 +25,11 @@ class EventAdminController extends AbstractController
         $eventAdmin = $this->adminRepository->findOneBy([
             'invitationCode' => $code
         ]);
-        $date = $this->dateService->getFullDate($eventAdmin->getEvent()->getStartDate(), true, true);
+
+        
         $apiUrl = $this->apiService->getApiUrl();
+
+        $date = $this->dateService->getFullDate($eventAdmin->getEvent()->getStartDate(), true, true);
 
         $roles = explode(',', $eventAdmin->getRoles());
         $rolesNames = [];
