@@ -5,6 +5,7 @@ namespace App\Controller\EventAdmin;
 use App\Entity\Event\EventAdmin;
 use App\Repository\Event\EventAdminRepository;
 use App\Repository\EventRepository;
+use App\Repository\UserRepository;
 use App\Service\PhoneService;
 use App\Service\SmsService;
 use App\Service\Utils;
@@ -22,6 +23,7 @@ class AddAdminController extends AbstractController
         private readonly NormalizerInterface $normalizer,
         private readonly SmsService $smsService,
         private readonly PhoneService $phoneService,
+        private readonly UserRepository $userRepository,
     ){}
 
     /**
@@ -31,10 +33,12 @@ class AddAdminController extends AbstractController
     {
         $content = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
         $name = $content["name"] ?? null;
+        $userId = $content["userId"] ?? null;
         $roles = $content['permissions'] ?? [];
         $eventId = $content["eventId"] ?? null;
 
         $event = $this->eventRepository->find($eventId);
+        $user = !empty($userId) ? $this->userRepository->find($userId) : null;
 
         if (!in_array(Utils::$EventAdminRoles_VERIFY_INVITATIONS, $roles)) {
             $roles[] = Utils::$EventAdminRoles_VERIFY_INVITATIONS;
@@ -54,6 +58,7 @@ class AddAdminController extends AbstractController
             ->setEvent($event)
             ->setInvitationCode($code)
             ->setStatus('waiting')
+            ->setCreatedBy($user)
         ;
 
         $this->adminRepository->save($admin, true);
