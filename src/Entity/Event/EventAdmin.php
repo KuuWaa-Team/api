@@ -12,6 +12,7 @@ use App\Controller\Beverage\AddBeverageController;
 use App\Controller\EventAdmin\AcceptInvitationController;
 use App\Controller\EventAdmin\AddAdminController;
 use App\Controller\EventAdmin\RefuseInvitationController;
+use App\Controller\EventAdmin\RemoveEventAdmin;
 use App\Entity\Event;
 use App\Entity\User;
 use App\Repository\Event\EventAdminRepository;
@@ -76,6 +77,24 @@ use Symfony\Component\Serializer\Annotation\Groups;
             ],
             description: 'refuse invitation',
             name: 'refuseInvitation',
+        ),
+        new Post(
+            uriTemplate: '/event-admins/{id}/remove',
+            controller: RemoveEventAdmin::class,
+            openapiContext: [
+                'summary' => 'remove admin',
+                'requestBody' => [
+                    'content' => [
+                        'application/json' => [
+                            'schema' => [
+                                'type' => 'object',
+                            ]
+                        ]
+                    ]
+                ],
+            ],
+            description: 'remove event admin',
+            name: 'removeEventAdmin',
         ),
         new Put(),
         new Delete()
