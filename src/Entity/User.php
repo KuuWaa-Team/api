@@ -118,11 +118,18 @@ class User implements UserInterface
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: EventAdmin::class)]
     private Collection $admins;
 
+    /**
+     * @var Collection<int, EventAdmin>
+     */
+    #[ORM\OneToMany(mappedBy: 'createdBy', targetEntity: EventAdmin::class)]
+    private Collection $eventAdmins;
+
     public function __construct()
     {
         $this->events = new ArrayCollection();
         $this->operations = new ArrayCollection();
         $this->admins = new ArrayCollection();
+        $this->eventAdmins = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -340,6 +347,36 @@ class User implements UserInterface
             // set the owning side to null (unless already changed)
             if ($admin->getUser() === $this) {
                 $admin->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, EventAdmin>
+     */
+    public function getEventAdmins(): Collection
+    {
+        return $this->eventAdmins;
+    }
+
+    public function addEventAdmin(EventAdmin $eventAdmin): static
+    {
+        if (!$this->eventAdmins->contains($eventAdmin)) {
+            $this->eventAdmins->add($eventAdmin);
+            $eventAdmin->setCreatedBy($this);
+        }
+
+        return $this;
+    }
+
+    public function removeEventAdmin(EventAdmin $eventAdmin): static
+    {
+        if ($this->eventAdmins->removeElement($eventAdmin)) {
+            // set the owning side to null (unless already changed)
+            if ($eventAdmin->getCreatedBy() === $this) {
+                $eventAdmin->setCreatedBy(null);
             }
         }
 

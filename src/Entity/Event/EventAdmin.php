@@ -113,6 +113,9 @@ class EventAdmin
     #[ORM\ManyToOne(inversedBy: 'admins')]
     private ?User $user = null;
 
+    #[ORM\ManyToOne(inversedBy: 'eventAdmins')]
+    private ?User $createdBy = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -186,6 +189,18 @@ class EventAdmin
     public function setUser(?User $user): static
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    public function getCreatedBy(): ?User
+    {
+        return $this->createdBy;
+    }
+
+    public function setCreatedBy(?User $createdBy): static
+    {
+        $this->createdBy = $createdBy;
 
         return $this;
     }
