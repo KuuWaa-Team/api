@@ -1243,15 +1243,17 @@
                             {% endif %}
                         </div>
                     </div>
-                   <div class="jsx-d0ada46de86ca64b text-center pt-4 border-t border-[{{ template.primaryColor }}]/20"><button#}
-                       class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 border bg-background h-10 px-4 py-2 border-[{{ template.primaryColor }}] text-[{{ template.primaryColor }}] hover:bg-[{{ template.primaryColor }}] hover:text-white"><svg
-                           xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                           fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                           stroke-linejoin="round" class="lucide lucide-heart w-4 h-4 mr-2">
-                       <path
-                               d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z">
-                       </path>
-                   </svg>Consulter le livre d'or public</button>
+                   <div class="jsx-d0ada46de86ca64b text-center pt-4 border-t border-[{{ template.primaryColor }}]/20">
+                    <a href="{{ path('app_public_event_public_book') }}"
+                        class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 border bg-background h-10 px-4 py-2 border-[{{ template.primaryColor }}] text-[{{ template.primaryColor }}] hover:bg-[{{ template.primaryColor }}] hover:text-white"><svg
+                            xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round" class="lucide lucide-heart w-4 h-4 mr-2">
+                        <path
+                                d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z">
+                        </path>
+                            </svg>Consulter le livre d'or public
+                    </a>
                     </div> 
                 </div>
             </div>
@@ -1985,7 +1987,6 @@
             progressFill.style.width = `0%`;
         });
 
-        // Formatage de la durée (mm:ss)
         function formatTime(time) {
             const minutes = Math.floor(time / 60).toString().padStart(2, '0');
             const seconds = Math.floor(time % 60).toString().padStart(2, '0');

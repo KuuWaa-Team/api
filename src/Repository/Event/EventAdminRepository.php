@@ -5,6 +5,7 @@ namespace App\Repository\Event;
 use App\Entity\Beverage;
 use App\Entity\Event;
 use App\Entity\Event\EventAdmin;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\Persistence\ManagerRegistry;
@@ -36,6 +37,23 @@ class EventAdminRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult()
             ;
+    }
+
+    /**
+     * @return ?EventAdmin Returns an array of EventAdmin objects
+     * @throws NonUniqueResultException
+     */
+    public function findByEventUser(Event $event, User $user): ?EventAdmin
+    {
+        return $this->createQueryBuilder('e')
+            ->leftJoin('e.user', 'u')
+            ->andWhere('e.event = :ev')
+            ->andWhere('u.id = :evU')
+            ->setParameter('ev', $event)
+            ->setParameter('evU', $user->getId())
+            ->orderBy('e.name', 'ASC')
+            ->getQuery()
+            ->getOneOrNullResult();
     }
 
     // /**

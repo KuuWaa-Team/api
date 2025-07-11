@@ -17,9 +17,9 @@ use App\Controller\Invitation\SendAllController;
 use App\Controller\Invitation\SendInvitationController;
 use App\Controller\Invitation\ValidateController;
 use App\Entity\Event\Book;
+use App\Entity\Event\GameResponse;
 use App\Entity\Event\Gift;
 use App\Entity\Event\Photo;
-use App\Entity\Question\Answer;
 use App\Repository\InvitationRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -248,12 +248,6 @@ class Invitation
     #[ORM\OneToMany(mappedBy: 'eventTemplate', targetEntity: self::class)]
     private Collection $invitations;
 
-    /**
-     * @var Collection<int, Answer>
-     */
-    #[ORM\OneToMany(mappedBy: 'invitation', targetEntity: Answer::class)]
-    private Collection $answers;
-
     #[ORM\Column(nullable: true)]
     private ?bool $willBePresent = null;
 
@@ -282,13 +276,23 @@ class Invitation
     #[ORM\OneToMany(mappedBy: 'invitation', targetEntity: Photo::class)]
     private Collection $photos;
 
+    #[ORM\Column(nullable: true)]
+    #[Groups(["invitation:pRead", 'table:pRead', 'invitation:fRead', 'event:pRead', 'event:fRead'])]
+    private ?bool $musicPlayed = null;
+
+    /**
+     * @var Collection<int, GameResponse>
+     */
+    #[ORM\OneToMany(mappedBy: 'invitation', targetEntity: GameResponse::class)]
+    private Collection $gameResponses;
+
     public function __construct()
     {
         $this->invitations = new ArrayCollection();
-        $this->answers = new ArrayCollection();
         $this->gifts = new ArrayCollection();
         $this->beverages = new ArrayCollection();
         $this->photos = new ArrayCollection();
+        $this->gameResponses = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -478,37 +482,6 @@ class Invitation
 
         return $this;
     }
-
-    /**
-     * @return Collection<int, Answer>
-     */
-    public function getAnswers(): Collection
-    {
-        return $this->answers;
-    }
-
-    public function addAnswer(Answer $answer): static
-    {
-        if (!$this->answers->contains($answer)) {
-            $this->answers->add($answer);
-            $answer->setInvitation($this);
-        }
-
-        return $this;
-    }
-
-    public function removeAnswer(Answer $answer): static
-    {
-        if ($this->answers->removeElement($answer)) {
-            // set the owning side to null (unless already changed)
-            if ($answer->getInvitation() === $this) {
-                $answer->setInvitation(null);
-            }
-        }
-
-        return $this;
-    }
-
     public function isWillBePresent(): ?bool
     {
         return $this->willBePresent;
@@ -617,6 +590,48 @@ class Invitation
             // set the owning side to null (unless already changed)
             if ($photo->getInvitation() === $this) {
                 $photo->setInvitation(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function isMusicPlayed(): ?bool
+    {
+        return $this->musicPlayed;
+    }
+
+    public function setMusicPlayed(?bool $musicPlayed): static
+    {
+        $this->musicPlayed = $musicPlayed;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, GameResponse>
+     */
+    public function getGameResponses(): Collection
+    {
+        return $this->gameResponses;
+    }
+
+    public function addGameResponse(GameResponse $gameResponse): static
+    {
+        if (!$this->gameResponses->contains($gameResponse)) {
+            $this->gameResponses->add($gameResponse);
+            $gameResponse->setInvitation($this);
+        }
+
+        return $this;
+    }
+
+    public function removeGameResponse(GameResponse $gameResponse): static
+    {
+        if ($this->gameResponses->removeElement($gameResponse)) {
+            // set the owning side to null (unless already changed)
+            if ($gameResponse->getInvitation() === $this) {
+                $gameResponse->setInvitation(null);
             }
         }
 

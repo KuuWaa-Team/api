@@ -10,6 +10,8 @@ use App\Controller\Book\AddController;
 use App\Controller\Event\EditEventController;
 use App\Controller\Event\EditEventImageController;
 use App\Controller\Event\EventDetailController;
+use App\Controller\Event\Game\AddGameQuestionController;
+use App\Controller\Event\Game\GameQuestionListController;
 use App\Controller\Event\GenerateBookController;
 use App\Controller\Event\ListingAdminsController;
 use App\Controller\Event\ListingEventBeveragesController;
@@ -18,6 +20,7 @@ use App\Controller\Event\OpenBookController;
 use App\Controller\Event\OpenTablesController;
 use App\Entity\Event\Book;
 use App\Entity\Event\EventAdmin;
+use App\Entity\Event\GameQuestion;
 use App\Entity\Event\Gift;
 use App\Entity\Event\EventSpecification;
 use App\Entity\Event\EventTemplate;
@@ -31,7 +34,6 @@ use App\Controller\Event\CreateEventController;
 use App\Controller\Event\DeleteEventController;
 use App\Controller\Event\ListingEventInvitationsController;
 use App\Controller\Event\ListingEventTablesController;
-use App\Entity\Question\Question;
 use App\Repository\EventRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -287,6 +289,19 @@ use Symfony\Component\Serializer\Annotation\Groups;
             description: 'Generate book',
             name: 'generateBook',
         ),
+        new Get(
+            uriTemplate: '/events/{id}/questions-list',
+            controller: GameQuestionListController::class,
+            description: 'Game Questions List',
+            name: 'gameQuestionsList',
+        ),
+        new Post(
+            uriTemplate: '/events/{id}/add-game-question',
+            controller: AddGameQuestionController::class,
+            description: 'Add game question',
+            deserialize: false,
+            name: 'addGameQuestion'
+        ),
         new Post(
             inputFormats: ['multipart' => ['multipart/form-data']],
             controller: CreateEventController::class,
@@ -381,6 +396,9 @@ class Event
     private ?string $adminStatus = null;
 
     #[Groups(['event:pRead', 'event:fRead'])]
+    private ?string $adminRoles = null;
+
+    #[Groups(['event:pRead', 'event:fRead'])]
     private ?int $adminId = null;
 
     #[ORM\OneToMany(mappedBy: 'event', targetEntity: Book::class, cascade: ['remove'])]
@@ -447,13 +465,6 @@ class Event
     private ?string $placeLatitude = null;
 
     /**
-     * @var Collection<int, Question>
-     */
-    #[ORM\OneToMany(mappedBy: 'event', targetEntity: Question::class)]
-    #[Groups(['invitation:fRead'])]
-    private Collection $questions;
-
-    /**
      * @var Collection<int, Gift>
      */
     #[ORM\OneToMany(mappedBy: 'event', targetEntity: Gift::class)]
@@ -467,6 +478,12 @@ class Event
 
     #[ORM\Column(nullable: true)]
     private ?bool $hasGift = null;
+
+    /**
+     * @var Collection<int, GameQuestion>
+     */
+    #[ORM\OneToMany(mappedBy: 'event', targetEntity: GameQuestion::class)]
+    private Collection $questions;
 
     public function getImagePath(): ?string
     {
@@ -488,9 +505,9 @@ class Event
         $this->beverages = new ArrayCollection();
         $this->eventAdmins = new ArrayCollection();
         $this->books = new ArrayCollection();
-        $this->questions = new ArrayCollection();
         $this->gifts = new ArrayCollection();
         $this->eventSpecifications = new ArrayCollection();
+        $this->questions = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -712,6 +729,19 @@ class Event
         $this->adminStatus = $adminStatus;
 
         return $this;
+    }
+
+
+    public function setAdminRoles(?string $adminRoles): static
+    {
+        $this->adminRoles = $adminRoles;
+
+        return $this;
+    }
+
+    public function getAdminRoles(): ?string
+    {
+        return $this->adminRoles;
     }
 
     public function getAdminId(): ?int
@@ -958,36 +988,6 @@ class Event
     }
 
     /**
-     * @return Collection<int, Question>
-     */
-    public function getQuestions(): Collection
-    {
-        return $this->questions;
-    }
-
-    public function addQuestion(Question $question): static
-    {
-        if (!$this->questions->contains($question)) {
-            $this->questions->add($question);
-            $question->setEvent($this);
-        }
-
-        return $this;
-    }
-
-    public function removeQuestion(Question $question): static
-    {
-        if ($this->questions->removeElement($question)) {
-            // set the owning side to null (unless already changed)
-            if ($question->getEvent() === $this) {
-                $question->setEvent(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
      * @return Collection<int, Gift>
      */
     public function getGifts(): Collection
@@ -1049,6 +1049,36 @@ class Event
     public function setHasGift(?bool $hasGift): static
     {
         $this->hasGift = $hasGift;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, GameQuestion>
+     */
+    public function getQuestions(): Collection
+    {
+        return $this->questions;
+    }
+
+    public function addQuestion(GameQuestion $question): static
+    {
+        if (!$this->questions->contains($question)) {
+            $this->questions->add($question);
+            $question->setEvent($this);
+        }
+
+        return $this;
+    }
+
+    public function removeQuestion(GameQuestion $question): static
+    {
+        if ($this->questions->removeElement($question)) {
+            // set the owning side to null (unless already changed)
+            if ($question->getEvent() === $this) {
+                $question->setEvent(null);
+            }
+        }
 
         return $this;
     }
