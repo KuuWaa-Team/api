@@ -43,7 +43,7 @@ class EventAdminController extends AbstractController
             'eventAdmin' => $eventAdmin,
             'apiUrl' => $apiUrl,
             'date' => $date,
-            'roles' => $rolesNames
+            'rolesNames' => $rolesNames
         ]);
     }
 }
