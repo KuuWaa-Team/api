@@ -22,6 +22,7 @@ class EventAdminController extends AbstractController
     #[Route('/event-admins/{code}', name: 'app_event_admin_invitation')]
     public function eventAdminInvitation(EventAdmin $eventAdmin): JsonResponse
     {
+        dd($eventAdmin);
         $date = $this->dateService->getFullDate($eventAdmin->getEvent()->getStartDate(), true, true);
         $apiUrl = $this->apiService->getApiUrl();
 
