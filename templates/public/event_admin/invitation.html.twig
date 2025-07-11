@@ -504,9 +504,11 @@
                     <p class="message-text">
                         "Salut ! J’organise l’événement « {{ eventAdmin.event.title }} » et j’aurais besoin de ton aide pour en gérer tous les aspects. Acceptes-tu de me rejoindre pour faire de cette journée un moment inoubliable ? Utilise le code ci-dessous pour intégrer l’équipe de gestion "
                     </p>
+                    {% if eventAdmin.createdBy is not null %}
                     <div class="message-signature">
                         <span>- {{ eventAdmin.createdBy.displayName }}</span>
                     </div>
+                    {% endif %}
                 </div>
             </div>
 
