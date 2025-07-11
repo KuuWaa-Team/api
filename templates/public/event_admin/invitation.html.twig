@@ -624,6 +624,149 @@
         </div>
     </div>
 
-    <script src="invitation-gestionnaire.js"></script>
+    <script >
+        document.addEventListener('DOMContentLoaded', function() {
+            const copyButton = document.getElementById('copyButton');
+            const copyIcon = document.getElementById('copyIcon');
+            const copyText = document.getElementById('copyText');
+            const invitationCode = document.getElementById('invitationCode').textContent;
+
+            copyButton.addEventListener('click', function() {
+                // Copier le code dans le presse-papiers
+                navigator.clipboard.writeText(invitationCode).then(function() {
+                    // Changer l'apparence du bouton pour indiquer que c'est copié
+                    copyIcon.className = 'fas fa-check';
+                    copyText.textContent = 'Copié !';
+                    copyButton.style.color = '#22c55e';
+
+                    // Remettre l'apparence normale après 2 secondes
+                    setTimeout(function() {
+                        copyIcon.className = 'fas fa-copy';
+                        copyText.textContent = 'Copier le code';
+                        copyButton.style.color = '';
+                    }, 2000);
+                }).catch(function(err) {
+                    console.error('Erreur lors de la copie:', err);
+                    // Fallback pour les navigateurs qui ne supportent pas clipboard API
+                    fallbackCopyTextToClipboard(invitationCode);
+                });
+            });
+
+            // Fonction de fallback pour la copie
+            function fallbackCopyTextToClipboard(text) {
+                const textArea = document.createElement("textarea");
+                textArea.value = text;
+                
+                // Éviter le scroll vers le textarea
+                textArea.style.top = "0";
+                textArea.style.left = "0";
+                textArea.style.position = "fixed";
+
+                document.body.appendChild(textArea);
+                textArea.focus();
+                textArea.select();
+
+                try {
+                    const successful = document.execCommand('copy');
+                    if (successful) {
+                        copyIcon.className = 'fas fa-check';
+                        copyText.textContent = 'Copié !';
+                        copyButton.style.color = '#22c55e';
+
+                        setTimeout(function() {
+                            copyIcon.className = 'fas fa-copy';
+                            copyText.textContent = 'Copier le code';
+                            copyButton.style.color = '';
+                        }, 2000);
+                    }
+                } catch (err) {
+                    console.error('Fallback: Impossible de copier', err);
+                }
+
+                document.body.removeChild(textArea);
+            }
+
+            // Animation d'entrée pour les éléments
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver(function(entries) {
+                entries.forEach(function(entry) {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, observerOptions);
+
+            // Appliquer l'animation aux sections principales
+            const sections = document.querySelectorAll('.invitation-message, .roles-section, .code-section, .instructions-section, .download-section');
+            sections.forEach(function(section) {
+                section.style.opacity = '0';
+                section.style.transform = 'translateY(20px)';
+                section.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                observer.observe(section);
+            });
+
+            // Animation pour les éléments de rôle
+            const roleItems = document.querySelectorAll('.role-item');
+            roleItems.forEach(function(item, index) {
+                item.style.opacity = '0';
+                item.style.transform = 'translateX(-20px)';
+                item.style.transition = `opacity 0.4s ease ${index * 0.1}s, transform 0.4s ease ${index * 0.1}s`;
+                
+                setTimeout(function() {
+                    item.style.opacity = '1';
+                    item.style.transform = 'translateX(0)';
+                }, 500 + (index * 100));
+            });
+
+            // Animation pour les boutons de téléchargement
+            const downloadButtons = document.querySelectorAll('.download-button');
+            downloadButtons.forEach(function(button) {
+                button.addEventListener('mouseenter', function() {
+                    this.style.transform = 'scale(1.02) translateY(-2px)';
+                });
+                
+                button.addEventListener('mouseleave', function() {
+                    this.style.transform = 'scale(1) translateY(0)';
+                });
+            });
+
+            // Effet de pulsation sur le code d'invitation
+            const codeDisplay = document.getElementById('invitationCode');
+            setInterval(function() {
+                codeDisplay.style.transform = 'scale(1.05)';
+                setTimeout(function() {
+                    codeDisplay.style.transform = 'scale(1)';
+                }, 200);
+            }, 3000);
+
+            // Gestion du clic sur les liens de téléchargement
+            downloadButtons.forEach(function(button) {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // Animation de clic
+                    this.style.transform = 'scale(0.98)';
+                    setTimeout(() => {
+                        this.style.transform = 'scale(1.02)';
+                    }, 100);
+                    
+                    // Ici vous pouvez ajouter la logique pour rediriger vers les stores
+                    const isAppStore = this.querySelector('.fa-apple');
+                    if (isAppStore) {
+                        console.log('Redirection vers App Store');
+                        // window.open('https://apps.apple.com/app/kuuwaa', '_blank');
+                    } else {
+                        console.log('Redirection vers Google Play');
+                        // window.open('https://play.google.com/store/apps/details?id=com.kuuwaa', '_blank');
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 </html>
