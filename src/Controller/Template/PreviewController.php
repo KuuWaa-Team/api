@@ -102,7 +102,7 @@ final class PreviewController extends AbstractController
         list($secondaryR, $secondaryG, $secondaryB) = $this->hexToRgb($invitation->getEvent()->getTemplate()->getSecondaryColor());
 
         return $this->render("public/invitation/index.html.twig", [
-            'preview' => true,
+            'preview' => true, // if is preview
             'invitation' => $invitation,
             'template' => $invitation->getEvent()->getTemplate(),
             'date' => $date,
