@@ -3,8 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Livre d'or - Serge & Deborah</title>
+    <title>🏷 Livre d'or - {{ event.title }}</title>
     <link rel="stylesheet" href="guestbook-styles.css">
+    <meta name="description" content="{{ event.category.name }}" />
+    <meta property="og:image" itemprop="image" content="{{ apiUrl ~ event.thumbPath }}" />
+    <link itemprop="thumbnailUrl" href="{{ apiUrl ~ event.thumbPath }}">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
       * {
@@ -560,9 +563,6 @@
     <header class="header">
         <div class="header-container">
             <div class="header-nav">
-                <button class="back-btn" onclick="window.history.back()">
-                    <i class="fas fa-arrow-left"></i> Retour à l'invitation
-                </button>
                 <div class="header-title">
                     <h1>Livre d'or</h1>
                     <div class="title-underline"></div>
@@ -571,8 +571,8 @@
             </div>
             
             <div class="header-subtitle">
-                <p class="subtitle-main">Messages d'amour pour Serge & Deborah</p>
-                <p class="subtitle-count"><span id="message-count">6</span> messages</p>
+                <p class="subtitle-main">Messages d'amour pour "{{ event.title }}"</p>
+                <p class="subtitle-count"><span id="message-count">{{ event.books|length }}</span> messages</p>
             </div>
         </div>
     </header>
@@ -598,314 +598,69 @@
     <!-- Messages -->
     <main class="messages-section">
         <div class="messages-container">
+            {% if event.books|length > 0 %}
             <div id="messages-list" class="messages-list">
-                <!-- Message 1 -->
-                <div class="message-card" data-type="both">
-                    <div class="message-header">
-                        <div class="message-author">
-                            <div class="author-avatar">MD</div>
-                            <div class="author-info">
-                                <h3 class="author-name">Marie & Pierre Dubois</h3>
-                                <p class="message-time">Il y a 2 heures</p>
-                            </div>
-                        </div>
-                        <div class="message-indicators">
-                            <div class="indicator written-indicator"></div>
-                            <div class="indicator voice-indicator"></div>
-                        </div>
-                    </div>
-                    
-                    <div class="message-content">
-                        <!-- Written Message -->
-                        <div class="written-message">
-                            <div class="message-type-header">
-                                <i class="fas fa-heart"></i>
-                                <span>Message écrit</span>
-                            </div>
-                            <p class="message-text">Félicitations à vous deux ! Nous sommes si heureux de partager ce moment magique avec vous. Que votre amour grandisse chaque jour davantage ! Nous avons hâte de danser à votre mariage et de célébrer votre union. Vous formez un couple magnifique ! ❤️</p>
-                        </div>
-                        
-                        <!-- Voice Message -->
-                        <div class="voice-message">
-                            <div class="message-type-header">
-                                <i class="fas fa-microphone"></i>
-                                <span>Message vocal</span>
-                            </div>
-                            <div class="voice-player">
-                                <button class="play-btn" data-message-id="1">
-                                    <i class="fas fa-play"></i>
-                                </button>
-                                <div class="waveform">
-                                    <div class="wave-bar" style="height: 12px;"></div>
-                                    <div class="wave-bar" style="height: 20px;"></div>
-                                    <div class="wave-bar" style="height: 16px;"></div>
-                                    <div class="wave-bar" style="height: 24px;"></div>
-                                    <div class="wave-bar" style="height: 18px;"></div>
-                                    <div class="wave-bar" style="height: 22px;"></div>
-                                    <div class="wave-bar" style="height: 14px;"></div>
-                                    <div class="wave-bar" style="height: 28px;"></div>
-                                    <div class="wave-bar" style="height: 16px;"></div>
-                                    <div class="wave-bar" style="height: 20px;"></div>
-                                    <div class="wave-bar" style="height: 12px;"></div>
-                                    <div class="wave-bar" style="height: 26px;"></div>
-                                    <div class="wave-bar" style="height: 18px;"></div>
-                                    <div class="wave-bar" style="height: 22px;"></div>
-                                    <div class="wave-bar" style="height: 14px;"></div>
-                                    <div class="wave-bar" style="height: 20px;"></div>
-                                    <div class="wave-bar" style="height: 16px;"></div>
-                                    <div class="wave-bar" style="height: 24px;"></div>
-                                    <div class="wave-bar" style="height: 12px;"></div>
-                                    <div class="wave-bar" style="height: 18px;"></div>
-                                </div>
-                                <div class="voice-info">
-                                    <i class="fas fa-volume-up"></i>
-                                    <span class="duration">2:15</span>
+                {% for book in event.books %}
+                    {% set dataType = 'both' %}
+                    {% if book.message is null or book.message == '' %}
+                        {% set dataType = 'voice' %}
+                    {% else if book.audioPath is null or book.audioPath == '' %}
+                        {% set dataType = 'written' %}
+                    {% endif %}
+                    <div class="message-card" data-type="{{ dataType }}">
+                        <div class="message-header">
+                            <div class="message-author">
+                                <div class="author-avatar">MD</div>
+                                <div class="author-info">
+                                    <h3 class="author-name">{{ book.invitation.fullname }}</h3>
+                                    <p class="message-time">Il y a 2 heures</p>
                                 </div>
                             </div>
+                            <div class="message-indicators">
+                                <div class="indicator written-indicator"></div>
+                                <div class="indicator voice-indicator"></div>
+                            </div>
                         </div>
-                    </div>
-                </div>
 
-                <!-- Message 2 -->
-                <div class="message-card" data-type="written">
-                    <div class="message-header">
-                        <div class="message-author">
-                            <div class="author-avatar">FM</div>
-                            <div class="author-info">
-                                <h3 class="author-name">Famille Martin</h3>
-                                <p class="message-time">Il y a 5 heures</p>
+                        <div class="message-content">
+                            {% if book.message is not null and book.message != '' %}
+                            <!-- Written Message -->
+                            <div class="written-message">
+                                <div class="message-type-header">
+                                    <i class="fas fa-heart"></i>
+                                    <span>Message écrit</span>
+                                </div>
+                                <p class="message-text">{{ book.message }}</p>
                             </div>
-                        </div>
-                        <div class="message-indicators">
-                            <div class="indicator written-indicator"></div>
-                        </div>
-                    </div>
-                    
-                    <div class="message-content">
-                        <div class="written-message">
-                            <div class="message-type-header">
-                                <i class="fas fa-heart"></i>
-                                <span>Message écrit</span>
-                            </div>
-                            <p class="message-text">Toutes nos félicitations pour cette belle union ! Nous vous souhaitons tout le bonheur du monde. Vivement la fête ! Que cette journée soit remplie de joie, d'amour et de moments inoubliables. 🎉</p>
-                        </div>
-                    </div>
-                </div>
+                            {% endif %}
 
-                <!-- Message 3 -->
-                <div class="message-card" data-type="both">
-                    <div class="message-header">
-                        <div class="message-author">
-                            <div class="author-avatar">SL</div>
-                            <div class="author-info">
-                                <h3 class="author-name">Sophie Leroy</h3>
-                                <p class="message-time">Il y a 1 jour</p>
-                            </div>
-                        </div>
-                        <div class="message-indicators">
-                            <div class="indicator written-indicator"></div>
-                            <div class="indicator voice-indicator"></div>
-                        </div>
-                    </div>
-                    
-                    <div class="message-content">
-                        <div class="written-message">
-                            <div class="message-type-header">
-                                <i class="fas fa-heart"></i>
-                                <span>Message écrit</span>
-                            </div>
-                            <p class="message-text">Mes chers amis, je suis émue aux larmes ! Votre histoire d'amour est si belle. J'ai hâte de danser à votre mariage ! Vous méritez tout le bonheur du monde. 💃</p>
-                        </div>
-                        
-                        <div class="voice-message">
-                            <div class="message-type-header">
-                                <i class="fas fa-microphone"></i>
-                                <span>Message vocal</span>
-                            </div>
-                            <div class="voice-player">
-                                <button class="play-btn" data-message-id="3">
-                                    <i class="fas fa-play"></i>
-                                </button>
-                                <div class="waveform">
-                                    <div class="wave-bar" style="height: 16px;"></div>
-                                    <div class="wave-bar" style="height: 24px;"></div>
-                                    <div class="wave-bar" style="height: 18px;"></div>
-                                    <div class="wave-bar" style="height: 22px;"></div>
-                                    <div class="wave-bar" style="height: 14px;"></div>
-                                    <div class="wave-bar" style="height: 28px;"></div>
-                                    <div class="wave-bar" style="height: 20px;"></div>
-                                    <div class="wave-bar" style="height: 26px;"></div>
-                                    <div class="wave-bar" style="height: 12px;"></div>
-                                    <div class="wave-bar" style="height: 24px;"></div>
-                                    <div class="wave-bar" style="height: 18px;"></div>
-                                    <div class="wave-bar" style="height: 22px;"></div>
-                                    <div class="wave-bar" style="height: 16px;"></div>
-                                    <div class="wave-bar" style="height: 20px;"></div>
-                                    <div class="wave-bar" style="height: 14px;"></div>
-                                    <div class="wave-bar" style="height: 26px;"></div>
-                                    <div class="wave-bar" style="height: 18px;"></div>
-                                    <div class="wave-bar" style="height: 24px;"></div>
-                                    <div class="wave-bar" style="height: 12px;"></div>
-                                    <div class="wave-bar" style="height: 20px;"></div>
-                                </div>
-                                <div class="voice-info">
-                                    <i class="fas fa-volume-up"></i>
-                                    <span class="duration">1:45</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                            <!-- Voice Message -->
+                            {% if invitation.book.audioPath != null %}
+                                <div id="voice-message" class="bg-gradient-to-r from-[{{ template.primaryColor }}]/5 to-[{{ template.secondaryColor }}]/5 rounded-lg p-4 mt-4">
+                                    <div class="flex items-center justify-between">
+                                        <div class="flex items-center gap-2">
+                                            <span class="text-sm font-medium text-[{{ template.secondaryColor }}]">Message vocal</span>
+                                            <span id="voice-duration" class="text-xs text-[{{ template.secondaryColor }}]/60">(00:00)</span>
+                                        </div>
+                                        <button id="play-button" class="inline-flex items-center justify-center gap-2 text-sm font-medium h-9 rounded-md px-3 bg-[{{ template.secondaryColor }}] text-white hover:bg-[{{ template.secondaryColor }}]/90">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-play w-4 h-4"><polygon points="6 3 20 12 6 21 6 3"></polygon></svg>
+                                        </button>
+                                    </div>
 
-                <!-- Message 4 -->
-                <div class="message-card" data-type="voice">
-                    <div class="message-header">
-                        <div class="message-author">
-                            <div class="author-avatar">GJ</div>
-                            <div class="author-info">
-                                <h3 class="author-name">Grand-mère Jeanne</h3>
-                                <p class="message-time">Il y a 2 jours</p>
-                            </div>
-                        </div>
-                        <div class="message-indicators">
-                            <div class="indicator voice-indicator"></div>
-                        </div>
-                    </div>
-                    
-                    <div class="message-content">
-                        <div class="voice-message">
-                            <div class="message-type-header">
-                                <i class="fas fa-microphone"></i>
-                                <span>Message vocal</span>
-                            </div>
-                            <div class="voice-player">
-                                <button class="play-btn" data-message-id="4">
-                                    <i class="fas fa-play"></i>
-                                </button>
-                                <div class="waveform">
-                                    <div class="wave-bar" style="height: 20px;"></div>
-                                    <div class="wave-bar" style="height: 28px;"></div>
-                                    <div class="wave-bar" style="height: 16px;"></div>
-                                    <div class="wave-bar" style="height: 24px;"></div>
-                                    <div class="wave-bar" style="height: 18px;"></div>
-                                    <div class="wave-bar" style="height: 26px;"></div>
-                                    <div class="wave-bar" style="height: 14px;"></div>
-                                    <div class="wave-bar" style="height: 30px;"></div>
-                                    <div class="wave-bar" style="height: 22px;"></div>
-                                    <div class="wave-bar" style="height: 28px;"></div>
-                                    <div class="wave-bar" style="height: 16px;"></div>
-                                    <div class="wave-bar" style="height: 24px;"></div>
-                                    <div class="wave-bar" style="height: 20px;"></div>
-                                    <div class="wave-bar" style="height: 26px;"></div>
-                                    <div class="wave-bar" style="height: 18px;"></div>
-                                    <div class="wave-bar" style="height: 22px;"></div>
-                                    <div class="wave-bar" style="height: 14px;"></div>
-                                    <div class="wave-bar" style="height: 28px;"></div>
-                                    <div class="wave-bar" style="height: 16px;"></div>
-                                    <div class="wave-bar" style="height: 24px;"></div>
+                                    <div id="progress-bar" class="mt-3 flex items-center gap-2">
+                                        <div class="flex-1 bg-white rounded-full h-2 overflow-hidden">
+                                            <div id="progress-fill" class="bg-[{{ template.primaryColor }}] h-full w-0 rounded-full transition-all duration-200"></div>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="voice-info">
-                                    <i class="fas fa-volume-up"></i>
-                                    <span class="duration">3:22</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
 
-                <!-- Message 5 -->
-                <div class="message-card" data-type="written">
-                    <div class="message-header">
-                        <div class="message-author">
-                            <div class="author-avatar">CB</div>
-                            <div class="author-info">
-                                <h3 class="author-name">Les Collègues de Bureau</h3>
-                                <p class="message-time">Il y a 3 jours</p>
-                            </div>
-                        </div>
-                        <div class="message-indicators">
-                            <div class="indicator written-indicator"></div>
+                                <audio id="audio-player" src="{{ asset(invitation.book.audioPath) }}"></audio>
+                            {% endif %}
                         </div>
                     </div>
-                    
-                    <div class="message-content">
-                        <div class="written-message">
-                            <div class="message-type-header">
-                                <i class="fas fa-heart"></i>
-                                <span>Message écrit</span>
-                            </div>
-                            <p class="message-text">Félicitations de toute l'équipe ! Nous sommes ravis pour vous deux. Profitez bien de cette journée exceptionnelle et de votre lune de miel ! On a hâte de voir les photos ! 📸</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Message 6 -->
-                <div class="message-card" data-type="both">
-                    <div class="message-header">
-                        <div class="message-author">
-                            <div class="author-avatar">TI</div>
-                            <div class="author-info">
-                                <h3 class="author-name">Tante Isabelle</h3>
-                                <p class="message-time">Il y a 4 jours</p>
-                            </div>
-                        </div>
-                        <div class="message-indicators">
-                            <div class="indicator written-indicator"></div>
-                            <div class="indicator voice-indicator"></div>
-                        </div>
-                    </div>
-                    
-                    <div class="message-content">
-                        <div class="written-message">
-                            <div class="message-type-header">
-                                <i class="fas fa-heart"></i>
-                                <span>Message écrit</span>
-                            </div>
-                            <p class="message-text">Mes chéris, je suis si fière de vous voir unis ! Que Dieu bénisse votre mariage et vous accorde une vie remplie d'amour, de joie et de prospérité. Vous avez toute ma tendresse. 🙏</p>
-                        </div>
-                        
-                        <div class="voice-message">
-                            <div class="message-type-header">
-                                <i class="fas fa-microphone"></i>
-                                <span>Message vocal</span>
-                            </div>
-                            <div class="voice-player">
-                                <button class="play-btn" data-message-id="6">
-                                    <i class="fas fa-play"></i>
-                                </button>
-                                <div class="waveform">
-                                    <div class="wave-bar" style="height: 18px;"></div>
-                                    <div class="wave-bar" style="height: 26px;"></div>
-                                    <div class="wave-bar" style="height: 22px;"></div>
-                                    <div class="wave-bar" style="height: 30px;"></div>
-                                    <div class="wave-bar" style="height: 16px;"></div>
-                                    <div class="wave-bar" style="height: 24px;"></div>
-                                    <div class="wave-bar" style="height: 20px;"></div>
-                                    <div class="wave-bar" style="height: 28px;"></div>
-                                    <div class="wave-bar" style="height: 14px;"></div>
-                                    <div class="wave-bar" style="height: 26px;"></div>
-                                    <div class="wave-bar" style="height: 18px;"></div>
-                                    <div class="wave-bar" style="height: 24px;"></div>
-                                    <div class="wave-bar" style="height: 22px;"></div>
-                                    <div class="wave-bar" style="height: 28px;"></div>
-                                    <div class="wave-bar" style="height: 16px;"></div>
-                                    <div class="wave-bar" style="height: 30px;"></div>
-                                    <div class="wave-bar" style="height: 20px;"></div>
-                                    <div class="wave-bar" style="height: 26px;"></div>
-                                    <div class="wave-bar" style="height: 18px;"></div>
-                                    <div class="wave-bar" style="height: 24px;"></div>
-                                </div>
-                                <div class="voice-info">
-                                    <i class="fas fa-volume-up"></i>
-                                    <span class="duration">2:58</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                {% endfor %}
             </div>
-
-            <!-- No Results Message -->
+            {% else %}
             <div id="no-results" class="no-results hidden">
                 <div class="no-results-content">
                     <i class="fas fa-heart"></i>
@@ -913,6 +668,7 @@
                     <p class="no-results-subtitle">Essayez de modifier vos critères de recherche</p>
                 </div>
             </div>
+            {% endif %}
         </div>
     </main>
 
