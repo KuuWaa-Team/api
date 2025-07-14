@@ -48,8 +48,8 @@ class RechargeController extends AbstractController
         if ($amount < WalletService::$MIN_RECHARGE) {
             $message = "Vous devez recharger au moins " . WalletService::$MIN_RECHARGE . " USD";
             $success = false;
-        } if ($amount > WalletService::$MIN_RECHARGE * 100) {
-            $message = "Vous devez recharger au plus " . (WalletService::$MIN_RECHARGE * 100) . " USD en une fois";
+        } if ($amount > WalletService::$MIN_RECHARGE * 400) {
+            $message = "Vous devez recharger au plus " . (WalletService::$MIN_RECHARGE * 400) . " USD en une fois";
             $success = false;
         } else if (WalletService::$MOBILE_PAYMENT !== $paymentMethod && WalletService::$CARD_PAYMENT !== $paymentMethod) {
             $message = "Methode de paiement inconnue";
