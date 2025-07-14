@@ -604,7 +604,7 @@
                     {% set dataType = 'both' %}
                     {% if book.message is null or book.message == '' %}
                         {% set dataType = 'voice' %}
-                    {% else if book.audioPath is null or book.audioPath == '' %}
+                    {% elseif book.audioPath is null or book.audioPath == '' %}
                         {% set dataType = 'written' %}
                     {% endif %}
                     <div class="message-card" data-type="{{ dataType }}">
