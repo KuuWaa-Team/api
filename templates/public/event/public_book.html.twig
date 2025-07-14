@@ -635,7 +635,7 @@
                             {% endif %}
 
                             <!-- Voice Message -->
-                            {% if invitation.book.audioPath != null %}
+                            {% if book.audioPath != null %}
                                 <div id="voice-message" class="bg-gradient-to-r from-[{{ template.primaryColor }}]/5 to-[{{ template.secondaryColor }}]/5 rounded-lg p-4 mt-4">
                                     <div class="flex items-center justify-between">
                                         <div class="flex items-center gap-2">
@@ -654,7 +654,7 @@
                                     </div>
                                 </div>
 
-                                <audio id="audio-player" src="{{ asset(invitation.book.audioPath) }}"></audio>
+                                <audio id="audio-player" src="{{ asset(book.audioPath) }}"></audio>
                             {% endif %}
                         </div>
                     </div>
