@@ -38,7 +38,7 @@ class EventController extends AbstractController
     /**
      * @throws NonUniqueResultException
      */
-    #[Route('/event/{slug}/public-book', name: 'app_public_event_public_book')] 
+    #[Route('/event/{id}/public-book', name: 'app_public_event_public_book')] 
     public function publicBook (Event $event): Response
     {
         return $this->render('public/event/public_book.html.twig', [
