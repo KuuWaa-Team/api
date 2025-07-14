@@ -41,8 +41,10 @@ class EventController extends AbstractController
     #[Route('/event/{id}/public-book', name: 'app_public_event_public_book')] 
     public function publicBook (Event $event): Response
     {
+        $apiUrl = $this->apiService->getApiUrl();
         return $this->render('public/event/public_book.html.twig', [
-            'event' => $event
+            'event' => $event,
+            'apiUrl' => $apiUrl,
         ]);
     }
 }
