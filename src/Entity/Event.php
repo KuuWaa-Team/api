@@ -485,6 +485,12 @@ class Event
     #[ORM\OneToMany(mappedBy: 'event', targetEntity: GameQuestion::class)]
     private Collection $questions;
 
+    #[ORM\Column(nullable: true)]
+    private ?bool $hasMusic = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?bool $hasGame = null;
+
     public function getImagePath(): ?string
     {
         return $this->imagePath;
@@ -1079,6 +1085,30 @@ class Event
                 $question->setEvent(null);
             }
         }
+
+        return $this;
+    }
+
+    public function hasMusic(): ?bool
+    {
+        return $this->hasMusic;
+    }
+
+    public function setHasMusic(?bool $hasMusic): static
+    {
+        $this->hasMusic = $hasMusic;
+
+        return $this;
+    }
+
+    public function hasGame(): ?bool
+    {
+        return $this->hasGame;
+    }
+
+    public function setHasGame(?bool $hasGame): static
+    {
+        $this->hasGame = $hasGame;
 
         return $this;
     }
