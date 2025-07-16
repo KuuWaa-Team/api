@@ -17,6 +17,8 @@ use App\Controller\Event\ListingAdminsController;
 use App\Controller\Event\ListingEventBeveragesController;
 use App\Controller\Event\OpenBeverageController;
 use App\Controller\Event\OpenBookController;
+use App\Controller\Event\OpenGameController;
+use App\Controller\Event\OpenMusicController;
 use App\Controller\Event\OpenTablesController;
 use App\Entity\Event\Book;
 use App\Entity\Event\EventAdmin;
@@ -178,6 +180,42 @@ use Symfony\Component\Serializer\Annotation\Groups;
             ],
             description: 'open book',
             name: 'openEventBook',
+        ),
+        new Post(
+            uriTemplate: '/events/{id}/open-music',
+            controller: OpenMusicController::class,
+            openapiContext: [
+                'summary' => 'Allow music choices',
+                'requestBody' => [
+                    'content' => [
+                        'application/json' => [
+                            'schema' => [
+                                'type' => 'object',
+                            ]
+                        ]
+                    ]
+                ],
+            ],
+            description: 'open music',
+            name: 'openEventMusic',
+        ),
+        new Post(
+            uriTemplate: '/events/{id}/open-game',
+            controller: OpenGameController::class,
+            openapiContext: [
+                'summary' => 'Allow game',
+                'requestBody' => [
+                    'content' => [
+                        'application/json' => [
+                            'schema' => [
+                                'type' => 'object',
+                            ]
+                        ]
+                    ]
+                ],
+            ],
+            description: 'open game',
+            name: 'openEventGame',
         ),
         new Post(
             uriTemplate: '/events/{id}/tables',

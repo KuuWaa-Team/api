@@ -56,7 +56,7 @@ class LoginController extends AbstractController
                     ->setSlug()
                     ->setCreatedAt()
                     ->setUpdatedAt()
-                    ->setCredits(0)
+                    ->setCredits(5)
                     ->setDisplayName($displayName)
                     ->setUid($uuid)
                     ->setPhotoUrl($photoUrl)
