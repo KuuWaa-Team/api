@@ -131,6 +131,7 @@ class User implements UserInterface
     private Collection $eventAdmins;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['user:pRead'])]
     private ?\DateTimeImmutable $deleted_at = null;
 
     public function __construct()
