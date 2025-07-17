@@ -51,6 +51,7 @@ class SendInvitationController extends AbstractController
         } else {
             $message = '';
             $success = true;
+
             $this->creditService->reduce($user, $invitation->getEvent()->getTemplate()->getPrice());
             $invitation->setStatus("sent");
             $this->invitationRepository->save($invitation);

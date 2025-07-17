@@ -427,7 +427,7 @@ class Event
      */
     public function getCanSendInvitations(): ?bool
     {
-        return $this->getUser()->getCredits() >= $this->getTemplate()->getPrice();
+        return $this->getOwner()->getCredits() >= $this->getTemplate()->getPrice();
     }
 
     #[Groups(['event:pRead', 'event:fRead'])]
@@ -505,7 +505,7 @@ class Event
     /**
      * @var Collection<int, Gift>
      */
-    #[ORM\OneToMany(mappedBy: 'event', targetEntity: Gift::class)]
+    #[ORM\OneToMany(mappedBy: 'event', targetEntity: Gift::class, cascade: ['remove'])]
     private Collection $gifts;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -520,7 +520,7 @@ class Event
     /**
      * @var Collection<int, GameQuestion>
      */
-    #[ORM\OneToMany(mappedBy: 'event', targetEntity: GameQuestion::class)]
+    #[ORM\OneToMany(mappedBy: 'event', targetEntity: GameQuestion::class, cascade: ['remove'])]
     private Collection $questions;
 
     #[ORM\Column(nullable: true)]
@@ -842,7 +842,7 @@ class Event
         return $this;
     }
 
-    public function getUser(): ?User
+    public function getOwner(): ?User
     {
         return $this->owner;
     }

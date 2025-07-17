@@ -72,6 +72,7 @@ class LoginController extends AbstractController
             if ($new) {
                 $welcomeMessage = "Bienvenue chez KuuWaa!\nLa meuilleur application de gestion d'evenement";
             }
+
         } catch (Exception $exception) {
             $success = false;
             $message = "Une erreur est survenue. Veuillez ressayer";

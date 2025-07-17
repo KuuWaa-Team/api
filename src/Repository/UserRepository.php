@@ -23,6 +23,15 @@ class UserRepository extends ServiceEntityRepository
         }
     }
 
+    public function findUsersMarkedForDeletion(): array
+    {
+        return $this->createQueryBuilder('u')
+            ->where('u.deleted_at IS NOT NULL')
+            ->getQuery()
+            ->getResult();
+    }
+
+
     //    /**
     //     * @return User[] Returns an array of User objects
     //     */
