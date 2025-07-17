@@ -55,7 +55,7 @@ class GameQuestion
     /**
      * @var Collection<int, GameAssertion>
      */
-    #[ORM\OneToMany(mappedBy: 'question', targetEntity: GameAssertion::class)]
+    #[ORM\OneToMany(mappedBy: 'question', targetEntity: GameAssertion::class, cascade: ['remove'])]
     #[Groups(['question:read'])]
     private Collection $gameAssertions;
 
@@ -66,7 +66,7 @@ class GameQuestion
     /**
      * @var Collection<int, GameResponse>
      */
-    #[ORM\OneToMany(mappedBy: 'question', targetEntity: GameResponse::class)]
+    #[ORM\OneToMany(mappedBy: 'question', targetEntity: GameResponse::class, cascade: ['remove'])]
     private Collection $gameResponse;
 
     #[ORM\Column(length: 255, nullable: true)]

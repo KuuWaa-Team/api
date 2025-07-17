@@ -29,7 +29,7 @@ class OpenBeverageController extends AbstractController
 
     public function __invoke(Request $request, Event $event): JsonResponse
     {
-        $user = $event->getUser();
+        $user = $event->getOwner();
         $message = "Gestion des boissons dévérouillé avec succeès";
         $success = true;
 

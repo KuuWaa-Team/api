@@ -6,6 +6,7 @@ use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
+use App\Controller\Auth\DeleteAccountController;
 use App\Controller\Auth\LoginController;
 use App\Controller\Event\ListingUserEventController;
 use App\Controller\Wallet\ListingOperationsController;
@@ -55,6 +56,11 @@ use Symfony\Component\Serializer\Attribute\Groups;
             controller: RechargeController::class,
             description: "Recharge credits",
         ),
+        new Post(
+            uriTemplate: '/users/{id}/remove',
+            controller: DeleteAccountController::class,
+            description: "delete account",
+        ),
     ]
 )]
 class User implements UserInterface
@@ -100,13 +106,13 @@ class User implements UserInterface
     /**
      * @var Collection<int, Event>
      */
-    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Event::class)]
+    #[ORM\OneToMany(mappedBy: 'owner', targetEntity: Event::class, cascade: ['remove'])]
     private Collection $events;
 
     /**
      * @var Collection<int, Operation>
      */
-    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Operation::class)]
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Operation::class, cascade: ['remove'])]
     private Collection $operations;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -115,14 +121,17 @@ class User implements UserInterface
     /**
      * @var Collection<int, EventAdmin>
      */
-    #[ORM\OneToMany(mappedBy: 'user', targetEntity: EventAdmin::class)]
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: EventAdmin::class, cascade: ['remove'])]
     private Collection $admins;
 
     /**
      * @var Collection<int, EventAdmin>
      */
-    #[ORM\OneToMany(mappedBy: 'createdBy', targetEntity: EventAdmin::class)]
+    #[ORM\OneToMany(mappedBy: 'createdBy', targetEntity: EventAdmin::class, cascade: ['remove'])]
     private Collection $eventAdmins;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $deleted_at = null;
 
     public function __construct()
     {
@@ -379,6 +388,18 @@ class User implements UserInterface
                 $eventAdmin->setCreatedBy(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getDeletedAt(): ?\DateTimeImmutable
+    {
+        return $this->deleted_at;
+    }
+
+    public function setDeletedAt(?\DateTimeImmutable $deleted_at): static
+    {
+        $this->deleted_at = $deleted_at;
 
         return $this;
     }

@@ -36,7 +36,7 @@ class ListingUserEventController extends AbstractController
         $userData = $this->userRepository->find($user->getId());
 
         foreach ($data as $event) {
-            if ($event->getUser()->getId() !== $user->getId()) {
+            if ($event->getOwner()->getId() !== $user->getId()) {
                 $event->setShared(true);
             }
         }
