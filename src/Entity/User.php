@@ -8,6 +8,7 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
 use App\Controller\Auth\DeleteAccountController;
 use App\Controller\Auth\LoginController;
+use App\Controller\Auth\RestoreDeletion;
 use App\Controller\Event\ListingUserEventController;
 use App\Controller\Wallet\ListingOperationsController;
 use App\Controller\Wallet\RechargeController;
@@ -60,6 +61,11 @@ use Symfony\Component\Serializer\Attribute\Groups;
             uriTemplate: '/users/{id}/remove',
             controller: DeleteAccountController::class,
             description: "delete account",
+        ),
+        new Post(
+            uriTemplate: '/users/{id}/restore',
+            controller: RestoreDeletion::class,
+            description: "restore account",
         ),
     ]
 )]
