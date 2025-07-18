@@ -54,7 +54,7 @@ class EventRepository extends ServiceEntityRepository
             ->where('e.owner = :u')
             ->orWhere('ea.user = :u')
             ->setParameter('u', $user)
-            ->orderBy('e.startDate', 'DESC')
+            ->orderBy('e.startDate')
             ->getQuery()
             ->getResult()
         ;

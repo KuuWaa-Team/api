@@ -18,6 +18,7 @@ use App\Controller\Event\ListingEventBeveragesController;
 use App\Controller\Event\OpenBeverageController;
 use App\Controller\Event\OpenBookController;
 use App\Controller\Event\OpenTablesController;
+use App\Entity\EventTemplate\TemplateRequirementValue;
 use App\Entity\Event\Book;
 use App\Entity\Event\EventAdmin;
 use App\Entity\Event\GameQuestion;
@@ -474,9 +475,11 @@ class Event
     private ?string $templateImage = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['event:pRead', 'event:fRead', 'invitation:fRead'])]
     private ?bool $hasQuiz = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['event:pRead', 'event:fRead', 'invitation:fRead'])]
     private ?bool $hasGift = null;
 
     /**
@@ -486,10 +489,19 @@ class Event
     private Collection $questions;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['event:pRead', 'event:fRead', 'invitation:fRead'])]
     private ?bool $hasMusic = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['event:pRead', 'event:fRead', 'invitation:fRead'])]
     private ?bool $hasGame = null;
+
+    /**
+     * @var Collection<int, TemplateRequirementValue>
+     */
+    #[ORM\OneToMany(mappedBy: 'event', targetEntity: TemplateRequirementValue::class)]
+    #[Groups(['event:pRead', 'event:fRead', 'invitation:fRead'])]
+    private Collection $templateRequirementValues;
 
     public function getImagePath(): ?string
     {
@@ -514,6 +526,7 @@ class Event
         $this->gifts = new ArrayCollection();
         $this->eventSpecifications = new ArrayCollection();
         $this->questions = new ArrayCollection();
+        $this->templateRequirementValues = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -1109,6 +1122,36 @@ class Event
     public function setHasGame(?bool $hasGame): static
     {
         $this->hasGame = $hasGame;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, TemplateRequirementValue>
+     */
+    public function getTemplateRequirementValues(): Collection
+    {
+        return $this->templateRequirementValues;
+    }
+
+    public function addTemplateRequirementValue(TemplateRequirementValue $templateRequirementValue): static
+    {
+        if (!$this->templateRequirementValues->contains($templateRequirementValue)) {
+            $this->templateRequirementValues->add($templateRequirementValue);
+            $templateRequirementValue->setEvent($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTemplateRequirementValue(TemplateRequirementValue $templateRequirementValue): static
+    {
+        if ($this->templateRequirementValues->removeElement($templateRequirementValue)) {
+            // set the owning side to null (unless already changed)
+            if ($templateRequirementValue->getEvent() === $this) {
+                $templateRequirementValue->setEvent(null);
+            }
+        }
 
         return $this;
     }
