@@ -1131,7 +1131,6 @@ class Event
     public function removeQuestion(GameQuestion $question): static
     {
         if ($this->questions->removeElement($question)) {
-            // set the owning side to null (unless already changed)
             if ($question->getEvent() === $this) {
                 $question->setEvent(null);
             }
