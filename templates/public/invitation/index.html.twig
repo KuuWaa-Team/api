@@ -1191,7 +1191,7 @@
             
             {% if invitation.event.hasGame == true %}
             <!-- GAME -->
-            <div class="rounded-lg border bg-card text-card-foreground border-[{{ template.primaryColor }}]/20 shadow-lg">
+            <div id="game-section" class="rounded-lg border bg-card text-card-foreground border-[{{ template.primaryColor }}]/20 shadow-lg">
                 <div class="flex flex-col space-y-1.5 p-6 text-center">
                     <div
                             class="font-semibold tracking-tight text-2xl text-[{{ template.secondaryColor }}] flex items-center justify-center gap-2">
@@ -1324,7 +1324,7 @@
             <!-- END GAME -->
 
             <!-- GAME PLAY -->
-            <div class="rounded-lg border bg-card text-card-foreground border-[#f24173]/20 shadow-lg" data-v0-t="card">
+            <div id="game-play-section" class="rounded-lg border bg-card text-card-foreground border-[#f24173]/20 hidden" data-v0-t="card">
                 <div class="flex flex-col space-y-1.5 p-6 text-center">
                     <h3 class="font-semibold tracking-tight text-2xl text-[#2f2644] flex items-center justify-center gap-2"><svg
                             xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
@@ -2181,6 +2181,298 @@
       });
     });
   });
+</script>
+
+<script>
+    // Configuration du quiz
+const quizData = [
+    {
+        question: "Qui a fait le premier pas ?",
+        options: ["Serge", "Deborah", "C'était simultané", "Un ami commun a tout arrangé"],
+        correctAnswer: 1,
+        funFact: "Deborah a invité Serge à prendre un café après s'être rencontrés à une exposition d'art !"
+    },
+    {
+        question: "Où était leur premier rendez-vous ?",
+        options: ["Au cinéma", "Dans un café", "Au parc", "À la plage"],
+        correctAnswer: 1,
+        funFact: "Ils ont parlé pendant 4 heures sans voir le temps passer !"
+    },
+    {
+        question: "Quelle est la chanson préférée du couple ?",
+        options: ["Perfect - Ed Sheeran", "All of Me - John Legend", "At Last - Etta James", "Can't Help Falling in Love - Elvis"],
+        correctAnswer: 2,
+        funFact: "Cette chanson a joué lors de leur première danse ensemble !"
+    },
+    {
+        question: "Quel est le plat préféré qu'ils cuisinent ensemble ?",
+        options: ["Lasagnes", "Sushi", "Tacos", "Risotto aux champignons"],
+        correctAnswer: 3,
+        funFact: "Ils ont appris à le faire lors d'un cours de cuisine pour leur anniversaire !"
+    },
+    {
+        question: "Où Serge a-t-il demandé Deborah en mariage ?",
+        options: ["Paris", "À la maison", "Sur une plage", "En montagne"],
+        correctAnswer: 2,
+        funFact: "Il avait préparé un chemin de pétales de roses jusqu'à la terrasse décorée de bougies !"
+    }
+];
+
+// Variables du jeu
+let currentQuestion = 0;
+let userAnswers = [];
+let score = 0;
+let gameStarted = false;
+
+// Éléments DOM
+const gameSection = document.getElementById('game-section');
+const gamePlaySection = document.getElementById('game-play-section');
+
+// Initialisation du jeu
+function initializeQuiz() {
+    // Ajouter l'événement au bouton "Commencer le Quiz"
+    const startButton = gameSection.querySelector('button');
+    if (startButton) {
+        startButton.addEventListener('click', startQuiz);
+    }
+}
+
+// Démarrer le quiz
+function startQuiz() {
+    gameStarted = true;
+    currentQuestion = 0;
+    userAnswers = [];
+    score = 0;
+    
+    // Masquer la section d'introduction et afficher le jeu
+    gameSection.classList.add('hidden');
+    gamePlaySection.classList.remove('hidden');
+    
+    // Afficher la première question
+    displayQuestion();
+}
+
+// Afficher une question
+function displayQuestion() {
+    if (currentQuestion >= quizData.length) {
+        showResults();
+        return;
+    }
+    
+    const question = quizData[currentQuestion];
+    
+    // Mettre à jour le contenu de la section de jeu
+    const questionNumber = gamePlaySection.querySelector('p');
+    const questionTitle = gamePlaySection.querySelector('h3');
+    const optionsContainer = gamePlaySection.querySelector('.space-y-3');
+    
+    // Mettre à jour le numéro de question
+    questionNumber.textContent = `Question ${currentQuestion + 1} sur ${quizData.length}`;
+    
+    // Mettre à jour le titre de la question
+    questionTitle.textContent = question.question;
+    
+    // Créer les boutons d'options
+    optionsContainer.innerHTML = '';
+    question.options.forEach((option, index) => {
+        const button = document.createElement('button');
+        button.className = 'w-full p-3 rounded-lg border border-[#f24173]/30 hover:bg-[#f24173]/5 text-left transition-all flex items-center justify-between';
+        button.innerHTML = `<span>${option}</span>`;
+        button.addEventListener('click', () => selectAnswer(index));
+        optionsContainer.appendChild(button);
+    });
+}
+
+// Sélectionner une réponse
+function selectAnswer(selectedIndex) {
+    const question = quizData[currentQuestion];
+    const isCorrect = selectedIndex === question.correctAnswer;
+    
+    // Enregistrer la réponse
+    userAnswers.push(selectedIndex);
+    if (isCorrect) {
+        score++;
+    }
+    
+    // Désactiver tous les boutons et montrer la bonne réponse
+    const buttons = gamePlaySection.querySelectorAll('.space-y-3 button');
+    buttons.forEach((button, index) => {
+        button.disabled = true;
+        button.style.pointerEvents = 'none';
+        
+        if (index === question.correctAnswer) {
+            // Bonne réponse en vert
+            button.classList.remove('border-[#f24173]/30', 'hover:bg-[#f24173]/5');
+            button.classList.add('bg-green-100', 'border-green-300', 'text-green-800');
+            
+            // Ajouter une icône de check
+            const checkIcon = document.createElement('svg');
+            checkIcon.innerHTML = `
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-green-600">
+                    <path d="M20 6L9 17l-5-5"></path>
+                </svg>
+            `;
+            button.appendChild(checkIcon.firstElementChild);
+        } else if (index === selectedIndex && !isCorrect) {
+            // Mauvaise réponse sélectionnée en rouge
+            button.classList.remove('border-[#f24173]/30', 'hover:bg-[#f24173]/5');
+            button.classList.add('bg-red-100', 'border-red-300', 'text-red-800');
+            
+            // Ajouter une icône de X
+            const xIcon = document.createElement('svg');
+            xIcon.innerHTML = `
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-red-600">
+                    <path d="M18 6L6 18"></path>
+                    <path d="M6 6l12 12"></path>
+                </svg>
+            `;
+            button.appendChild(xIcon.firstElementChild);
+        }
+    });
+    
+    // Afficher l'anecdote
+    showFunFact(question.funFact);
+    
+    // Passer à la question suivante après 3 secondes
+    setTimeout(() => {
+        currentQuestion++;
+        displayQuestion();
+    }, 3000);
+}
+
+// Afficher l'anecdote
+function showFunFact(funFact) {
+    const container = gamePlaySection.querySelector('.space-y-6');
+    
+    // Supprimer l'ancienne anecdote si elle existe
+    const existingFunFact = container.querySelector('.fun-fact');
+    if (existingFunFact) {
+        existingFunFact.remove();
+    }
+    
+    // Créer la nouvelle anecdote
+    const funFactDiv = document.createElement('div');
+    funFactDiv.className = 'fun-fact bg-[#f24173]/5 p-4 rounded-lg text-center border border-[#f24173]/20';
+    funFactDiv.innerHTML = `
+        <div class="flex items-center justify-center gap-2 mb-2">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-[#f24173]">
+                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
+            </svg>
+            <span class="text-[#2f2644] font-medium text-sm">Le saviez-vous ?</span>
+        </div>
+        <p class="text-[#2f2644] text-sm">${funFact}</p>
+        ${currentQuestion < quizData.length - 1 ? 
+            '<p class="text-[#2f2644]/60 text-xs mt-2">Question suivante dans 3 secondes...</p>' : 
+            '<p class="text-[#2f2644]/60 text-xs mt-2">Calcul de votre score...</p>'
+        }
+    `;
+    
+    container.appendChild(funFactDiv);
+}
+
+function showResults() {
+    const percentage = Math.round((score / quizData.length) * 100);
+    let message = '';
+    let emoji = '';
+    
+    if (percentage >= 80) {
+        message = "Incroyable ! Vous connaissez parfaitement notre histoire d'amour !";
+        emoji = "🏆";
+    } else if (percentage >= 60) {
+        message = "Très bien ! Vous êtes un(e) vrai(e) ami(e) du couple !";
+        emoji = "🎉";
+    } else if (percentage >= 40) {
+        message = "Pas mal ! Il vous reste encore quelques secrets à découvrir !";
+        emoji = "😊";
+    } else {
+        message = "Il faut mieux nous connaître ! Mais merci d'avoir participé !";
+        emoji = "😅";
+    }
+    
+    // Remplacer le contenu de la section de jeu par les résultats
+    gamePlaySection.innerHTML = `
+        <div class="flex flex-col space-y-1.5 p-6 text-center">
+            <h3 class="font-semibold tracking-tight text-2xl text-[#2f2644] flex items-center justify-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trophy w-6 h-6 text-[#f24173]">
+                    <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path>
+                    <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path>
+                    <path d="M4 22h16"></path>
+                    <path d="M10 14.66V17c0 .55.47.98.97 1.21C12.04 18.75 14 20 14 20s1.96-1.25 3.03-1.79c.5-.23.97-.66.97-1.21v-2.34"></path>
+                    <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path>
+                </svg>
+                Résultats du Quiz
+            </h3>
+        </div>
+        <div class="p-6 pt-0">
+            <div class="text-center space-y-6">
+                <div class="bg-gradient-to-br from-[#f24173]/10 to-[#2f2644]/10 rounded-2xl p-8">
+                    <div class="text-6xl mb-4">${emoji}</div>
+                    <h3 class="text-2xl font-bold text-[#2f2644] mb-3">Bravo !</h3>
+                    <div class="text-4xl font-bold text-[#f24173] mb-2">${score}/${quizData.length}</div>
+                    <div class="text-lg text-[#2f2644]/70 mb-4">${percentage}% de bonnes réponses</div>
+                    <p class="text-[#2f2644] leading-relaxed">${message}</p>
+                    <div class="mt-6 p-4 bg-[#f24173]/5 rounded-lg border border-[#f24173]/20">
+                        <p class="text-[#f24173] font-medium text-sm">
+                            🎁 Votre score sera pris en compte pour la récompense de la soirée !
+                        </p>
+                    </div>
+                </div>
+                <div class="space-y-3">
+                    <button onclick="restartQuiz()" class="bg-gradient-to-r from-[#f24173] to-[#2f2644] hover:from-[#f24173]/90 hover:to-[#2f2644]/90 text-white px-8 py-3 rounded-full font-semibold transition-all duration-300 hover:shadow-lg">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="inline mr-2">
+                            <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"></path>
+                            <path d="M21 3v5h-5"></path>
+                            <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"></path>
+                            <path d="M3 21v-5h5"></path>
+                        </svg>
+                        Recommencer le quiz
+                    </button>
+                    <button onclick="backToIntro()" class="border-2 border-[#2f2644] text-[#2f2644] hover:bg-[#2f2644] hover:text-white px-6 py-2 rounded-full font-medium transition-all duration-300">
+                        Retour à l'introduction
+                    </button>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+function restartQuiz() {
+    currentQuestion = 0;
+    userAnswers = [];
+    score = 0;
+    displayQuestion();
+}
+
+function backToIntro() {
+    gameStarted = false;
+    gameSection.classList.remove('hidden');
+    gamePlaySection.classList.add('hidden');
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    initializeQuiz();
+});
+
+function addSparkleEffect(element) {
+    const sparkle = document.createElement('div');
+    sparkle.className = 'absolute w-2 h-2 bg-yellow-400 rounded-full animate-ping';
+    sparkle.style.left = Math.random() * 100 + '%';
+    sparkle.style.top = Math.random() * 100 + '%';
+    element.appendChild(sparkle);
+    
+    setTimeout(() => {
+        sparkle.remove();
+    }, 1000);
+}
+
+function celebrateCorrectAnswer() {
+    const container = gamePlaySection.querySelector('.space-y-6');
+    for (let i = 0; i < 5; i++) {
+        setTimeout(() => {
+            addSparkleEffect(container);
+        }, i * 200);
+    }
+}
 </script>
 
 </body>
