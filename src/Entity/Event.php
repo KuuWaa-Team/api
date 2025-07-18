@@ -17,6 +17,8 @@ use App\Controller\Event\ListingAdminsController;
 use App\Controller\Event\ListingEventBeveragesController;
 use App\Controller\Event\OpenBeverageController;
 use App\Controller\Event\OpenBookController;
+use App\Controller\Event\OpenGameController;
+use App\Controller\Event\OpenMusicController;
 use App\Controller\Event\OpenTablesController;
 use App\Entity\EventTemplate\TemplateRequirementValue;
 use App\Entity\Event\Book;
@@ -179,6 +181,42 @@ use Symfony\Component\Serializer\Annotation\Groups;
             ],
             description: 'open book',
             name: 'openEventBook',
+        ),
+        new Post(
+            uriTemplate: '/events/{id}/open-music',
+            controller: OpenMusicController::class,
+            openapiContext: [
+                'summary' => 'Allow music choices',
+                'requestBody' => [
+                    'content' => [
+                        'application/json' => [
+                            'schema' => [
+                                'type' => 'object',
+                            ]
+                        ]
+                    ]
+                ],
+            ],
+            description: 'open music',
+            name: 'openEventMusic',
+        ),
+        new Post(
+            uriTemplate: '/events/{id}/open-game',
+            controller: OpenGameController::class,
+            openapiContext: [
+                'summary' => 'Allow game',
+                'requestBody' => [
+                    'content' => [
+                        'application/json' => [
+                            'schema' => [
+                                'type' => 'object',
+                            ]
+                        ]
+                    ]
+                ],
+            ],
+            description: 'open game',
+            name: 'openEventGame',
         ),
         new Post(
             uriTemplate: '/events/{id}/tables',
@@ -390,7 +428,7 @@ class Event
      */
     public function getCanSendInvitations(): ?bool
     {
-        return $this->getUser()->getCredits() >= $this->getTemplate()->getPrice();
+        return $this->getOwner()->getCredits() >= $this->getTemplate()->getPrice();
     }
 
     #[Groups(['event:pRead', 'event:fRead'])]
@@ -468,7 +506,7 @@ class Event
     /**
      * @var Collection<int, Gift>
      */
-    #[ORM\OneToMany(mappedBy: 'event', targetEntity: Gift::class)]
+    #[ORM\OneToMany(mappedBy: 'event', targetEntity: Gift::class, cascade: ['remove'])]
     private Collection $gifts;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -485,7 +523,7 @@ class Event
     /**
      * @var Collection<int, GameQuestion>
      */
-    #[ORM\OneToMany(mappedBy: 'event', targetEntity: GameQuestion::class)]
+    #[ORM\OneToMany(mappedBy: 'event', targetEntity: GameQuestion::class, cascade: ['remove'])]
     private Collection $questions;
 
     #[ORM\Column(nullable: true)]
@@ -817,7 +855,7 @@ class Event
         return $this;
     }
 
-    public function getUser(): ?User
+    public function getOwner(): ?User
     {
         return $this->owner;
     }

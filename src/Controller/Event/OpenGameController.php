@@ -22,7 +22,7 @@ class OpenGameController extends AbstractController
 
     public function __invoke(Request $request, Event $event): JsonResponse
     {
-        $user = $event->getUser();
+        $user = $event->getOwner();
         $message = "Jeux dévérouillés avec succeès";
         $success = true;
 

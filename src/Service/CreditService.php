@@ -26,7 +26,7 @@ class CreditService
         $this->userRepository->save($user);
     }
 
-    public function reduce(User $user, int $amount): void
+        public function reduce(User $user, int $amount): void
     {
         $currentBalance = $user->getCredits();
         $newBalance = $currentBalance - $amount;

@@ -29,7 +29,7 @@ class OpenBookController extends AbstractController
 
     public function __invoke(Request $request, Event $event): JsonResponse
     {
-        $user = $event->getUser();
+        $user = $event->getOwner();
         $message = "Livre d'or dévérouillé avec succeès";
         $success = true;
 
