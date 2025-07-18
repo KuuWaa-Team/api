@@ -1140,7 +1140,7 @@ class Event
         return $this;
     }
 
-    public function hasMusic(): ?bool
+    public function getHasMusic(): ?bool
     {
         return $this->hasMusic;
     }
@@ -1152,7 +1152,7 @@ class Event
         return $this;
     }
 
-    public function hasGame(): ?bool
+    public function getHasGame(): ?bool
     {
         return $this->hasGame;
     }
