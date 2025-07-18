@@ -1063,7 +1063,7 @@
             <!-- END BOOK -->
 
             <!-- MUSIC -->
-            {% if invitation.event.hasMusic %}
+            {% if event.hasMusic %}
             <div class="rounded-lg border bg-card text-card-foreground border-[{{ template.primaryColor }}]/20 shadow-lg">
                 <div class="flex flex-col space-y-1.5 p-6 text-center">
                     <div
@@ -1189,8 +1189,8 @@
             {% endif %}
             <!-- END BEVERAGE -->
             
-            <!-- GAME -->
             {% if invitation.event.hasGame == true %}
+            <!-- GAME -->
             <div class="rounded-lg border bg-card text-card-foreground border-[{{ template.primaryColor }}]/20 shadow-lg">
                 <div class="flex flex-col space-y-1.5 p-6 text-center">
                     <div
@@ -1321,7 +1321,6 @@
                     </div>
                 </div>
             </div>
-            {% endif %}
             <!-- END GAME -->
 
             <!-- GAME PLAY -->
@@ -1357,6 +1356,7 @@
                 </div>
             </div>
             <!-- END GAME PLAY -->
+            {% endif %}
 
             {# <div class="rounded-lg border bg-card text-card-foreground border-[{{ template.primaryColor }}]/20 shadow-lg">
                 <div class="flex flex-col space-y-1.5 p-6 text-center">
