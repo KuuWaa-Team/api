@@ -286,6 +286,9 @@ class Invitation
     #[ORM\OneToMany(mappedBy: 'invitation', targetEntity: GameResponse::class)]
     private Collection $gameResponses;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $gameStatus = null;
+
     public function __construct()
     {
         $this->invitations = new ArrayCollection();
@@ -634,6 +637,18 @@ class Invitation
                 $gameResponse->setInvitation(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getGameStatus(): ?string
+    {
+        return $this->gameStatus;
+    }
+
+    public function setGameStatus(?string $gameStatus): static
+    {
+        $this->gameStatus = $gameStatus;
 
         return $this;
     }
