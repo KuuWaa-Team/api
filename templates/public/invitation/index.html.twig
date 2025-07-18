@@ -45,17 +45,16 @@
             --tw-gradient-to: #{{ secondaryHex }} var(--tw-gradient-to-position) !important;
         }
 
-        
+        {% for i in 0..20 %}
         .to-\[\#{{ primaryHex }}\]\/{{ i * 5 }} {
             --tw-gradient-to: rgba({{ primaryR }} {{ primaryG }} {{ primaryB }}/{{ (i*5/100) }}) var(--tw-gradient-to-position) !important;
         }
-        
 
         
         .to-\[\#{{ secondaryHex }}\]\/{{ i * 5 }} {
             --tw-gradient-to: rgba({{ secondaryR }} {{ secondaryG }} {{ secondaryB }}/{{ (i*5/100) }}) var(--tw-gradient-to-position) !important;
         }
-        
+        {% endfor %}
 
         /* Primary background */
         .text-\[\{{ template.primaryColor }}\] {
