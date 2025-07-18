@@ -50,7 +50,6 @@
             --tw-gradient-to: rgba({{ primaryR }} {{ primaryG }} {{ primaryB }}/{{ (i*5/100) }}) var(--tw-gradient-to-position) !important;
         }
 
-        
         .to-\[\#{{ secondaryHex }}\]\/{{ i * 5 }} {
             --tw-gradient-to: rgba({{ secondaryR }} {{ secondaryG }} {{ secondaryB }}/{{ (i*5/100) }}) var(--tw-gradient-to-position) !important;
         }
@@ -64,12 +63,13 @@
         .bg-\[\{{ template.primaryColor }}\] {
             background-color: {{ template.primaryColor }} !important;
         }
-
         
+        {% for i in 0..20 %}
         .bg-\[\{{ template.primaryColor }}\]\/{{ i * 5 }} {
                                                 background-color: rgba({{ primaryR }}, {{ primaryG }}, {{ primaryB }}, {{ (i * 5) / 100 }});
                                             }
         
+        {% endfor %}
 
         /* Classes de base */
         .border-\[\#{{ primaryHex }}\] {
