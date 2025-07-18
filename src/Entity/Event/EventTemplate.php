@@ -11,6 +11,7 @@ use ApiPlatform\Metadata\Put;
 use App\Controller\Template\GetAllController;
 use App\Entity\Event;
 use App\Entity\EventCategory;
+use App\Entity\EventTemplate\TemplateRequirement;
 use App\Repository\EventTemplateRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -82,9 +83,16 @@ class EventTemplate
     #[Groups(['event:pRead', 'event:fRead', 'invitation:fRead', 'templates:fRead'])]
     private ?string $secondaryColor = null;
 
+    /**
+     * @var Collection<int, TemplateRequirement>
+     */
+    #[ORM\OneToMany(mappedBy: 'template', targetEntity: TemplateRequirement::class)]
+    private Collection $templateRequirements;
+
     public function __construct()
     {
         $this->events = new ArrayCollection();
+        $this->templateRequirements = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -226,6 +234,36 @@ class EventTemplate
     public function setSecondaryColor(string $secondaryColor): static
     {
         $this->secondaryColor = $secondaryColor;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, TemplateRequirement>
+     */
+    public function getTemplateRequirements(): Collection
+    {
+        return $this->templateRequirements;
+    }
+
+    public function addTemplateRequirement(TemplateRequirement $templateRequirement): static
+    {
+        if (!$this->templateRequirements->contains($templateRequirement)) {
+            $this->templateRequirements->add($templateRequirement);
+            $templateRequirement->setTemplate($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTemplateRequirement(TemplateRequirement $templateRequirement): static
+    {
+        if ($this->templateRequirements->removeElement($templateRequirement)) {
+            // set the owning side to null (unless already changed)
+            if ($templateRequirement->getTemplate() === $this) {
+                $templateRequirement->setTemplate(null);
+            }
+        }
 
         return $this;
     }
