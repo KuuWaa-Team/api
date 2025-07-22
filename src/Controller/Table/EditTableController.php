@@ -26,6 +26,7 @@ class EditTableController extends AbstractController
      */
     public function __invoke(Request $request, Table $table, KernelInterface $kernel)
     {
+        $content = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
         $name = $content["name"] ?? null;
         $count = $content["count"] ?? null;
 
