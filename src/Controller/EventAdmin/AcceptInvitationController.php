@@ -61,7 +61,7 @@ class AcceptInvitationController extends AbstractController
             ], Response::HTTP_OK);
         }
 
-        if ($user->getId() === $eventAdmin->getEvent()?->getUser()?->getId()) {
+        if ($user->getId() === $eventAdmin->getEvent()?->getOwner()?->getId()) {
             return $this->json([
                 'success' => false,
                 'message' => 'Vous ne pouvez pas accepter une invitation à votre propre évènement.'
