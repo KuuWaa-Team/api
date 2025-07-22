@@ -9,6 +9,7 @@ use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use App\Controller\Table\AddTableController;
+use App\Controller\Table\EditTableController;
 use App\Repository\TableRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -37,6 +38,24 @@ use Symfony\Component\Serializer\Annotation\Groups;
             ],
             description: 'add table',
             name: 'addTabble',
+        ),
+        new Post(
+            uriTemplate: '/tables/{id}/edit',
+            controller: EditTableController::class,
+            openapiContext: [
+                'summary' => 'edit table',
+                'requestBody' => [
+                    'content' => [
+                        'application/json' => [
+                            'schema' => [
+                                'type' => 'object',
+                            ]
+                        ]
+                    ]
+                ],
+            ],
+            description: 'edit table',
+            name: 'editTable',
         ),
         new Put(),
         new Delete()
