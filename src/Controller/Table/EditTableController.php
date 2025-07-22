@@ -42,6 +42,8 @@ class EditTableController extends AbstractController
         $table->setName($name);
         $table->setCount((int) $count);
 
+        $this->tableRepository->save($table);
+
         $tables = $this->tableRepository->findByEvent($table->getEvent());
         $response = [
             'success'   => $success,
