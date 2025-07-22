@@ -28,15 +28,24 @@ class EditTableController extends AbstractController
     {
         $name = $content["name"] ?? null;
         $count = $content["count"] ?? null;
+
+        $message = "Table modifiée avec succès";
+        $success = true;
+
+        $invitationsCount = $table->getInvitations()->count();
+        if ((int)$count < $invitationsCount) {
+            $message = "La table doit avoir au mois $invitationsCount place, comme il y a deja $invitationsCount invitation y affectees";
+            $success = false;
+        }
         
         $table->setName($name);
         $table->setCount((int) $count);
 
         $tables = $this->tableRepository->findByEvent($table->getEvent());
         $response = [
-            'success'   => true,
+            'success'   => $success,
             'tables' => $this->normalizer->normalize($tables, null, ['groups' => ['table:pRead']]),
-            'message'   => "Table modifiée avec succès",
+            'message'   => $message,
         ];
 
         return new JsonResponse($response, Response::HTTP_OK);
