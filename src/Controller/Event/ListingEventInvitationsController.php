@@ -24,12 +24,12 @@ class ListingEventInvitationsController extends AbstractController
      */
     public function __invoke(Event $event, Request $request): JsonResponse
     {
-        $wn = (bool) $request->query->get('wm') ?? false;
+        $wn = (bool) $request->query->get('wm');
         $invitations = $this->invitationRepository->findByEvent($event, $wn);
 
         $response = [
             'success' => true,
-            'data'    => $this->normalizerInterface->normalize($invitations, null, ['groups' => ['invitation:pRead']])
+            'data'    => $invitations
         ];
 
         return new JsonResponse($response, Response::HTTP_OK);
