@@ -29,7 +29,7 @@ class ListingEventInvitationsController extends AbstractController
 
         $response = [
             'success' => true,
-            'data'    => $this->normalizerInterface->normalize($invitations, null, ['groups' => ['invitation:pRead']])
+            'data'    => $invitations
         ];
 
         return new JsonResponse($response, Response::HTTP_OK);
