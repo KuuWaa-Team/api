@@ -74,6 +74,8 @@ class EditEventController extends AbstractController
 
             if (!empty($endDate) && strtoupper($endDate) != "NULL") {
                 $event->setEndDate(new \DateTime($endDate));
+            } else {
+                $event->setEndDate(null);
             }
         }
 
