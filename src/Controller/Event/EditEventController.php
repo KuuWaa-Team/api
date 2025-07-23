@@ -27,6 +27,7 @@ class EditEventController extends AbstractController
         private readonly EventCategoryRepository $categoryRepository,
         private readonly ProvinceRepository $provinceRepository,
         private readonly CountryRepository $countryRepository,
+        private readonly NormalizerInterface $normalizerInterface,
         private readonly AddressRepository $addressRepository,
     ) {
     }
@@ -37,61 +38,29 @@ class EditEventController extends AbstractController
     public function __invoke(Event $event, Request $request, UserInterface $user, KernelInterface $kernel): JsonResponse
     {
         $content = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
+        $step = $content['step'];
         $message = 'Evénement modifié avec succès !';
         $success = true;
         $errorType = null;
 
-        $name = $content['name'] ?? null;
-        $date = $content['date'] ?? null;
-        $details = $content['details'] ?? null;
-        $provinceId = $content['province_id'] ?? null;
-        $street = $content['street'] ?? null;
-        $number = $content['number'] ?? null;
-        $ref = $content['ref'] ?? null;
+        if ($step === "GENERAL_INFORMATIONS") {
+            $title = $content['title'] ?? null;
+            $details = $content['details'] ?? null;
+            $category_id = $content['category_id'] ?? null;
 
-        $category_id = $content['category_id'] ?? null;
-
-         if ($category_id === null || $category_id === 0) {
-             $category = (new EventCategory())
-                 ->setName($content['category_name'] ?? 'Non défini')
-                 ->setValidated(false)
-             ;
-         } else {
-             $category = $this->categoryRepository->find($category_id);
-         }
-
-        if ($name !== null) {
-            $event->setName($name);
-        }
-
-        if ($date !== null) {
-            $event->setDate(new \DateTime($date));
-        }
-
-        if ($details !== null) {
-            $event->setDetails($details);
-        }
-
-        if (
-            $street !== $event->getAddress()->getStreet()
-            || $number !== $event->getAddress()->getNumber()
-            || $ref !== $event->getAddress()->getRef()
-            || $provinceId !== $event->getAddress()->getProvince()->getId()
-        ) {
-            $address = (new Address())
-                ->setRef($ref)
-                ->setCountry($this->countryRepository->find(1))
-                ->setNumber($number)
-                ->setStreet($street)
-            ;
-            if ($provinceId !== null) {
-                $address->setProvince($this->provinceRepository->find($provinceId));
+            $category = $this->categoryRepository->find($category_id ?? 0);
+            if ($category === null) {
+                $category = (new EventCategory())
+                    ->setName($content['category_name'] ?? 'Non défini')
+                    ->setValidated(false)
+                ;
+                $this->categoryRepository->save($category);
             }
-            $this->addressRepository->save($address, true);
-            $event->setAddress($address);
+            $event  
+                ->setTitle($title)
+                ->setDetails($details)
+                ->setCategory($category);
         }
-
-        $event->setCategory($category);
 
         try {
             $this->eventRepository->save($event, true);
@@ -99,11 +68,14 @@ class EditEventController extends AbstractController
             $success = false;
             $message = 'Erreur : événement non modifié !';
         }
+        
+        $data = $this->normalizerInterface->normalize($event, null, ['groups' => ['event:pRead']]);
 
         $response = [
             'success'   => $success,
             'message'   => $message,
             'errorType' => $errorType,
+            'event' => $data
         ];
 
         return new JsonResponse($response, Response::HTTP_OK);
