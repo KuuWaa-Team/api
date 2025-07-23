@@ -57,6 +57,24 @@ class EditEventController extends AbstractController
                 ->setTitle($title)
                 ->setDetails($details)
                 ->setCategory($category);
+        } else if ($step == "PLACE_DATE_HOUR") {
+            $startDate = $content['start_date'];
+            $endDate = $content['end_date'];
+            $address = $content['address'];
+            $placeName = $content['place_name'];
+            $placeLongitude = $content['place_longitude'];
+            $placeLatitude = $content['place_latitude'];
+
+            $event
+                ->setAddress($address)
+                ->setPlaceName($placeName)
+                ->setPlaceLongitude($placeLongitude)
+                ->setPlaceLatitude($placeLatitude)
+                ->setStartDate(new \DateTime($startDate));
+
+            if (!empty($endDate) && strtoupper($endDate) != "NULL") {
+                $event->setEndDate(new \DateTime($endDate));
+            }
         }
 
         try {
