@@ -77,6 +77,14 @@ class EditEventController extends AbstractController
             } else {
                 $event->setEndDate(null);
             }
+        } else if ($step == "OTHER_INFORMATIONS") {
+            $specifications = json_decode($content['specifications'], true, 512, JSON_THROW_ON_ERROR);
+            foreach ($event->getEventSpecifications() as $spec) {
+                $event->removeEventSpecification($spec);
+            }
+            foreach ($specifications as $specification) {
+                $event->addEventSpecification((new Event\EventSpecification())->setName($specification));
+            }
         }
 
         try {
