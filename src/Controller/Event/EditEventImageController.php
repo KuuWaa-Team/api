@@ -4,7 +4,6 @@ namespace App\Controller\Event;
 
 use App\Entity\Event;
 use App\Repository\EventRepository;
-use Google\Service\Dataflow\Point;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
