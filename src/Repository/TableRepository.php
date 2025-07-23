@@ -22,7 +22,7 @@ class TableRepository extends ServiceEntityRepository
         parent::__construct($registry, Table::class);
     }
 
-    public function save(Table $table, bool $flush): void
+    public function save(Table $table, bool $flush = true): void
     {
         $this->getEntityManager()->persist($table);
         if ($flush) {

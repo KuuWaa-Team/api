@@ -24,7 +24,7 @@ class ListingEventInvitationsController extends AbstractController
      */
     public function __invoke(Event $event, Request $request): JsonResponse
     {
-        $wn = (bool) $request->query->get('wm') ?? false;
+        $wn = (bool) $request->query->get('wm');
         $invitations = $this->invitationRepository->findByEvent($event, $wn);
 
         $response = [
