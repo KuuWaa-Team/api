@@ -5,20 +5,16 @@ namespace App\Controller\Event;
 use App\Entity\Address\Address;
 use App\Entity\Event;
 use App\Entity\EventCategory;
-use App\Entity\User;
 use App\Repository\Address\AddressRepository;
 use App\Repository\Address\CountryRepository;
 use App\Repository\Address\ProvinceRepository;
 use App\Repository\EventCategoryRepository;
-use App\Repository\EventPackRepository;
 use App\Repository\EventRepository;
-use App\Repository\FeatureRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\KernelInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 class EditEventController extends AbstractController
@@ -36,7 +32,7 @@ class EditEventController extends AbstractController
     /**
      * @throws \JsonException
      */
-    public function __invoke(Event $event, Request $request, UserInterface $user, KernelInterface $kernel): JsonResponse
+    public function __invoke(Event $event, Request $request, KernelInterface $kernel): JsonResponse
     {
         $content = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
         $step = $content['step'];
