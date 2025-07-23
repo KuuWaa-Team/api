@@ -34,6 +34,7 @@ class EditInvitationController extends AbstractController
     )
     {
     }
+    
     /**
      * @throws \JsonException
      */
