@@ -68,7 +68,7 @@ class AddAdminController extends AbstractController
         $event->setAdminsCount($eventAdminsCount + 1);
         $this->eventRepository->save($event, true);
 
-        $user = $event->getUser();
+        $user = $event->getOwner();
 
         $message = "Salut " . $name . "\n" . $user->getDisplayName() . " vous invite à gerer à son évenement ". '"' . $event->getTitle() .  '"'
             . " prévu pour le " . $event->getStartDate()->format("d/m/Y") . " \n\nVeuillez lancer ou télécharger l'application KuuWaa pour accépter l'invitation\n\nPour télécharger l'application KuuWaa, cliquez sur l'un de liens suivant : "
