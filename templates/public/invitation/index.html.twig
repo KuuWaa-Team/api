@@ -1852,7 +1852,8 @@
 
         try {
             const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-            mediaRecorder = new MediaRecorder(stream);
+            const mimeType = MediaRecorder.isTypeSupported('audio/webm;codecs=opus') ? 'audio/webm' : 'audio/ogg';
+            mediaRecorder = new MediaRecorder(stream, { mimeType });
             mediaRecorder.start();
             isRecording = true;
             sendBookBtn.style.display = 'none';
@@ -1873,14 +1874,22 @@
                 stopBtn.classList.add('hidden');
 
                 audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+                console.log("audioBlob size:", audioBlob.size); // ← check this
+                if (audioBlob.size === 0) {
+                    alert("L'audio est vide, réessayez.");
+                    return;
+                }
                 audioUrl = URL.createObjectURL(audioBlob);
-                audio = new Audio(audioUrl);
+                
+                audio = new Audio();
+                audio.src = audioUrl;
+                audio.load();
                 blobToBase64(audioBlob);
 
-                audio.onloadedmetadata = () => {
+                audio.addEventListener('canplaythrough', () => {
                     voiceDuration.textContent = `(${formatTime(audio.duration)})`;
                     voiceMessage.classList.remove('hidden');
-                };
+                }, { once: true });
             };
         } catch (e) {
             sendBookBtn.style.display = 'inline-flex';
