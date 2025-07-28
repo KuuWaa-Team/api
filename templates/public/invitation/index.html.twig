@@ -1989,22 +1989,22 @@
             formData.append('audio', file);
         }
 
-        try {
+        // try {
             const response = await fetch('/api/invitations/{{ invitation.slug }}/send-book-messages', {
                 method: 'POST',
                 body: formData,
             });
 
-            if (!response.ok) {
-                throw new Error('Erreur lors de l’envoi');
-            }
+            // if (!response.ok) {
+            //     throw new Error('Erreur lors de l’envoi');
+            // }
 
             window.location.reload();
 
-        } catch (error) {
-            console.error(error);
-            alert('Erreur lors de l’envoi du message :' + error.message);
-        }
+        // } catch (error) {
+        //     console.error(error);
+        //     alert('Erreur lors de l’envoi du message :' + error.message);
+        // }
     });
 </script>
 <script>
