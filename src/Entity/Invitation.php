@@ -249,6 +249,7 @@ class Invitation
     private Collection $invitations;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(["invitation:pRead", 'table:pRead', 'invitation:fRead', 'event:pRead', 'event:fRead'])]
     private ?bool $willBePresent = null;
 
     /**
