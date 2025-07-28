@@ -1190,7 +1190,7 @@
             {% endif %}
             <!-- END BEVERAGE -->
             
-            {% if invitation.event.hasGame == true %}
+            {% if invitation.event.hasGame == true and invitation.event.question|length > 0 %}
             <!-- GAME -->
             <div id="game-section" class="rounded-lg border bg-card text-card-foreground border-[{{ template.primaryColor }}]/20 shadow-lg">
                 <div class="flex flex-col space-y-1.5 p-6 text-center">
