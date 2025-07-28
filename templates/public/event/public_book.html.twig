@@ -572,7 +572,7 @@
             
             <div class="header-subtitle">
                 <p class="subtitle-main">Messages d'amour pour "{{ event.title }}"</p>
-                <p class="subtitle-count"><span id="message-count">{{ event.books|length }}</span> messages</p>
+                <p class="subtitle-count"><span id="message-count">{{ books|length }}</span> messages</p>
             </div>
         </div>
     </header>
@@ -598,9 +598,9 @@
     <!-- Messages -->
     <main class="messages-section">
         <div class="messages-container">
-            {% if event.books|length > 0 %}
+            {% if books|length > 0 %}
             <div id="messages-list" class="messages-list">
-                {% for book in event.books %}
+                {% for book in books %}
                     {% set dataType = 'both' %}
                     {% if book.message is null or book.message == '' %}
                         {% set dataType = 'voice' %}
