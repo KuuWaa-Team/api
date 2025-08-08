@@ -13,6 +13,7 @@ use App\Controller\Invitation\CheckByCodeController;
 use App\Controller\Invitation\EditInvitationController;
 use App\Controller\Invitation\MyInvitationsController;
 use App\Controller\Invitation\PresenceConfirmationController;
+use App\Controller\Invitation\RemoveInvitationController;
 use App\Controller\Invitation\SendAllController;
 use App\Controller\Invitation\SendInvitationController;
 use App\Controller\Invitation\ValidateController;
@@ -180,6 +181,24 @@ use Symfony\Component\Serializer\Annotation\Groups;
             description: 'Set Presence Status',
             name: 'setPresenceStatus',
         ),
+        new Post(
+            uriTemplate: '/invitations/{id}/remove',
+            controller: RemoveInvitationController::class,
+            openapiContext: [
+                'summary' => 'Remove invitation',
+                'requestBody' => [
+                    'content' => [
+                        'application/json' => [
+                            'schema' => [
+                                'type' => 'object',
+                            ]
+                        ]
+                    ]
+                ],
+            ],
+            description: 'Remove invitation',
+            name: 'removeInvitation',
+        ),
         new Put(),
         new Delete()
     ],
@@ -255,13 +274,13 @@ class Invitation
     /**
      * @var Collection<int, Gift>
      */
-    #[ORM\ManyToMany(targetEntity: Gift::class, inversedBy: 'invitations')]
+    #[ORM\ManyToMany(targetEntity: Gift::class, inversedBy: 'invitations', cascade: ['remove'])]
     private Collection $gifts;
 
     /**
      * @var Collection<int, Beverage>
      */
-    #[ORM\ManyToMany(targetEntity: Beverage::class, inversedBy: 'invitations')]
+    #[ORM\ManyToMany(targetEntity: Beverage::class, inversedBy: 'invitations', cascade: ['remove'])]
     private Collection $beverages;
 
     #[ORM\OneToOne(inversedBy: 'invitation', cascade: ['persist', 'remove'])]
@@ -274,7 +293,7 @@ class Invitation
     /**
      * @var Collection<int, Photo>
      */
-    #[ORM\OneToMany(mappedBy: 'invitation', targetEntity: Photo::class)]
+    #[ORM\OneToMany(mappedBy: 'invitation', targetEntity: Photo::class, cascade: ['remove'])]
     private Collection $photos;
 
     #[ORM\Column(nullable: true)]
@@ -284,7 +303,7 @@ class Invitation
     /**
      * @var Collection<int, GameResponse>
      */
-    #[ORM\OneToMany(mappedBy: 'invitation', targetEntity: GameResponse::class)]
+    #[ORM\OneToMany(mappedBy: 'invitation', targetEntity: GameResponse::class, cascade: ['remove'])]
     private Collection $gameResponses;
 
     #[ORM\Column(length: 255, nullable: true)]
