@@ -565,6 +565,7 @@ class Event
         $this->eventSpecifications = new ArrayCollection();
         $this->questions = new ArrayCollection();
         $this->templateRequirementValues = new ArrayCollection();
+        $this->setCreatedAt();
     }
 
     public function getId(): ?int
