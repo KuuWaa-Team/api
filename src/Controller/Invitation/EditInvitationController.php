@@ -31,6 +31,8 @@ class EditInvitationController extends AbstractController
         private readonly TableRepository $tableRepository,
         private readonly InvitationRepository $invitationRepository,
         private readonly NormalizerInterface $normalizer,
+        private readonly ApiService $apiService,
+        private readonly DateService $dateService,
     )
     {
     }
@@ -40,13 +42,19 @@ class EditInvitationController extends AbstractController
      */
     public function __invoke(Request $request, Invitation $invitation, KernelInterface $kernel)
     {
+        $oldCount = $this->invitationRepository->find($invitation->getId())->getCount();
+        $oldTable = $this->tableRepository->find($invitation->getInvitationTable()->getId());
+
+        if ($oldTable !== null) {
+            $oldTable->setCount($oldTable->getCount() - $oldCount);
+        }
+
         $content = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
         $phoneNumber = $content["phoneNumber"] ?? null;
         $tableId = $content["tableId"] ?? null;
         $name = $content["name"] ?? null;
         $count = $content["count"] ?? null;
         $civility = $content["civility"] ?? null;
-
 
         $event = $invitation->getEvent();
 
@@ -175,11 +183,38 @@ class EditInvitationController extends AbstractController
         ;
 
         $result->saveToFile($destinationPath . "/" . $fileName);
+
+        $event = $invitation->getEvent();
+
         $invitation->setCodePath("/events/invitations/qr_code/" . $fileName);
+
+        $apiUrl = $this->apiService->getApiUrl();
+
+        $invitMessage  = "Bonjour " . $civility . " " . $name . ",\n\n";
+        $invitMessage .= "Vous êtes cordialement invité à l’événement « " . $event->getCategory()->getName() . " - " . $event->getTitle() . " », qui se tiendra le ";
+        $invitMessage .= $this->dateService->getFullDate($event->getStartDate(), true, true) . " à " . $event->getStartDate()->format('H:i') . ".\n\n";
+
+        $invitMessage .= "🎟️ Pour accéder à votre invitation personnalisée, veuillez cliquer sur le lien ci-dessous :\n";
+        $invitMessage .= $apiUrl . "/invitations/" . $invitation->getSlug() . "\n\n";
+
+        $invitMessage .= "🔐 En cas de difficulté pour ouvrir le lien, veuillez conserver le code d'invitation à 6 chiffres suivant : ";
+        $invitMessage .= $invitation->getCode() . ". Il vous sera demandé lors du contrôle à l’entrée de l’événement.\n\n";
+
+        $invitMessage .= "Au plaisir de vous compter parmi nous pour célébrer cet instant unique.\n\n";
+        $invitMessage .= $event->getTitle();
+
+        $invitation->setMessage($invitMessage);
+
         $this->invitationRepository->save($invitation, true);
 
         // END CODE TO REMOVE
 
+
+        $newTable = $invitation->getInvitationTable();
+        if ($newTable !== null) {
+            $newTable->setCount($newTable->getCount() + $invitation->getCount());
+        }
+        $this->tableRepository->save($newTable);
 
 
         $this->invitationRepository->save($invitation, true);

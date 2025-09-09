@@ -8,8 +8,10 @@ use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
+use App\Controller\Invitation\RemoveInvitationController;
 use App\Controller\Table\AddTableController;
 use App\Controller\Table\EditTableController;
+use App\Controller\Table\RemoveTableController;
 use App\Repository\TableRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -57,6 +59,24 @@ use Symfony\Component\Serializer\Annotation\Groups;
             description: 'edit table',
             name: 'editTable',
         ),
+        new Post(
+            uriTemplate: '/tables/{id}/remove',
+            controller: RemoveTableController::class,
+            openapiContext: [
+                'summary' => 'remove table',
+                'requestBody' => [
+                    'content' => [
+                        'application/json' => [
+                            'schema' => [
+                                'type' => 'object',
+                            ]
+                        ]
+                    ]
+                ],
+            ],
+            description: 'remove table',
+            name: 'removeTable',
+        ),
         new Put(),
         new Delete()
     ],
@@ -82,7 +102,7 @@ class Table
     #[ORM\ManyToOne(inversedBy: 'tables')]
     private ?Event $event = null;
 
-    #[ORM\OneToMany(mappedBy: 'invitationTable', targetEntity: Invitation::class)]
+    #[ORM\OneToMany(mappedBy: 'invitationTable', targetEntity: Invitation::class, cascade: ['remove'])]
     #[Groups(['table:pRead'])]
     private Collection $invitations;
 
