@@ -5,6 +5,7 @@ namespace App\Controller\Admin;
 use App\Repository\EventRepository;
 use App\Repository\Payment\PaymentRepository;
 use App\Repository\UserRepository;
+use App\Repository\Wallet\OperationRepository;
 use App\Service\WalletService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -15,7 +16,7 @@ final class DashbordController extends AbstractController
     public function __construct(
         private readonly UserRepository $userRepository,
         private readonly EventRepository $eventRepository,
-        private readonly PaymentRepository $paymentRepository,
+        private readonly OperationRepository $operationRepository,
     ){}
 
     #[Route('/admin/dashbord', name: 'app_admin_dashbord', methods: ['GET'])]
@@ -24,8 +25,8 @@ final class DashbordController extends AbstractController
         $actifUsers = $this->userRepository->count([]);
         $events = $this->eventRepository->count([]);
 
-        $qb = $this->paymentRepository->createQueryBuilder('p')
-            ->select('SUM(p.amount)')
+        $qb = $this->operationRepository->createQueryBuilder('o')
+            ->select('SUM(o.amount)')
             ->where('p.status = :status')
             ->setParameter('status', WalletService::$STATUS_PAID)
             ->getQuery();
