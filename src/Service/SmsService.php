@@ -7,7 +7,7 @@ class SmsService {
         try {
             $url = 'https://api2.dream-digital.info/api/SendSMS';
             $data = array(
-                'api_id' => 'API2778874588',
+                'api_id' => 'API2875540209',
                 'api_password' => 'c2kz8V7WW',
                 'sms_type' => 'P',
                 'encoding' => 'U',
