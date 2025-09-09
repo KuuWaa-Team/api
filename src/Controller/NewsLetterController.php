@@ -14,6 +14,7 @@ final class NewsLetterController extends AbstractController
     #[Route('/api/news-letter/new', name: 'app_news_letter', methods: ['POST'])]
     public function index(Request $request, EntityManagerInterface $em): JsonResponse
     {
+        // Décoder le JSON envoyé
         $data = json_decode($request->getContent(), true);
 
         if (!$data || !isset($data['address'])) {
@@ -23,8 +24,17 @@ final class NewsLetterController extends AbstractController
             ], 400);
         }
 
-        $email = $data['address'];
+        $email = trim($data['address']);
 
+        // Vérifier si l'adresse est valide
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            return $this->json([
+                'success' => false,
+                'message' => 'Adresse email invalide.'
+            ], 400);
+        }
+
+        // Vérifier si l'adresse existe déjà
         $existing = $em->getRepository(NewsLetter::class)->findOneBy(['address' => $email]);
 
         if ($existing) {
@@ -34,6 +44,7 @@ final class NewsLetterController extends AbstractController
             ], 409);
         }
 
+        // Créer une nouvelle inscription
         $newsLetter = new NewsLetter();
         $newsLetter->setAddress($email);
         $newsLetter->setCreateAt(new \DateTimeImmutable());
