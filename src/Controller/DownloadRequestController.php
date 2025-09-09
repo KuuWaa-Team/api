@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\DownloadRequest;
+use App\Service\SmsService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -13,7 +14,7 @@ use Symfony\Component\Routing\Attribute\Route;
 final class DownloadRequestController extends AbstractController
 {
     #[Route('/api/downlaod/request', name: 'app_download_request', methods: ['POST'])]
-    public function index(Request $request, EntityManagerInterface $em): JsonResponse
+    public function index(Request $request, EntityManagerInterface $em, SmsService $smsService): JsonResponse
     {
         // Décoder le JSON envoyé
         $data = json_decode($request->getContent(), true);
@@ -35,17 +36,7 @@ final class DownloadRequestController extends AbstractController
             ], 400);
         }
 
-        // Vérifier si l'adresse existe déjà
-        $existing = $em->getRepository(DownloadRequest::class)->findOneBy(['address' => $email]);
-
-        if ($existing) {
-            return $this->json([
-                'success' => false,
-                'message' => 'Cette adresse est déjà inscrite.'
-            ], 409);
-        }
-
-        // Créer une nouvelle inscription
+        // Créer une nouvelle demande
         $downloadRequest = new DownloadRequest();
         $downloadRequest->setAddress($email);
         $downloadRequest->setCreatedAt(new \DateTimeImmutable());
@@ -53,6 +44,8 @@ final class DownloadRequestController extends AbstractController
 
         $em->persist($downloadRequest);
         $em->flush();
+
+        $smsService->send('243814063056', "Nouvelle demande de telechargement de l'app Android : " . $email);
 
         return $this->json([
             'success' => true,
