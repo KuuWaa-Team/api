@@ -27,7 +27,7 @@ final class DashbordController extends AbstractController
 
         $qb = $this->operationRepository->createQueryBuilder('o')
             ->select('SUM(o.amount)')
-            ->where('p.status = :status')
+            ->where('o.status = :status')
             ->setParameter('status', WalletService::$STATUS_PAID)
             ->getQuery();
 
