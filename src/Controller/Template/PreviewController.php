@@ -30,12 +30,12 @@ final class PreviewController extends AbstractController
     #[Route('/{id}', name: 'preview', methods: ['POST', 'GET'])]
     public function preview(Request $request, EventTemplate $template, KernelInterface $kernel): Response
     {
-        $title = $request->request->get('title');
-        $address = $request->request->get('address');
-        $placeName = $request->request->get('placeName');
-        $details = $request->request->get('details');
+        $title = $request->request->get('title') ?? 'Jean & Jeanne';
+        $address = $request->request->get('address') ?? '15, Avenue de la justice. Kinshasa';
+        $placeName = $request->request->get('placeName') ?? 'Salle de fete KuuWaa';
+        $details = $request->request->get('details') ?? 'Nous sommes heureux de vous inviter a celebrer notre mariage ensemble a la salle de fete kuuwaa';
         $categoryId = $request->request->get('category_id') ?? 1;
-        $startDate = $request->request->get('start_date');
+        $startDate = $request->request->get('start_date') ?? '2025-01-01 22:00';
 
         $endDate = $request->request->get('end_date');
         $placeLatitude = $request->request->get('place_latitude');
