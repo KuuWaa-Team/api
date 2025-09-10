@@ -12,19 +12,19 @@ class NewsLetter
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['contact:fRead'])]
+    #[Groups(['newsletter:fRead'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['contact:fRead'])]
+    #[Groups(['newsletter:fRead'])]
     private ?string $address = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['contact:fRead'])]
+    #[Groups(['newsletter:fRead'])]
     private ?\DateTimeImmutable $createAt = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['contact:fRead'])]
+    #[Groups(['newsletter:fRead'])]
     private ?bool $isActif = null;
 
     public function getId(): ?int
