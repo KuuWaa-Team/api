@@ -83,7 +83,7 @@ final class StatsController extends AbstractController
 
         // Top 5 événements avec le plus d'invitations
         $topEvents = $this->em->createQuery("
-            SELECT e.name, COUNT(i.id) as invitations
+            SELECT e.title, COUNT(i.id) as invitations
             FROM App\Entity\Event e
             JOIN e.invitations i
             GROUP BY e.id
