@@ -16,8 +16,25 @@ final class EventController extends AbstractController
         private readonly NormalizerInterface $normalizer
     ){}
 
+    #[Route('/admin/event', name: 'app_admin_event', methods: ['GET'])]
+    public function index(): JsonResponse
+    {
+        $events = $this->eventRepository->findAll();
+
+        $normalizedData = $this->normalizer->normalize(
+            $events,
+            null,
+            ['groups' => ['event:fRead']]
+        );
+
+        return $this->json([
+            'success' => true,
+            'data' => $normalizedData
+        ]);
+    }
+
     #[Route('/admin/event/{id}', name: 'app_admin_event_detail', methods: ['GET'])]
-    public function index(Event $event): JsonResponse
+    public function detail(Event $event): JsonResponse
     {
         $normalizedDataEvents = $this->normalizer->normalize(
             $event,
@@ -26,7 +43,7 @@ final class EventController extends AbstractController
         );
         $invitations = $event->getInvitations();
         $normalizedDataInvitations = $this->normalizer->normalize(
-            $event,
+            $invitations,
             null,
             ['groups' => ['event:fRead']]
         );
