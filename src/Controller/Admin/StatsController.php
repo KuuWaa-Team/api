@@ -134,7 +134,7 @@ final class StatsController extends AbstractController
             0
         );
         foreach ($payments as $p) {
-            $month = $p->getCreatedAt()->format('Y-m');
+            $month = $p->getDate()->format('Y-m');
             if (isset($paymentsEvolution[$month])) $paymentsEvolution[$month] += $p->getAmount();
         }
 
@@ -174,7 +174,7 @@ final class StatsController extends AbstractController
             0
         );
         foreach ($operations as $op) {
-            $month = $op->getCreatedAt()->format('Y-m');
+            $month = $op->getDate()->format('Y-m');
             if (isset($engagementEvolution[$month])) $engagementEvolution[$month]++;
         }
 
