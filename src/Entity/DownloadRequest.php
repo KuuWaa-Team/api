@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\DownloadRequestRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: DownloadRequestRepository::class)]
 class DownloadRequest
@@ -11,15 +12,18 @@ class DownloadRequest
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['contact:fRead'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['contact:fRead'])]
     private ?string $address = null;
 
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['contact:fRead'])]
     private ?bool $sent = null;
 
     public function getId(): ?int

@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\NewsLetterRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: NewsLetterRepository::class)]
 class NewsLetter
@@ -11,15 +12,19 @@ class NewsLetter
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['contact:fRead'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['contact:fRead'])]
     private ?string $address = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['contact:fRead'])]
     private ?\DateTimeImmutable $createAt = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['contact:fRead'])]
     private ?bool $isActif = null;
 
     public function getId(): ?int
