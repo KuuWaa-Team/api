@@ -30,6 +30,7 @@ final class DashbordController extends AbstractController
         $qb = $this->paymentRepository->createQueryBuilder('p')
             ->select('SUM(p.amount)')
             ->where('p.status = :status')
+            ->andWhere("p.phoneNumber not like '%999999999'")
             ->setParameter('status', WalletService::$STATUS_PAID);
         $paymentsAmount = (float) $qb->getQuery()->getSingleScalarResult();
 
