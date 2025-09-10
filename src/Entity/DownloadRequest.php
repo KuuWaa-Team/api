@@ -12,18 +12,18 @@ class DownloadRequest
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['contact:fRead'])]
+    #[Groups(['request:fRead'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['contact:fRead'])]
+    #[Groups(['request:fRead'])]
     private ?string $address = null;
 
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['contact:fRead'])]
+    #[Groups(['request:fRead'])]
     private ?bool $sent = null;
 
     public function getId(): ?int
