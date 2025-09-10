@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\ContactFormRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: ContactFormRepository::class)]
 class ContactForm
@@ -12,18 +13,23 @@ class ContactForm
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['contact:fRead'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['contact:fRead'])]
     private ?string $fullname = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['contact:fRead'])]
     private ?string $address = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['contact:fRead'])]
     private ?string $subject = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Groups(['contact:fRead'])]
     private ?string $message = null;
 
     public function getId(): ?int
