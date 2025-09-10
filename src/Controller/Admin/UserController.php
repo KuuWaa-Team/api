@@ -29,5 +29,4 @@ final class UserController extends AbstractController
             'data' => $normalizedData
         ]);
     }
-    }
 }
