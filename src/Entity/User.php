@@ -7,6 +7,7 @@ use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Post;
 use App\Controller\Auth\DeleteAccountController;
+use App\Controller\Auth\LoginAdminController;
 use App\Controller\Auth\LoginController;
 use App\Controller\Auth\RestoreDeletion;
 use App\Controller\Event\ListingUserEventController;
@@ -34,6 +35,14 @@ use Symfony\Component\Serializer\Attribute\Groups;
             ],
             controller: LoginController::class,
             description: "Login with google",
+        ),
+        new Post(
+            uriTemplate: '/login-admin',
+            requirements: [
+                'email' => 'String', 'password' => 'String'
+            ],
+            controller: LoginAdminController::class,
+            description: "Login admin",
         ),
         new GetCollection(
             uriTemplate: '/users/{id}/events',
@@ -139,6 +148,12 @@ class User implements UserInterface
     #[ORM\Column(nullable: true)]
     #[Groups(['user:pRead'])]
     private ?\DateTimeImmutable $deleted_at = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?bool $admin = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $password = null;
 
     public function __construct()
     {
@@ -407,6 +422,30 @@ class User implements UserInterface
     public function setDeletedAt(?\DateTimeImmutable $deleted_at): static
     {
         $this->deleted_at = $deleted_at;
+
+        return $this;
+    }
+
+    public function isAdmin(): ?bool
+    {
+        return $this->admin;
+    }
+
+    public function setAdmin(?bool $admin): static
+    {
+        $this->admin = $admin;
+
+        return $this;
+    }
+
+    public function getPassword(): ?string
+    {
+        return $this->password;
+    }
+
+    public function setPassword(?string $password): static
+    {
+        $this->password = $password;
 
         return $this;
     }
