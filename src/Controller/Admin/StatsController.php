@@ -29,10 +29,11 @@ final class StatsController extends AbstractController
 
         $newUsersThisMonth = $this->userRepository->createQueryBuilder('u')
             ->select('COUNT(u.id)')
-            ->where('MONTH(u.createdAt) = MONTH(CURRENT_DATE())')
-            ->andWhere('YEAR(u.createdAt) = YEAR(CURRENT_DATE())')
+            ->where('FUNCTION("MONTH", u.createdAt) = FUNCTION("MONTH", CURRENT_DATE())')
+            ->andWhere('FUNCTION("YEAR", u.createdAt) = FUNCTION("YEAR", CURRENT_DATE())')
             ->getQuery()
             ->getSingleScalarResult();
+
 
         $usersEvolution = $this->em->createQuery("
             SELECT FUNCTION('DATE_FORMAT', u.createdAt, '%Y-%m') as month, COUNT(u.id) as count
@@ -47,8 +48,8 @@ final class StatsController extends AbstractController
         $totalEvents = $this->eventRepository->count([]);
         $eventsThisMonth = $this->eventRepository->createQueryBuilder('e')
             ->select('COUNT(e.id)')
-            ->where('MONTH(e.createdAt) = MONTH(CURRENT_DATE())')
-            ->andWhere('YEAR(e.createdAt) = YEAR(CURRENT_DATE())')
+            ->where('FUNCTION("MONTH", e.createdAt) = FUNCTION("MONTH", CURRENT_DATE())')
+            ->andWhere('FUNCTION("YEAR", e.createdAt) = FUNCTION("YEAR", CURRENT_DATE())')
             ->getQuery()
             ->getSingleScalarResult();
 
