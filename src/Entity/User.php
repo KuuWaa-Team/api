@@ -76,15 +76,15 @@ class User implements UserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['user:pRead'])]
+    #[Groups(['user:pRead', 'operation:fRead'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 180)]
-    #[Groups(['user:pRead'])]
+    #[Groups(['user:pRead', 'operation:fRead'])]
     private ?string $email = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['user:pRead'])]
+    #[Groups(['user:pRead', 'operation:fRead'])]
     private ?int $credits = null;
 
     /**
@@ -94,15 +94,15 @@ class User implements UserInterface
     private array $roles = [];
 
     #[ORM\Column(length: 255)]
-    #[Groups(['user:pRead'])]
+    #[Groups(['user:pRead', 'operation:fRead'])]
     private ?string $displayName = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['user:pRead'])]
+    #[Groups(['user:pRead', 'operation:fRead'])]
     private ?string $photoUrl = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['user:pRead'])]
+    #[Groups(['user:pRead', 'operation:fRead'])]
     private ?string $provider = null;
 
     #[ORM\Column(length: 255)]
