@@ -16,7 +16,6 @@ final class StatsController extends AbstractController
     public function __construct(
         private readonly UserRepository $userRepository,
         private readonly EventRepository $eventRepository,
-        private readonly OperationRepository $paymentRepository,
         private readonly OperationRepository $operationRepository,
         private readonly EntityManagerInterface $em,
     ) {}
@@ -91,21 +90,21 @@ final class StatsController extends AbstractController
         ")->setMaxResults(5)->getResult();
 
         // === PAYMENTS ===
-        $totalAmount = $this->paymentRepository->createQueryBuilder('p')
+        $totalAmount = $this->operationRepository->createQueryBuilder('p')
             ->select('SUM(p.amount)')
             ->where('p.status = :status')
             ->setParameter('status', 'SUCCESS')
             ->getQuery()
             ->getSingleScalarResult() ?? 0;
 
-        $failedAmount = $this->paymentRepository->createQueryBuilder('p')
+        $failedAmount = $this->operationRepository->createQueryBuilder('p')
             ->select('SUM(p.amount)')
             ->where('p.status = :status')
             ->setParameter('status', 'FAILED')
             ->getQuery()
             ->getSingleScalarResult() ?? 0;
 
-        $amountThisMonth = $this->paymentRepository->createQueryBuilder('p')
+        $amountThisMonth = $this->operationRepository->createQueryBuilder('p')
             ->select('SUM(p.amount)')
             ->where('p.status = :status')
             ->andWhere('p.date BETWEEN :start AND :end')
@@ -122,7 +121,7 @@ final class StatsController extends AbstractController
             FROM App\Entity\Payment\Payment p
         ")->getSingleResult();
 
-        $payments = $this->paymentRepository->createQueryBuilder('p')
+        $payments = $this->operationRepository->createQueryBuilder('p')
             ->where('p.status = :status')
             ->andWhere('p.date >= :start')
             ->setParameter('status', 'SUCCESS')
@@ -156,7 +155,7 @@ final class StatsController extends AbstractController
 
         $activeUsersThisMonth = $this->operationRepository->createQueryBuilder('o')
             ->select('COUNT(DISTINCT o.user)')
-            ->where('o.createdAt BETWEEN :start AND :end')
+            ->where('o.date BETWEEN :start AND :end')
             ->setParameter('start', $firstDayOfMonth)
             ->setParameter('end', $lastDayOfMonth)
             ->getQuery()
@@ -165,7 +164,7 @@ final class StatsController extends AbstractController
         $activeRate = $totalUsers > 0 ? round(($activeUsersThisMonth / $totalUsers) * 100, 2) . '%' : '0%';
 
         $operations = $this->operationRepository->createQueryBuilder('o')
-            ->where('o.createdAt >= :start')
+            ->where('o.date >= :start')
             ->setParameter('start', $start12Months)
             ->getQuery()
             ->getResult();
@@ -183,7 +182,7 @@ final class StatsController extends AbstractController
         $lastMonthStart = $now->modify('first day of last month')->setTime(0,0,0);
         $lastMonthEnd = $now->modify('last day of last month')->setTime(23,59,59);
 
-        $lastMonthPayments = $this->paymentRepository->createQueryBuilder('p')
+        $lastMonthPayments = $this->operationRepository->createQueryBuilder('p')
             ->select('SUM(p.amount)')
             ->where('p.status = :status')
             ->andWhere('p.date BETWEEN :start AND :end')
