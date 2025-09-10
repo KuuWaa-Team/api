@@ -16,7 +16,7 @@ final class StatsController extends AbstractController
     public function __construct(
         private readonly UserRepository $userRepository,
         private readonly EventRepository $eventRepository,
-        private readonly PaymentRepository $paymentRepository,
+        private readonly OperationRepository $paymentRepository,
         private readonly OperationRepository $operationRepository,
         private readonly EntityManagerInterface $em,
     ) {}
@@ -108,7 +108,7 @@ final class StatsController extends AbstractController
         $amountThisMonth = $this->paymentRepository->createQueryBuilder('p')
             ->select('SUM(p.amount)')
             ->where('p.status = :status')
-            ->andWhere('p.createdAt BETWEEN :start AND :end')
+            ->andWhere('p.date BETWEEN :start AND :end')
             ->setParameter('status', 'SUCCESS')
             ->setParameter('start', $firstDayOfMonth)
             ->setParameter('end', $lastDayOfMonth)
@@ -124,7 +124,7 @@ final class StatsController extends AbstractController
 
         $payments = $this->paymentRepository->createQueryBuilder('p')
             ->where('p.status = :status')
-            ->andWhere('p.createdAt >= :start')
+            ->andWhere('p.date >= :start')
             ->setParameter('status', 'SUCCESS')
             ->setParameter('start', $start12Months)
             ->getQuery()
@@ -186,7 +186,7 @@ final class StatsController extends AbstractController
         $lastMonthPayments = $this->paymentRepository->createQueryBuilder('p')
             ->select('SUM(p.amount)')
             ->where('p.status = :status')
-            ->andWhere('p.createdAt BETWEEN :start AND :end')
+            ->andWhere('p.date BETWEEN :start AND :end')
             ->setParameter('status', 'SUCCESS')
             ->setParameter('start', $lastMonthStart)
             ->setParameter('end', $lastMonthEnd)
