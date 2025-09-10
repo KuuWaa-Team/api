@@ -24,35 +24,64 @@ final class StatsController extends AbstractController
     #[Route('/admin/stats', name: 'app_admin_stats', methods: ['GET'])]
     public function index(): JsonResponse
     {
+        $now = new \DateTimeImmutable();
+        $firstDayOfMonth = $now->modify('first day of this month')->setTime(0, 0, 0);
+        $lastDayOfMonth = $now->modify('last day of this month')->setTime(23, 59, 59);
+        $start12Months = $now->modify('-11 months')->modify('first day of this month')->setTime(0, 0, 0);
+
         // === UTILISATEURS ===
         $totalUsers = $this->userRepository->count([]);
 
         $newUsersThisMonth = $this->userRepository->createQueryBuilder('u')
             ->select('COUNT(u.id)')
-            ->where('FUNCTION("MONTH", u.createdAt) = FUNCTION("MONTH", CURRENT_DATE())')
-            ->andWhere('FUNCTION("YEAR", u.createdAt) = FUNCTION("YEAR", CURRENT_DATE())')
+            ->where('u.createdAt BETWEEN :start AND :end')
+            ->setParameter('start', $firstDayOfMonth)
+            ->setParameter('end', $lastDayOfMonth)
             ->getQuery()
             ->getSingleScalarResult();
 
-
-        $usersEvolution = $this->em->createQuery("
-            SELECT FUNCTION('DATE_FORMAT', u.createdAt, '%Y-%m') as month, COUNT(u.id) as count
-            FROM App\Entity\User u
-            WHERE u.createdAt >= :date
-            GROUP BY month
-            ORDER BY month ASC
-        ")->setParameter('date', new \DateTime('-12 months'))
+        $users = $this->userRepository->createQueryBuilder('u')
+            ->where('u.createdAt >= :start')
+            ->setParameter('start', $start12Months)
+            ->getQuery()
             ->getResult();
+
+        $usersEvolution = array_fill_keys(
+            array_map(fn($i) => $now->modify("-$i months")->format('Y-m'), range(11, 0)),
+            0
+        );
+        foreach ($users as $user) {
+            $month = $user->getCreatedAt()->format('Y-m');
+            if (isset($usersEvolution[$month])) $usersEvolution[$month]++;
+        }
 
         // === EVENTS ===
         $totalEvents = $this->eventRepository->count([]);
+
         $eventsThisMonth = $this->eventRepository->createQueryBuilder('e')
             ->select('COUNT(e.id)')
-            ->where('FUNCTION("MONTH", e.createdAt) = FUNCTION("MONTH", CURRENT_DATE())')
-            ->andWhere('FUNCTION("YEAR", e.createdAt) = FUNCTION("YEAR", CURRENT_DATE())')
+            ->where('e.createdAt BETWEEN :start AND :end')
+            ->setParameter('start', $firstDayOfMonth)
+            ->setParameter('end', $lastDayOfMonth)
             ->getQuery()
             ->getSingleScalarResult();
 
+        $events = $this->eventRepository->createQueryBuilder('e')
+            ->where('e.createdAt >= :start')
+            ->setParameter('start', $start12Months)
+            ->getQuery()
+            ->getResult();
+
+        $eventsEvolution = array_fill_keys(
+            array_map(fn($i) => $now->modify("-$i months")->format('Y-m'), range(11, 0)),
+            0
+        );
+        foreach ($events as $event) {
+            $month = $event->getCreatedAt()->format('Y-m');
+            if (isset($eventsEvolution[$month])) $eventsEvolution[$month]++;
+        }
+
+        // Top 5 événements avec le plus d'invitations
         $topEvents = $this->em->createQuery("
             SELECT e.name, COUNT(i.id) as invitations
             FROM App\Entity\Event e
@@ -61,34 +90,29 @@ final class StatsController extends AbstractController
             ORDER BY invitations DESC
         ")->setMaxResults(5)->getResult();
 
-        $eventsEvolution = $this->em->createQuery("
-            SELECT FUNCTION('DATE_FORMAT', e.createdAt, '%Y-%m') as month, COUNT(e.id) as count
-            FROM App\Entity\Event e
-            WHERE e.createdAt >= :date
-            GROUP BY month
-            ORDER BY month ASC
-        ")->setParameter('date', new \DateTime('-12 months'))
-            ->getResult();
-
         // === PAYMENTS ===
-        $totalAmount = $this->em->createQuery("
-            SELECT SUM(p.amount) FROM App\Entity\Payment\Payment p
-            WHERE p.status = :status
-        ")->setParameter('status', 'SUCCESS')
+        $totalAmount = $this->paymentRepository->createQueryBuilder('p')
+            ->select('SUM(p.amount)')
+            ->where('p.status = :status')
+            ->setParameter('status', 'SUCCESS')
+            ->getQuery()
             ->getSingleScalarResult() ?? 0;
 
-        $failedAmount = $this->em->createQuery("
-            SELECT SUM(p.amount) FROM App\Entity\Payment\Payment p
-            WHERE p.status = :status
-        ")->setParameter('status', 'FAILED')
+        $failedAmount = $this->paymentRepository->createQueryBuilder('p')
+            ->select('SUM(p.amount)')
+            ->where('p.status = :status')
+            ->setParameter('status', 'FAILED')
+            ->getQuery()
             ->getSingleScalarResult() ?? 0;
 
-        $amountThisMonth = $this->em->createQuery("
-            SELECT SUM(p.amount) FROM App\Entity\Payment\Payment p
-            WHERE p.status = :status
-            AND MONTH(p.createdAt) = MONTH(CURRENT_DATE())
-            AND YEAR(p.createdAt) = YEAR(CURRENT_DATE())
-        ")->setParameter('status', 'SUCCESS')
+        $amountThisMonth = $this->paymentRepository->createQueryBuilder('p')
+            ->select('SUM(p.amount)')
+            ->where('p.status = :status')
+            ->andWhere('p.createdAt BETWEEN :start AND :end')
+            ->setParameter('status', 'SUCCESS')
+            ->setParameter('start', $firstDayOfMonth)
+            ->setParameter('end', $lastDayOfMonth)
+            ->getQuery()
             ->getSingleScalarResult() ?? 0;
 
         $transactions = $this->em->createQuery("
@@ -98,15 +122,22 @@ final class StatsController extends AbstractController
             FROM App\Entity\Payment\Payment p
         ")->getSingleResult();
 
-        $paymentsEvolution = $this->em->createQuery("
-            SELECT FUNCTION('DATE_FORMAT', p.createdAt, '%Y-%m') as month, SUM(p.amount) as amount
-            FROM App\Entity\Payment\Payment p
-            WHERE p.status = 'SUCCESS'
-            AND p.createdAt >= :date
-            GROUP BY month
-            ORDER BY month ASC
-        ")->setParameter('date', new \DateTime('-12 months'))
+        $payments = $this->paymentRepository->createQueryBuilder('p')
+            ->where('p.status = :status')
+            ->andWhere('p.createdAt >= :start')
+            ->setParameter('status', 'SUCCESS')
+            ->setParameter('start', $start12Months)
+            ->getQuery()
             ->getResult();
+
+        $paymentsEvolution = array_fill_keys(
+            array_map(fn($i) => $now->modify("-$i months")->format('Y-m'), range(11, 0)),
+            0
+        );
+        foreach ($payments as $p) {
+            $month = $p->getCreatedAt()->format('Y-m');
+            if (isset($paymentsEvolution[$month])) $paymentsEvolution[$month] += $p->getAmount();
+        }
 
         $topUser = $this->em->createQuery("
             SELECT u.id, u.fullname, SUM(o.amount) as credits
@@ -123,35 +154,47 @@ final class StatsController extends AbstractController
         // === ENGAGEMENT ===
         $avgEventsPerUser = $totalUsers > 0 ? $totalEvents / $totalUsers : 0;
 
-        $activeRateThisMonth = $this->em->createQuery("
-            SELECT COUNT(DISTINCT o.user) 
-            FROM App\Entity\Wallet\Operation o
-            WHERE MONTH(o.createdAt) = MONTH(CURRENT_DATE())
-            AND YEAR(o.createdAt) = YEAR(CURRENT_DATE())
-        ")->getSingleScalarResult();
+        $activeUsersThisMonth = $this->operationRepository->createQueryBuilder('o')
+            ->select('COUNT(DISTINCT o.user)')
+            ->where('o.createdAt BETWEEN :start AND :end')
+            ->setParameter('start', $firstDayOfMonth)
+            ->setParameter('end', $lastDayOfMonth)
+            ->getQuery()
+            ->getSingleScalarResult();
 
-        $activeRate = $totalUsers > 0 ? round(($activeRateThisMonth / $totalUsers) * 100, 2) . '%' : '0%';
+        $activeRate = $totalUsers > 0 ? round(($activeUsersThisMonth / $totalUsers) * 100, 2) . '%' : '0%';
 
-        $engagementEvolution = $this->em->createQuery("
-            SELECT FUNCTION('DATE_FORMAT', o.createdAt, '%Y-%m') as month, COUNT(DISTINCT o.user) as active_users
-            FROM App\Entity\Wallet\Operation o
-            WHERE o.createdAt >= :date
-            GROUP BY month
-            ORDER BY month ASC
-        ")->setParameter('date', new \DateTime('-12 months'))
+        $operations = $this->operationRepository->createQueryBuilder('o')
+            ->where('o.createdAt >= :start')
+            ->setParameter('start', $start12Months)
+            ->getQuery()
             ->getResult();
 
+        $engagementEvolution = array_fill_keys(
+            array_map(fn($i) => $now->modify("-$i months")->format('Y-m'), range(11, 0)),
+            0
+        );
+        foreach ($operations as $op) {
+            $month = $op->getCreatedAt()->format('Y-m');
+            if (isset($engagementEvolution[$month])) $engagementEvolution[$month]++;
+        }
+
         // === PERFORMANCE ===
-        $thisMonthPayments = $amountThisMonth;
-        $lastMonthPayments = $this->em->createQuery("
-            SELECT SUM(p.amount) FROM App\Entity\Payment\Payment p
-            WHERE p.status = 'SUCCESS'
-            AND MONTH(p.createdAt) = MONTH(DATE_SUB(CURRENT_DATE(), 1, 'MONTH'))
-            AND YEAR(p.createdAt) = YEAR(DATE_SUB(CURRENT_DATE(), 1, 'MONTH'))
-        ")->getSingleScalarResult() ?? 0;
+        $lastMonthStart = $now->modify('first day of last month')->setTime(0,0,0);
+        $lastMonthEnd = $now->modify('last day of last month')->setTime(23,59,59);
+
+        $lastMonthPayments = $this->paymentRepository->createQueryBuilder('p')
+            ->select('SUM(p.amount)')
+            ->where('p.status = :status')
+            ->andWhere('p.createdAt BETWEEN :start AND :end')
+            ->setParameter('status', 'SUCCESS')
+            ->setParameter('start', $lastMonthStart)
+            ->setParameter('end', $lastMonthEnd)
+            ->getQuery()
+            ->getSingleScalarResult() ?? 0;
 
         $progressionPayments = $lastMonthPayments > 0 
-            ? round((($thisMonthPayments - $lastMonthPayments) / $lastMonthPayments) * 100, 2) . '%' 
+            ? round((($amountThisMonth - $lastMonthPayments) / $lastMonthPayments) * 100, 2) . '%'
             : 'N/A';
 
         $failureRate = $transactions['failed'] + $transactions['success'] > 0
