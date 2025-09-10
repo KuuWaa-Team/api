@@ -34,54 +34,55 @@ class Operation
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['operation:pRead'])]
+    #[Groups(['operation:pRead', 'operation:fRead'])]
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'operations')]
+    #[Groups(['operation:fRead'])]
     private ?User $user = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['operation:pRead'])]
+    #[Groups(['operation:pRead', 'operation:fRead'])]
     private ?string $type = null;
 
     #[ORM\Column(nullable: true)]
-    #[Groups(['operation:pRead'])]
+    #[Groups(['operation:pRead', 'operation:fRead'])]
     private ?int $credits = null;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 0, nullable: true)]
-    #[Groups(['operation:pRead'])]
+    #[Groups(['operation:pRead', 'operation:fRead'])]
     private ?string $amount = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    #[Groups(['operation:pRead'])]
+    #[Groups(['operation:pRead', 'operation:fRead'])]
     private ?\DateTimeInterface $date = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['operation:pRead'])]
+    #[Groups(['operation:pRead', 'operation:fRead'])]
     private ?string $title = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['operation:pRead'])]
+    #[Groups(['operation:pRead', 'operation:fRead'])]
     private ?string $paymentMethod = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['operation:pRead'])]
+    #[Groups(['operation:pRead', 'operation:fRead'])]
     private ?string $phoneNumber = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['operation:pRead'])]
+    #[Groups(['operation:pRead', 'operation:fRead'])]
     private ?string $reference = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['operation:pRead'])]
+    #[Groups(['operation:pRead', 'operation:fRead'])]
     private ?string $orderNumber = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['operation:pRead'])]
+    #[Groups(['operation:pRead', 'operation:fRead'])]
     private ?string $status = null;
 
     #[ORM\Column(length: 500, nullable: true)]
-    #[Groups(['operation:pRead'])]
+    #[Groups(['operation:pRead', 'operation:fRead'])]
     private ?string $redirectUrl = null;
 
     public function getId(): ?int
