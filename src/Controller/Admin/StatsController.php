@@ -140,7 +140,7 @@ final class StatsController extends AbstractController
         }
 
         $topUser = $this->em->createQuery("
-            SELECT u.id, u.fullname, SUM(o.amount) as credits
+            SELECT u.id, u.displayName, SUM(o.amount) as credits
             FROM App\Entity\User u
             JOIN u.operations o
             GROUP BY u.id
