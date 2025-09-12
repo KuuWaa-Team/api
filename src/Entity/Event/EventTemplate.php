@@ -87,6 +87,7 @@ class EventTemplate
      * @var Collection<int, TemplateRequirement>
      */
     #[ORM\OneToMany(mappedBy: 'template', targetEntity: TemplateRequirement::class)]
+    #[Groups(['event:pRead', 'event:fRead', 'invitation:fRead', 'templates:fRead'])]
     private Collection $templateRequirements;
 
     public function __construct()

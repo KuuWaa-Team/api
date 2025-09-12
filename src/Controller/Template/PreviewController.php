@@ -12,6 +12,7 @@ use App\Service\ApiService;
 use App\Service\DateService;
 use Proxies\__CG__\App\Entity\Event;
 use App\Entity\EventCategory;
+use DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -48,7 +49,7 @@ final class PreviewController extends AbstractController
         $category = $this->categoryRepository->find((int) $categoryId);
         if ($category === null) {
              $category = (new EventCategory())
-                ->setName($request->request->get('category_name') ?? 'Non défini')
+                ->setName($request->request->get('category_name') ?? 'Mariage Religieux')
                 ->setValidated(false)
             ;
         }

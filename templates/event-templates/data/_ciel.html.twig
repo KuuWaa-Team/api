@@ -1,0 +1,170 @@
+<style>
+    @font-face {
+        font-family: 'TexGyreTermes';
+        src: url('{{ asset('templates/ciel/tex-gyre-termes/texgyretermes-regular.otf') }}') format('opentype');
+        font-weight: normal;
+        font-style: normal;
+    }
+
+    @font-face {
+        font-family: 'Rumba';
+        src: url('{{ asset('templates/ciel/Rumba/rumba.ttf') }}') format('truetype');
+        font-weight: normal;
+        font-style: normal;
+    }
+
+    @font-face {
+        font-family: 'Amsterdam';
+        src: url('{{ asset('templates/ocean/Amsterdam.ttf') }}') format('truetype');
+    }
+
+    body {
+        margin: 0;
+        background-color: #fff;
+        font-family: 'TexGyreTermes', serif;
+        color: {{ template.primaryColor }};
+    }
+
+    .invitation-card {
+        position: relative;
+        background-color: #fff;
+        padding: 2rem 1rem;
+        border: 1px solid {{ template.primaryColor }};
+        max-width: 600px;
+        margin: auto;
+        text-align: center;
+        font-family: 'TexGyreTermes', serif;
+        color: {{ template.primaryColor }};
+        overflow: hidden;
+        z-index: 2;
+        border-radius: 5px;
+        box-shadow:
+            0 4px 6px rgba(0, 0, 0, 0.05),
+            0 8px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    /* décorations coins */
+    .decoration {
+        position: absolute;
+        width: 180px;
+        z-index: 1;
+    }
+    .topleft { top: -100px; left: -70px; }
+    .topright { top: -150px; right: -50px; }
+    .bottomleft { bottom: -100px; left:-50px; }
+    .bottomright { bottom: -150px; right: -70px; }
+
+    /* texte du haut */
+    .heading {
+        font-size: 0.9rem;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        margin-bottom: 2rem;
+        position: relative;
+        z-index: 2;
+    }
+
+    /* photo + cercle */
+    .photo-wrapper {
+        position: relative;
+        display: inline-block;
+        margin-bottom: 1.5rem;
+    }
+    .photo {
+        width: 250px;
+        border-radius: 50%;
+    }
+    .circle {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 500px;
+        pointer-events: none;
+    }
+
+    /* noms */
+    .names {
+        font-family: 'Amsterdam', cursive;
+        font-size: 2.5rem;
+        margin: 1rem 0;
+        line-height: 1.1;
+        position: relative;
+        z-index: 2;
+    }
+
+    /* sous-texte */
+    .subtext {
+        font-size: 1rem;
+        margin-bottom: 2rem;
+        position: relative;
+        z-index: 2;
+    }
+
+    /* date */
+    .date {
+        margin: 1.5rem 0;
+        position: relative;
+        z-index: 2;
+    }
+    .date .month {
+        font-size: 1.2rem;
+        letter-spacing: 2px;
+    }
+    .date .day {
+        font-size: 3rem;
+        font-weight: bold;
+    }
+    .date .year {
+        font-size: 1.4rem;
+    }
+
+    /* détails bas */
+    .details {
+        font-size: 0.95rem;
+        margin-top: 2rem;
+        line-height: 1.5;
+        position: relative;
+        z-index: 2;
+    }
+</style>
+
+<div class="invitation-card">
+    <!-- décorations coins -->
+    <img src="{{ asset('templates/ciel/topleft.png') }}" class="decoration topleft" alt="">
+    <img src="{{ asset('templates/ciel/topright.png') }}" class="decoration topright" alt="">
+    <img src="{{ asset('templates/ciel/bottomleft.png') }}" class="decoration bottomleft" alt="">
+    <img src="{{ asset('templates/ciel/bottomright.png') }}" class="decoration bottomright" alt="">
+
+    <!-- texte haut -->
+    <div class="heading">
+        INVITATION 
+        {# <br> {{ invitation.event.category.name|upper }} #}
+    </div>
+
+    <!-- photo + cercle -->
+    <div class="photo-wrapper">
+        <img src="{{ asset('templates/ciel/image.png') }}" class="photo" alt="couple">
+        <img src="{{ asset('templates/ciel/circle.png') }}" class="circle" alt="">
+    </div>
+
+    <!-- noms -->
+    <div class="names">{{ invitation.event.title }}</div>
+
+    <!-- sous-texte -->
+    <div class="subtext">
+        {{invitation.event.category.name|upper}}
+    </div>
+
+    <!-- date -->
+    <div class="date">
+        <div class="month">{{ date }}</div>
+        {# <div class="day">{{ date('d', dateObj) }}</div>
+        <div class="year">{{ date('Y', dateObj) }}</div> #}
+    </div>
+
+    <!-- détails -->
+    <div class="details">
+        {{'à'|upper}} {{ hour }}H{{ minute }}<br>
+        {{ invitation.event.address }}, {{ invitation.event.placeName }}
+    </div>
+</div>
