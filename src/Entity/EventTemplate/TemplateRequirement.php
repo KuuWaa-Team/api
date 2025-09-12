@@ -33,7 +33,7 @@ class TemplateRequirement
      * @var Collection<int, TemplateRequirementValue>
      */
     #[ORM\OneToMany(mappedBy: 'requirement', targetEntity: TemplateRequirementValue::class)]
-    #[Groups(['event:pRead', 'event:fRead', 'invitation:fRead', 'templates:fRead'])]
+    #[Groups(['event:pRead', 'event:fRead', 'invitation:fRead'])]
     private Collection $templateRequirementValues;
 
     public function __construct()

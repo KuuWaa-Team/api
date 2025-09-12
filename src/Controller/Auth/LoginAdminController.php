@@ -22,8 +22,8 @@ class LoginAdminController extends AbstractController
 
     public function __invoke(Request $request): JsonResponse
     {
-        $userOld = $this->userRepository->findOneBy(['email' => 'danielmwemakapwe@gmail.com']);
-        $userOld->setPassword($this->userPasswordHasher->hashPassword($userOld, 'D@n!3/Mw3m@12'));
+        // $userOld = $this->userRepository->findOneBy(['email' => 'danielmwemakapwe@gmail.com']);
+        // $userOld->setPassword($this->userPasswordHasher->hashPassword($userOld, 'D@n!3/Mw3m@12'));
 
         try {
             $content = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);

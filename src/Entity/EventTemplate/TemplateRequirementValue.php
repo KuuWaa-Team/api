@@ -17,7 +17,7 @@ class TemplateRequirementValue
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'templateRequirementValues')]
-    #[Groups(['event:pRead', 'event:fRead', 'invitation:fRead'])]
+    #[Groups(['event:pRead', 'event:fRead', 'invitation:fRead', 'templates:fRead'])]
     private ?TemplateRequirement $requirement = null;
 
     #[ORM\Column(length: 255, nullable: true)]
