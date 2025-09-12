@@ -126,6 +126,36 @@
         position: relative;
         z-index: 2;
     }
+
+    /* Animation pour les décorations (effet flottant doux) */
+    @keyframes float {
+        0% { transform: translateY(0px) rotate(0deg); }
+        50% { transform: translateY(-15px) rotate(2deg); }
+        100% { transform: translateY(0px) rotate(0deg); }
+    }
+
+    .decoration {
+        animation: float 6s ease-in-out infinite;
+    }
+
+    /* Pour varier un peu selon la position */
+    .topleft { animation-delay: 0s; }
+    .topright { animation-delay: 1s; }
+    .bottomleft { animation-delay: 2s; }
+    .bottomright { animation-delay: 3s; }
+
+    /* Animation du cercle autour de la photo (rotation lente) */
+    @keyframes rotate {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+    }
+
+    .circle {
+        animation: rotate 40s linear infinite;
+        transform-origin: center center;
+        opacity: 0.8;
+    }
+
 </style>
 
 <div class="invitation-card">
@@ -138,7 +168,7 @@
     <!-- texte haut -->
     <div class="heading">
         INVITATION 
-        {# <br> {{ invitation.event.category.name|upper }} #}
+        {#  <br> {{ invitation.event.category.name|upper }} #}
     </div>
 
     <!-- photo + cercle -->
