@@ -584,7 +584,7 @@
     <section
             class="jsx-d0ada46de86ca64b min-h-screen flex flex-col relative overflow-hidden transition-all duration-1000 opacity-100 transform translate-y-0">
         <!-- Image de fond en fixed -->
-        <div class="fixed inset-0 bg-cover bg-center" style="background-image: url('{{ invitation is defined and invitation is not null ? asset(apiUrl ~ invitation.event.imagePath) : asset('templates/ocean/photo.jpg') }}'); background-attachment: fixed; background-position: center; background-size: cover"></div>
+        <div class="fixed inset-0 bg-cover bg-center" style="background-image: url('{{ invitation is defined and invitation is not null and invitation.event.imagePath is not null and invitation.event.imagePath != "" ? asset(apiUrl ~ invitation.event.imagePath) : asset('templates/prev.jpg') }}'); background-attachment: fixed; background-position: center; background-size: cover"></div>
 
         <!-- Overlays de gradient -->
         <div class="fixed inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/60"></div>
