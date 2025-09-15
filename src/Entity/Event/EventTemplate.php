@@ -90,6 +90,18 @@ class EventTemplate
     #[Groups(['event:pRead', 'event:fRead', 'invitation:fRead', 'templates:fRead'])]
     private Collection $templateRequirements;
 
+    #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 0, nullable: true)]
+    #[Groups(['event:pRead', 'event:fRead', 'invitation:fRead', 'templates:fRead'])]
+    private ?string $widthImage = null;
+
+    #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 0, nullable: true)]
+    #[Groups(['event:pRead', 'event:fRead', 'invitation:fRead', 'templates:fRead'])]
+    private ?string $heighImage = null;
+
+    #[ORM\Column(nullable: true)]
+    #[Groups(['event:pRead', 'event:fRead', 'invitation:fRead', 'templates:fRead'])]
+    private ?bool $imageRounded = null;
+
     public function __construct()
     {
         $this->events = new ArrayCollection();
@@ -265,6 +277,42 @@ class EventTemplate
                 $templateRequirement->setTemplate(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getWidthImage(): ?string
+    {
+        return $this->widthImage;
+    }
+
+    public function setWidthImage(?string $widthImage): static
+    {
+        $this->widthImage = $widthImage;
+
+        return $this;
+    }
+
+    public function getHeighImage(): ?string
+    {
+        return $this->heighImage;
+    }
+
+    public function setHeighImage(?string $heighImage): static
+    {
+        $this->heighImage = $heighImage;
+
+        return $this;
+    }
+
+    public function isImageRounded(): ?bool
+    {
+        return $this->imageRounded;
+    }
+
+    public function setImageRounded(?bool $imageRounded): static
+    {
+        $this->imageRounded = $imageRounded;
 
         return $this;
     }
