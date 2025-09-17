@@ -92,6 +92,7 @@ class InvitationController extends AbstractController
             'year' => $year,
             'hour' => $hour,
             'minute' => $minute,
+            'preview' => false,
 
             // colors
             'primaryR' => $primaryR,
