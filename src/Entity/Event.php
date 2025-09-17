@@ -510,6 +510,7 @@ class Event
     private Collection $gifts;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['event:pRead', 'event:fRead', 'invitation:fRead'])]
     private ?string $templateImage = null;
 
     #[ORM\Column(nullable: true)]
