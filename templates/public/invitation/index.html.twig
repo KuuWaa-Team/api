@@ -1339,7 +1339,7 @@
                         </svg>Quiz des mariés</h3>
                 </div>
                 <div class="p-6 pt-0">
-                    <p class="text-center text-[#2f2644]/70 mb-6">Mr Daniel Mwema, amusez-vous avec ce quiz sur notre histoire
+                    <p class="text-center text-[#2f2644]/70 mb-6">{{ invitation.civility }} {{ invitation.name ?? 'Invité' }}, amusez-vous avec ce quiz sur notre histoire
                         d'amour ! Répondez à ces questions sur notre couple et découvrez des anecdotes croustillantes. Le meilleur
                         participant pourrait bien être récompensé lors de la soirée avec une surprise spéciale préparée par nos
                         soins.</p>
@@ -1348,13 +1348,16 @@
                             <p class="text-[#2f2644]/70 mb-2">Question 1 sur 5</p>
                             <h3 class="text-xl font-medium text-[#2f2644]">Qui a fait le premier pas ?</h3>
                         </div>
-                        <div class="space-y-3 max-w-md mx-auto"><button
-                                class="w-full p-3 rounded-lg border border-[#f24173]/30 hover:bg-[#f24173]/5 text-left transition-all flex items-center justify-between"><span>Serge</span></button><button
-                                class="w-full p-3 rounded-lg border border-[#f24173]/30 hover:bg-[#f24173]/5 text-left transition-all flex items-center justify-between"><span>Deborah</span></button><button
-                                class="w-full p-3 rounded-lg border border-[#f24173]/30 hover:bg-[#f24173]/5 text-left transition-all flex items-center justify-between"><span>C'était
-                                    simultané</span></button><button
-                                class="w-full p-3 rounded-lg border border-[#f24173]/30 hover:bg-[#f24173]/5 text-left transition-all flex items-center justify-between"><span>Un
-                                    ami commun a tout arrangé</span></button></div>
+                        <div class="space-y-6">
+                            <!-- Zone de la question -->
+                            <div class="text-center">
+                                <p id="question-progress" class="text-[#2f2644]/70 mb-2"></p>
+                                <h3 id="question-title" class="text-xl font-medium text-[#2f2644]"></h3>
+                            </div>
+
+                            <!-- Zone des réponses -->
+                            <div id="options-container" class="space-y-3 max-w-md mx-auto"></div>
+                        </div>
                     </div>
                 </div>
             </div>
