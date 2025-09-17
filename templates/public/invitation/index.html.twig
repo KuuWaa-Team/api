@@ -914,6 +914,7 @@
             </div>
             <!-- END QRCODE -->
 
+            {% if invitation.event.hasBook %}
             <!-- BOOK -->
             <div class="rounded-lg border bg-card text-card-foreground border-[{{ template.primaryColor }}]/20 shadow-lg">
                 <div class="flex flex-col space-y-1.5 p-6 text-center">
@@ -927,7 +928,6 @@
                             </path>
                         </svg>Livre d'or </div>
                 </div>
-                {% if invitation.event.hasBook %}
                 <div class="p-6 pt-0 space-y-6">
                     {% if invitation.book == null %}
                     <p class="jsx-d0ada46de86ca64b text-center text-[{{ template.secondaryColor }}]/70">{{ invitation.fullname }}, ce livre d'or numérique recueille vos messages et vœux de bonheur, en texte ou en vocal. Vos mots resteront à jamais dans nos cœurs.</p>
@@ -1061,9 +1061,9 @@
                     </a>
                     </div> 
                 </div>
-                {% endif %}
             </div>
             <!-- END BOOK -->
+            {% endif %}
 
             <!-- MUSIC -->
             {% if invitation.event.hasMusic %}
