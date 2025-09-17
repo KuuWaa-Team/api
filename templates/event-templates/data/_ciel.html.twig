@@ -172,7 +172,7 @@
 
     <!-- photo + cercle -->
     <div class="photo-wrapper">
-        <img src="{{ asset('templates/ciel/image.png') }}" class="photo" alt="couple">
+        <img src="{{ asset(preview ? 'templates/ciel/image.png' : apiUrl ~ invitation.event.imagePath) }}" class="photo" alt="couple">
         <img src="{{ asset('templates/ciel/circle.png') }}" class="circle" alt="">
     </div>
 
