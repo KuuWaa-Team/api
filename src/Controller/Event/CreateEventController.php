@@ -79,11 +79,17 @@ class CreateEventController extends AbstractController
             $this->categoryRepository->save($category);
         }
         
+        $destinationPath = $kernel->getProjectDir() . '/public/events/images';
+
         $image = $request->files->get('image');
         $fileName = uniqid('', true) . '.' . $image->guessExtension();
-        $destinationPath = $kernel->getProjectDir() . '/public/events/images';
         $image->move($destinationPath, $fileName);
         $imagePath = '/events/images/'.$fileName;
+        
+        $templateImage = $request->files->get('template_image');
+        $templateImageFileName = uniqid('', true) . '.' . $templateImage->guessExtension();
+        $templateImage->move($destinationPath, $templateImageFileName);
+        $templateImagePath = '/events/images/'.$templateImageFileName;
 
         $thumbnailPath = '/events/thumb/'.$fileName;
         $thumbnailAbsolutePath = $kernel->getProjectDir() . '/public/events/thumb/' . $fileName;
@@ -110,6 +116,7 @@ class CreateEventController extends AbstractController
             ->setPlaceLongitude($placeLongitude)
             ->setPlaceLatitude($placeLatitude)
             ->setImagePath($imagePath)
+            ->setTemplateImage($templateImagePath)
             ->setThumbPath($thumbnailPath)
         ;
 
