@@ -16,26 +16,39 @@ class DateService extends AbstractController{
         "Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre",
     ];
 
-    public function getFullDate(?\DateTimeInterface $date, bool $dayName = false, bool $year = false, bool $showDay = true): String
-    {
-        $new_date = "";
-        if ($dayName) {
-            $new_date .= self::$DAYS[(int) $date->format("N") - 1]
-                . " ";
+    public function getFullDate(
+        ?\DateTimeInterface $startDate,
+        bool $dayName = false,
+        bool $year = false,
+        bool $showDay = true,
+        ?\DateTimeInterface $endDate = null,
+    ): string {
+        if (!$startDate) {
+            return "";
         }
 
-        if ($showDay) {
-            $new_date .= $date->format("d") . " ";
+        $formatDate = function (\DateTimeInterface $date) use ($dayName, $year, $showDay): string {
+            $str = "";
+            if ($dayName) {
+                $str .= self::$DAYS[(int) $date->format("N") - 1] . " ";
+            }
+            if ($showDay) {
+                $str .= $date->format("d") . " ";
+            }
+            $str .= self::$MONTHS[(int) $date->format("n") - 1];
+            if ($year) {
+                $str .= " " . $date->format("Y");
+            }
+            return $str;
+        };
+
+        if ($endDate && $endDate->getTimestamp() - $startDate->getTimestamp() >= 86400) {
+            return "Du " . $formatDate($startDate) . " au " . $formatDate($endDate);
         }
 
-        $new_date .= self::$MONTHS[(int) $date->format("n") - 1];
-
-        if ($year) {
-            $new_date .= " " . $date->format("Y");
-        }
-
-        return $new_date;
+        return $formatDate($startDate);
     }
+
 
     public function imageToBase64($path) {
         try {

@@ -927,6 +927,7 @@
                             </path>
                         </svg>Livre d'or </div>
                 </div>
+                {% if invitation.event.hasBook %}
                 <div class="p-6 pt-0 space-y-6">
                     {% if invitation.book == null %}
                     <p class="jsx-d0ada46de86ca64b text-center text-[{{ template.secondaryColor }}]/70">{{ invitation.fullname }}, ce livre d'or numérique recueille vos messages et vœux de bonheur, en texte ou en vocal. Vos mots resteront à jamais dans nos cœurs.</p>
@@ -1060,6 +1061,7 @@
                     </a>
                     </div> 
                 </div>
+                {% endif %}
             </div>
             <!-- END BOOK -->
 
