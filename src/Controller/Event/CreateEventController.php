@@ -87,6 +87,7 @@ class CreateEventController extends AbstractController
         $imagePath = '/events/images/'.$fileName;
         
         $templateImage = $request->files->get('template_image');
+        $templateImagePath = null;
         if ($templateImage !== null) {
             $templateImageFileName = uniqid('', true) . '.' . $templateImage->guessExtension();
             $templateImage->move($destinationPath, $templateImageFileName);
