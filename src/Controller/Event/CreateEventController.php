@@ -87,9 +87,11 @@ class CreateEventController extends AbstractController
         $imagePath = '/events/images/'.$fileName;
         
         $templateImage = $request->files->get('template_image');
-        $templateImageFileName = uniqid('', true) . '.' . $templateImage->guessExtension();
-        $templateImage->move($destinationPath, $templateImageFileName);
-        $templateImagePath = '/events/images/'.$templateImageFileName;
+        if ($templateImage !== null) {
+            $templateImageFileName = uniqid('', true) . '.' . $templateImage->guessExtension();
+            $templateImage->move($destinationPath, $templateImageFileName);
+            $templateImagePath = '/events/images/'.$templateImageFileName;
+        }
 
         $thumbnailPath = '/events/thumb/'.$fileName;
         $thumbnailAbsolutePath = $kernel->getProjectDir() . '/public/events/thumb/' . $fileName;
