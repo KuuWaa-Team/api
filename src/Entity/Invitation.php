@@ -321,6 +321,9 @@ class Invitation
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $quizMessage = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $quizEmoji = null;
+
     public function __construct()
     {
         $this->invitations = new ArrayCollection();
@@ -729,6 +732,18 @@ class Invitation
     public function setQuizMessage(?string $quizMessage): static
     {
         $this->quizMessage = $quizMessage;
+
+        return $this;
+    }
+
+    public function getQuizEmoji(): ?string
+    {
+        return $this->quizEmoji;
+    }
+
+    public function setQuizEmoji(?string $quizEmoji): static
+    {
+        $this->quizEmoji = $quizEmoji;
 
         return $this;
     }
