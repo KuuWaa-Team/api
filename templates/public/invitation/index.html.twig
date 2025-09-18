@@ -2344,8 +2344,8 @@
             }
         });
         
-        // Afficher l'anecdote
-        showFunFact(question.funFact);
+        // // Afficher l'anecdote
+        // showFunFact(question.funFact);
         
         // Passer à la question suivante après 3 secondes
         setTimeout(() => {
@@ -2365,23 +2365,23 @@
         }
         
         // Créer la nouvelle anecdote
-        const funFactDiv = document.createElement('div');
-        funFactDiv.className = 'fun-fact bg-[#f24173]/5 p-4 rounded-lg text-center border border-[#f24173]/20';
-        funFactDiv.innerHTML = `
-            <div class="flex items-center justify-center gap-2 mb-2">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-[#f24173]">
-                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
-                </svg>
-                <span class="text-[#2f2644] font-medium text-sm">Le saviez-vous ?</span>
-            </div>
-            <p class="text-[#2f2644] text-sm">${funFact}</p>
-            ${currentQuestion < quizData.length - 1 ? 
-                '<p class="text-[#2f2644]/60 text-xs mt-2">Question suivante dans 3 secondes...</p>' : 
-                '<p class="text-[#2f2644]/60 text-xs mt-2">Calcul de votre score...</p>'
-            }
-        `;
+        // const funFactDiv = document.createElement('div');
+        // funFactDiv.className = 'fun-fact bg-[#f24173]/5 p-4 rounded-lg text-center border border-[#f24173]/20';
+        // funFactDiv.innerHTML = `
+        //     <div class="flex items-center justify-center gap-2 mb-2">
+        //         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-[#f24173]">
+        //             <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path>
+        //         </svg>
+        //         <span class="text-[#2f2644] font-medium text-sm">Le saviez-vous ?</span>
+        //     </div>
+        //     <p class="text-[#2f2644] text-sm">${funFact}</p>
+        //     ${currentQuestion < quizData.length - 1 ? 
+        //         '<p class="text-[#2f2644]/60 text-xs mt-2">Question suivante dans 3 secondes...</p>' : 
+        //         '<p class="text-[#2f2644]/60 text-xs mt-2">Calcul de votre score...</p>'
+        //     }
+        // `;
         
-        container.appendChild(funFactDiv);
+        // container.appendChild(funFactDiv);
     }
 
     function showResults() {
