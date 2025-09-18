@@ -6,6 +6,7 @@ use App\Repository\Event\PhotoRepository;
 use App\Service\MediaUploaderService;
 use NumberFormatter;
 use App\Entity\Event\Book;
+use App\Entity\Event\GameQuestion;
 use App\Entity\Invitation;
 use App\Form\Invitation\BeverageFormType;
 use App\Form\Invitation\BookMessageFormType;
@@ -81,6 +82,26 @@ class InvitationController extends AbstractController
             $beverage->setCountTakenText(ucfirst($formatter->format($othersCount)));
         }
 
+        $quizData = [];
+        /**
+         * @var GameQuestion $question
+         */
+        foreach ($invitation->getEvent()->getQuestions() as $question) {
+            $data = [
+                'id' => $question->getId(),
+                'question' => $question->getTitle(),
+                'options' => [],
+                'correctAnswer' => null,
+            ];
+            for ($i = 0; $i < $question->getGameAssertions()->count() - 1; $i++) {
+                $data['options'][]= $question->getGameAssertions()[$i]->getText();
+                if ($question->getGameAssertions()[$i]->isCorrect()) {
+                    $data['correctAnswer'] = $i;
+                }
+            }
+            $quizData[] = $data;
+        }
+
         return $this->render('public/invitation/index.html.twig', [
             'invitation' => $invitation,
             'template' => $invitation->getEvent()->getTemplate(),
@@ -93,6 +114,7 @@ class InvitationController extends AbstractController
             'hour' => $hour,
             'minute' => $minute,
             'preview' => false,
+            'quizData' => $quizData,
 
             // colors
             'primaryR' => $primaryR,
