@@ -92,8 +92,8 @@ class InvitationController extends AbstractController
                 'question' => $question->getTitle(),
                 'options' => [],
                 'correctAnswer' => null,
-            ];
-            for ($i = 0; $i < $question->getGameAssertions()->count() - 1; $i++) {
+            ]; 
+            for ($i = 0; $i < $question->getGameAssertions()->count(); $i++) {
                 $data['options'][]= $question->getGameAssertions()[$i]->getText();
                 if ($question->getGameAssertions()[$i]->isCorrect()) {
                     $data['correctAnswer'] = $i;
@@ -101,7 +101,6 @@ class InvitationController extends AbstractController
             }
             $quizData[] = $data;
         }
-        dd($quizData);
 
         return $this->render('public/invitation/index.html.twig', [
             'invitation' => $invitation,
