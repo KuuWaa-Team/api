@@ -101,6 +101,7 @@ class InvitationController extends AbstractController
             }
             $quizData[] = $data;
         }
+        dd($quizData);
 
         return $this->render('public/invitation/index.html.twig', [
             'invitation' => $invitation,
