@@ -2372,7 +2372,7 @@
             emoji = "😅";
         }
 
-        fetch(`/api/invitations/{{ invitation.slug }}/answerQuiz`, {
+        const res = fetch(`/api/invitations/{{ invitation.slug }}/answerQuiz`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded'
@@ -2381,7 +2381,12 @@
                 percentage: percentage,
                 message: message
             })
-        })
+        });
+        console.log('*********************************');
+        console.log('*********************************');
+        console.log(res);
+        console.log('*********************************');
+        console.log('*********************************');
 
         // Remplacer le contenu de la section de jeu par les résultats
         gamePlaySection.innerHTML = `
