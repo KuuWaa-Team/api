@@ -1549,10 +1549,6 @@
             const diff = deadline - now;
 
             if (diff <= 0) {
-                document.getElementById('days').textContent = '00';
-                document.getElementById('hours').textContent = '00';
-                document.getElementById('minutes').textContent = '00';
-                document.getElementById('seconds').textContent = '00';
                 clearInterval(interval);
                 return;
             }
@@ -2103,6 +2099,7 @@
         }
     });
 </script>
+{% if invitation.event.hasMusic %}
 <script>
     const musicField = document.getElementById('musicField');
     const musicBtn = document.getElementById('musicBtn');
@@ -2136,80 +2133,83 @@
         }
     });
 </script>
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const uploadTrigger = document.getElementById('upload-trigger');
-        const photoInput = document.getElementById('photo-upload');
-        const previewContainer = document.getElementById('preview-container');
+{% endif %}
 
-        let uploadedFiles = []; // cumulatif
+// <script>
+//     document.addEventListener('DOMContentLoaded', () => {
+//         const uploadTrigger = document.getElementById('upload-trigger');
+//         const photoInput = document.getElementById('photo-upload');
+//         const previewContainer = document.getElementById('preview-container');
 
-        uploadTrigger.addEventListener('click', () => {
-            photoInput.click();
-        });
+//         let uploadedFiles = []; // cumulatif
 
-        photoInput.addEventListener('change', async () => {
-            const files = Array.from(photoInput.files);
+//         uploadTrigger.addEventListener('click', () => {
+//             photoInput.click();
+//         });
 
-            if (files.length === 0) return;
+//         photoInput.addEventListener('change', async () => {
+//             const files = Array.from(photoInput.files);
 
-            files.forEach(file => {
-                if (!file.type.startsWith('image/')) return;
+//             if (files.length === 0) return;
 
-                const reader = new FileReader();
-                reader.onload = e => {
-                    const wrapper = document.createElement('a');
-                    wrapper.className = 'relative group';
-                    wrapper.href = e.target.result; // lien vers l’image
-                    wrapper.target = '_blank';      // pour ouvrir dans un nouvel onglet
+//             files.forEach(file => {
+//                 if (!file.type.startsWith('image/')) return;
 
-                    const img = document.createElement('img');
-                    img.src = e.target.result;
-                    img.className = 'w-24 h-24 object-cover rounded-lg border';
+//                 const reader = new FileReader();
+//                 reader.onload = e => {
+//                     const wrapper = document.createElement('a');
+//                     wrapper.className = 'relative group';
+//                     wrapper.href = e.target.result; // lien vers l’image
+//                     wrapper.target = '_blank';      // pour ouvrir dans un nouvel onglet
 
-                    const removeBtn = document.createElement('button');
-                    removeBtn.innerHTML = '&times;';
-                    removeBtn.className = 'absolute top-0 right-0 bg-black bg-opacity-50 text-white w-6 h-6 rounded-full hidden group-hover:block';
-                    removeBtn.onclick = (event) => {
-                        event.preventDefault(); // empêche d’ouvrir le lien quand on clique sur le bouton
-                        previewContainer.removeChild(wrapper);
-                        uploadedFiles = uploadedFiles.filter(f => f !== file);
-                    };
+//                     const img = document.createElement('img');
+//                     img.src = e.target.result;
+//                     img.className = 'w-24 h-24 object-cover rounded-lg border';
 
-                    wrapper.appendChild(img);
-                    wrapper.appendChild(removeBtn);
-                    previewContainer.appendChild(wrapper);
-                };
+//                     const removeBtn = document.createElement('button');
+//                     removeBtn.innerHTML = '&times;';
+//                     removeBtn.className = 'absolute top-0 right-0 bg-black bg-opacity-50 text-white w-6 h-6 rounded-full hidden group-hover:block';
+//                     removeBtn.onclick = (event) => {
+//                         event.preventDefault(); // empêche d’ouvrir le lien quand on clique sur le bouton
+//                         previewContainer.removeChild(wrapper);
+//                         uploadedFiles = uploadedFiles.filter(f => f !== file);
+//                     };
 
-                reader.readAsDataURL(file);
-            });
+//                     wrapper.appendChild(img);
+//                     wrapper.appendChild(removeBtn);
+//                     previewContainer.appendChild(wrapper);
+//                 };
 
-            // Ajoute les nouveaux fichiers à la liste globale
-            uploadedFiles = [...uploadedFiles, ...files];
+//                 reader.readAsDataURL(file);
+//             });
 
-            // Envoi à l'API
-            const formData = new FormData();
-            uploadedFiles.forEach(file => {
-                formData.append('photos[]', file);
-            });
+//             // Ajoute les nouveaux fichiers à la liste globale
+//             uploadedFiles = [...uploadedFiles, ...files];
 
-            try {
-                const response = await fetch('/api/invitations/{{ invitation.slug }}/upload-photos', {
-                    method: 'POST',
-                    body: formData,
-                });
+//             // Envoi à l'API
+//             const formData = new FormData();
+//             uploadedFiles.forEach(file => {
+//                 formData.append('photos[]', file);
+//             });
 
-                if (!response.ok) throw new Error('Erreur lors de l’envoi');
+//             try {
+//                 const response = await fetch('/api/invitations/{{ invitation.slug }}/upload-photos', {
+//                     method: 'POST',
+//                     body: formData,
+//                 });
 
-                const result = await response.json();
-                console.log('Photos envoyées avec succès', result);
-            } catch (error) {
-                console.error('Erreur d’envoi', error);
-                alert("Erreur lors de l'envoi des photos.");
-            }
-        });
-    });
-</script>
+//                 if (!response.ok) throw new Error('Erreur lors de l’envoi');
+
+//                 const result = await response.json();
+//                 console.log('Photos envoyées avec succès', result);
+//             } catch (error) {
+//                 console.error('Erreur d’envoi', error);
+//                 alert("Erreur lors de l'envoi des photos.");
+//             }
+//         });
+//     });
+// </script>
+
 <script>
   document.addEventListener('DOMContentLoaded', function () {
     const radios = document.querySelectorAll('input[name="visibility"]');
@@ -2384,7 +2384,7 @@
             body: new URLSearchParams({
                 percentage: percentage,
                 message: message,
-                emoji = emoji;
+                emoji = emoji
             })
         });
 
