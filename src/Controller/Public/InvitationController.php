@@ -178,11 +178,13 @@ class InvitationController extends AbstractController
 
         $percentage = $request->request->get('percentage');
         $message = $request->request->get('message');
+        $emoji = $request->request->get('emoji');
         $invitation
             ->setQuizAnswered(true)
             ->setQuizAnsweredAt(new DateTimeImmutable())
             ->setQuizPercentage($percentage)
-            ->setQuizMessage($message);
+            ->setQuizMessage($message)
+            ->setQuizEmoji($emoji);
         $this->invitationRepository->save($invitation);
 
         return new JsonResponse([
