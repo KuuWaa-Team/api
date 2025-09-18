@@ -1346,17 +1346,15 @@
                     <div class="space-y-6">
                         <div class="text-center">
                             <p class="text-[#2f2644]/70 mb-2"></p>
-                            <h3 class="text-xl font-medium text-[#2f2644]">Q</h3>
+                            <h3 class="text-xl font-medium text-[#2f2644]">Qui a fait le premier pas ?</h3>
                         </div>
-                        <div class="space-y-3 max-w-md mx-auto">
-                            {# <button
+                        <div class="space-y-3 max-w-md mx-auto"><button
                                 class="w-full p-3 rounded-lg border border-[#f24173]/30 hover:bg-[#f24173]/5 text-left transition-all flex items-center justify-between"><span>Serge</span></button><button
                                 class="w-full p-3 rounded-lg border border-[#f24173]/30 hover:bg-[#f24173]/5 text-left transition-all flex items-center justify-between"><span>Deborah</span></button><button
                                 class="w-full p-3 rounded-lg border border-[#f24173]/30 hover:bg-[#f24173]/5 text-left transition-all flex items-center justify-between"><span>C'était
                                     simultané</span></button><button
                                 class="w-full p-3 rounded-lg border border-[#f24173]/30 hover:bg-[#f24173]/5 text-left transition-all flex items-center justify-between"><span>Un
-                                    ami commun a tout arrangé</span></button> #}
-                        </div>
+                                    ami commun a tout arrangé</span></button></div>
                     </div>
                 </div>
             </div>
@@ -2199,38 +2197,40 @@
 
 <script>
     // Configuration du quiz
-    const quizData = [
-        {
-            question: "Qui a fait le premier pas ?",
-            options: ["Serge", "Deborah", "C'était simultané", "Un ami commun a tout arrangé"],
-            correctAnswer: 1,
-            funFact: "Deborah a invité Serge à prendre un café après s'être rencontrés à une exposition d'art !"
-        },
-        {
-            question: "Où était leur premier rendez-vous ?",
-            options: ["Au cinéma", "Dans un café", "Au parc", "À la plage"],
-            correctAnswer: 1,
-            funFact: "Ils ont parlé pendant 4 heures sans voir le temps passer !"
-        },
-        {
-            question: "Quelle est la chanson préférée du couple ?",
-            options: ["Perfect - Ed Sheeran", "All of Me - John Legend", "At Last - Etta James", "Can't Help Falling in Love - Elvis"],
-            correctAnswer: 2,
-            funFact: "Cette chanson a joué lors de leur première danse ensemble !"
-        },
-        {
-            question: "Quel est le plat préféré qu'ils cuisinent ensemble ?",
-            options: ["Lasagnes", "Sushi", "Tacos", "Risotto aux champignons"],
-            correctAnswer: 3,
-            funFact: "Ils ont appris à le faire lors d'un cours de cuisine pour leur anniversaire !"
-        },
-        {
-            question: "Où Serge a-t-il demandé Deborah en mariage ?",
-            options: ["Paris", "À la maison", "Sur une plage", "En montagne"],
-            correctAnswer: 2,
-            funFact: "Il avait préparé un chemin de pétales de roses jusqu'à la terrasse décorée de bougies !"
-        }
-    ];
+    const quizData = {{ quizData|json_encode(constant('JSON_UNESCAPED_UNICODE'))|raw }};
+    console.log(quizData);
+    // const quizData = [
+    //     {
+    //         question: "Qui a fait le premier pas ?",
+    //         options: ["Serge", "Deborah", "C'était simultané", "Un ami commun a tout arrangé"],
+    //         correctAnswer: 1,
+    //         funFact: "Deborah a invité Serge à prendre un café après s'être rencontrés à une exposition d'art !"
+    //     },
+    //     {
+    //         question: "Où était leur premier rendez-vous ?",
+    //         options: ["Au cinéma", "Dans un café", "Au parc", "À la plage"],
+    //         correctAnswer: 1,
+    //         funFact: "Ils ont parlé pendant 4 heures sans voir le temps passer !"
+    //     },
+    //     {
+    //         question: "Quelle est la chanson préférée du couple ?",
+    //         options: ["Perfect - Ed Sheeran", "All of Me - John Legend", "At Last - Etta James", "Can't Help Falling in Love - Elvis"],
+    //         correctAnswer: 2,
+    //         funFact: "Cette chanson a joué lors de leur première danse ensemble !"
+    //     },
+    //     {
+    //         question: "Quel est le plat préféré qu'ils cuisinent ensemble ?",
+    //         options: ["Lasagnes", "Sushi", "Tacos", "Risotto aux champignons"],
+    //         correctAnswer: 3,
+    //         funFact: "Ils ont appris à le faire lors d'un cours de cuisine pour leur anniversaire !"
+    //     },
+    //     {
+    //         question: "Où Serge a-t-il demandé Deborah en mariage ?",
+    //         options: ["Paris", "À la maison", "Sur une plage", "En montagne"],
+    //         correctAnswer: 2,
+    //         funFact: "Il avait préparé un chemin de pétales de roses jusqu'à la terrasse décorée de bougies !"
+    //     }
+    // ];
     
     // Variables du jeu
     let currentQuestion = 0;
