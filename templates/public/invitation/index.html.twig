@@ -1208,7 +1208,7 @@
                 <div class="p-6 pt-0">
                     <div class="text-center space-y-6">
                         <div class="bg-gradient-to-br from-[#f24173]/10 to-[#2f2644]/10 rounded-2xl p-8">
-                            <div class="text-6xl mb-4">${emoji}</div>
+                            <div class="text-6xl mb-4">{{ invitation.quizEmoji }}</div>
                             <h3 class="text-2xl font-bold text-[#2f2644] mb-3">Bravo !</h3>
                             <div class="text-4xl font-bold text-[#f24173] mb-2">{{ invitation.quizPercentage ?? 0}}%</div>
                             <div class="text-lg text-[#2f2644]/70 mb-4">De bonnes réponses</div>
@@ -2246,12 +2246,14 @@
         // Ajouter l'événement au bouton "Commencer le Quiz"
         const startButton = gameSection.querySelector('button');
         if (startButton) {
+            console.log('startQuiz11')
             startButton.addEventListener('click', startQuiz);
         }
     }
 
     // Démarrer le quiz
     function startQuiz() {
+        console.log('startQuiz')
         gameStarted = true;
         currentQuestion = 0;
         userAnswers = [];
