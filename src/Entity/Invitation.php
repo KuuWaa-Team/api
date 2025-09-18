@@ -309,6 +309,18 @@ class Invitation
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $gameStatus = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?bool $quizAnswered = null;
+
+    #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 0, nullable: true)]
+    private ?string $quizPercentage = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $quizAnsweredAt = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $quizMessage = null;
+
     public function __construct()
     {
         $this->invitations = new ArrayCollection();
@@ -669,6 +681,54 @@ class Invitation
     public function setGameStatus(?string $gameStatus): static
     {
         $this->gameStatus = $gameStatus;
+
+        return $this;
+    }
+
+    public function isQuizAnswered(): ?bool
+    {
+        return $this->quizAnswered;
+    }
+
+    public function setQuizAnswered(?bool $quizAnswered): static
+    {
+        $this->quizAnswered = $quizAnswered;
+
+        return $this;
+    }
+
+    public function getQuizPercentage(): ?string
+    {
+        return $this->quizPercentage;
+    }
+
+    public function setQuizPercentage(?string $quizPercentage): static
+    {
+        $this->quizPercentage = $quizPercentage;
+
+        return $this;
+    }
+
+    public function getQuizAnsweredAt(): ?\DateTimeImmutable
+    {
+        return $this->quizAnsweredAt;
+    }
+
+    public function setQuizAnsweredAt(?\DateTimeImmutable $quizAnsweredAt): static
+    {
+        $this->quizAnsweredAt = $quizAnsweredAt;
+
+        return $this;
+    }
+
+    public function getQuizMessage(): ?string
+    {
+        return $this->quizMessage;
+    }
+
+    public function setQuizMessage(?string $quizMessage): static
+    {
+        $this->quizMessage = $quizMessage;
 
         return $this;
     }

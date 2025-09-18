@@ -16,6 +16,7 @@ use App\Repository\InvitationRepository;
 use App\Service\ApiService;
 use App\Service\DateService;
 use App\Service\NotificationService;
+use DateTimeImmutable;
 use Doctrine\ORM\NonUniqueResultException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -32,6 +33,7 @@ class InvitationController extends AbstractController
     public function __construct(
         private readonly ApiService $apiService,
         private readonly NotificationService $notificationService,
+        private readonly InvitationRepository $invitationRepository,
     ){}
 
     /**
@@ -159,6 +161,33 @@ class InvitationController extends AbstractController
 
         $invitationRepository->save($invitation);
         return $this->redirect($request->headers->get('referer') ?? '/');
+    }
+
+    #[Route('/api/invitations/{slug}/answerQuiz', name: 'app_invitation_answerQuiz', methods: ['POST'])]
+    public function answerQuiz(
+        string $slug,
+        Request $request,
+        InvitationRepository $invitationRepository,
+        BeverageRepository $beverageRepository
+    ): JsonResponse {
+        $invitation = $invitationRepository->findOneBy(['slug' => $slug]);
+
+        if (!$invitation) {
+            return new JsonResponse(['success' => false, 'message' => 'Invitation non trouvée.'], 404);
+        }
+
+        $percentage = $request->request->get('percentage');
+        $message = $request->request->get('message');
+        $invitation
+            ->setQuizAnswered(true)
+            ->setQuizAnsweredAt(new DateTimeImmutable())
+            ->setQuizPercentage($percentage)
+            ->setQuizMessage($message);
+        $this->invitationRepository->save($invitation);
+
+        return new JsonResponse([
+            'success' => true,
+        ]);
     }
 
     #[Route('/api/invitations/{slug}/toggle-beverage', name: 'app_invitation_toggle_beverage', methods: ['POST'])]
