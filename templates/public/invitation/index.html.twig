@@ -2227,6 +2227,7 @@
   });
 </script>
 
+{% if invitation.event.hasGame %}
 <script>
     // Configuration du quiz
     const quizData = {{ quizData|json_encode(constant('JSON_UNESCAPED_UNICODE'))|raw }};
@@ -2459,6 +2460,7 @@
         }
     }
 </script>
+{% endif %}
 
 </body>
 
