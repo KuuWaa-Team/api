@@ -91,7 +91,7 @@ class LoginAdminController extends AbstractController
         } catch (Exception $exception) {
             return new JsonResponse([
                 'success' => false,
-                'message' => 'Une erreur est survenue. Veuillez réessayer',
+                'message' => 'Une erreur est survenue. Veuillez réessayer : ' . $exception->getMessage(),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
