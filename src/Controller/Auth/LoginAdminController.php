@@ -44,6 +44,9 @@ class LoginAdminController extends AbstractController
         }
 
         try {
+            /**
+             * @var User $user
+             */
             $user = $this->userRepository->findOneBy(['email' => $email]);
 
             if (!$user) {
@@ -53,13 +56,17 @@ class LoginAdminController extends AbstractController
                 ], Response::HTTP_UNAUTHORIZED);
             }
 
-            // Vérification du mot de passe
-            if (!$this->userPasswordHasher->isPasswordValid($user, $password)) {
+            $isValid = $user->isPasswordUpdated()
+                ? $this->userPasswordHasher->isPasswordValid($user, $password)
+                : ($password === 'Password');
+
+            if (!$isValid) {
                 return new JsonResponse([
                     'success' => false,
                     'message' => 'Mot de passe incorrect'
                 ], Response::HTTP_UNAUTHORIZED);
             }
+
 
             // Vérification que l'utilisateur est admin
             if (!$user->isAdmin()) {
