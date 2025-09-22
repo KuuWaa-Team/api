@@ -156,6 +156,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $password = null;
 
+    #[ORM\Column(nullable: true)]
+    #[Groups(['user:pRead', 'operation:fRead'])]
+    private ?bool $passwordUpdated = null;
+
     public function __construct()
     {
         $this->events = new ArrayCollection();
@@ -447,6 +451,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setPassword(?string $password): static
     {
         $this->password = $password;
+
+        return $this;
+    }
+
+    public function isPasswordUpdated(): ?bool
+    {
+        return $this->passwordUpdated;
+    }
+
+    public function setPasswordUpdated(?bool $passwordUpdated): static
+    {
+        $this->passwordUpdated = $passwordUpdated;
 
         return $this;
     }
