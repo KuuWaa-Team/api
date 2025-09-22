@@ -113,6 +113,7 @@ final class PreviewController extends AbstractController
             'year' => $year,
             'hour' => $hour,
             'minute' => $minute,
+            'quizData' => [],
 
             // colors
             'primaryR' => $primaryR,
