@@ -5,6 +5,7 @@ namespace App\Controller\Auth;
 use App\Entity\User;
 use App\Repository\UserRepository;
 use Exception;
+use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -18,13 +19,11 @@ class LoginAdminController extends AbstractController
         private readonly NormalizerInterface $normalizer,
         private readonly UserRepository $userRepository,
         private readonly UserPasswordHasherInterface $userPasswordHasher,
+        private readonly JWTTokenManagerInterface $jwtManager,
     ) {}
 
     public function __invoke(Request $request): JsonResponse
     {
-        // $userOld = $this->userRepository->findOneBy(['email' => 'danielmwemakapwe@gmail.com']);
-        // $userOld->setPassword($this->userPasswordHasher->hashPassword($userOld, 'D@n!3/Mw3m@12'));
-
         try {
             $content = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
         } catch (\JsonException $e) {
@@ -71,18 +70,21 @@ class LoginAdminController extends AbstractController
             }
 
             // Tout est OK, on renvoie l’utilisateur
+            $token = $this->jwtManager->create($user);
+            $normalizedUser = $this->normalizer->normalize($user, null, ['groups' => 'user:pRead']);
             $normalizedUser = $this->normalizer->normalize($user, null, ['groups' => 'user:pRead']);
 
             return new JsonResponse([
                 'success' => true,
                 'message' => 'Connexion réussie',
+                'token' => $token,
                 'user' => $normalizedUser
             ], Response::HTTP_OK);
 
         } catch (Exception $exception) {
             return new JsonResponse([
                 'success' => false,
-                'message' => 'Une erreur est survenue. Veuillez réessayer'
+                'message' => 'Une erreur est survenue. Veuillez réessayer',
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
