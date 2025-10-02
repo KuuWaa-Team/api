@@ -93,6 +93,8 @@ final class StatsController extends AbstractController
         $totalAmount = $this->operationRepository->createQueryBuilder('p')
             ->select('SUM(p.amount)')
             ->where('p.status = :status')
+            ->andWhere('p.phoneNumber <> :testNumber')
+            ->setParameter('testNumber', '243999999999')
             ->setParameter('status', 'SUCCESS')
             ->getQuery()
             ->getSingleScalarResult() ?? 0;
@@ -100,6 +102,8 @@ final class StatsController extends AbstractController
         $failedAmount = $this->operationRepository->createQueryBuilder('p')
             ->select('SUM(p.amount)')
             ->where('p.status = :status')
+            ->andWhere('p.phoneNumber <> :testNumber')
+            ->setParameter('testNumber', '243999999999')
             ->setParameter('status', 'FAILED')
             ->getQuery()
             ->getSingleScalarResult() ?? 0;
@@ -108,6 +112,8 @@ final class StatsController extends AbstractController
             ->select('SUM(p.amount)')
             ->where('p.status = :status')
             ->andWhere('p.date BETWEEN :start AND :end')
+            ->andWhere('p.phoneNumber <> :testNumber')
+            ->setParameter('testNumber', '243999999999')
             ->setParameter('status', 'SUCCESS')
             ->setParameter('start', $firstDayOfMonth)
             ->setParameter('end', $lastDayOfMonth)
@@ -116,14 +122,16 @@ final class StatsController extends AbstractController
 
         $transactions = $this->em->createQuery("
             SELECT 
-                SUM(CASE WHEN p.status = 'SUCCESS' THEN 1 ELSE 0 END) as success,
-                SUM(CASE WHEN p.status = 'FAILED' THEN 1 ELSE 0 END) as failed
-            FROM App\Entity\Payment\Payment p
+                SUM(CASE WHEN o.status = 'STATUS_PAID' THEN 1 ELSE 0 END) as success,
+                SUM(CASE WHEN o.status = 'STATUS_FAILED' THEN 1 ELSE 0 END) as failed
+            FROM App\Entity\Wallet\Operation o WHERE o.phoneNumber <> '243999999999'
         ")->getSingleResult();
 
         $payments = $this->operationRepository->createQueryBuilder('p')
             ->where('p.status = :status')
             ->andWhere('p.date >= :start')
+            ->andWhere('p.phoneNumber <> :testNumber')
+            ->setParameter('testNumber', '243999999999')
             ->setParameter('status', 'SUCCESS')
             ->setParameter('start', $start12Months)
             ->getQuery()
