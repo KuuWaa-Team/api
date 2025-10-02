@@ -19,6 +19,11 @@ final class RechargeController extends AbstractController
     public function index(): Response
     {
         $recharges = $this->operationRepository->findAll();
+        foreach ($recharges as $key => $recharge) {
+            if ($recharge->getPhoneNumber() === '243999999999') {
+                unset($recharges[$key]);
+            }
+        }
         $normalizedData = $this->normalizer->normalize(
             $recharges,
             null,
