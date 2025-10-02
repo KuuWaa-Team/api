@@ -147,9 +147,12 @@ final class StatsController extends AbstractController
         }
 
         $topUser = $this->em->createQuery("
-            SELECT id, displayName, credits
-            FROM App\Entity\User u ORDER BY credits DESC
-        ")->setMaxResults(1)->getOneOrNullResult();
+            SELECT u.id, u.displayName, u.credits
+            FROM App\Entity\User u
+            ORDER BY u.credits DESC
+        ")
+        ->setMaxResults(1)
+        ->getOneOrNullResult();
 
         $totalCreditsBalance = $this->em->createQuery("
             SELECT SUM(credits) FROM App\Entity\User 
