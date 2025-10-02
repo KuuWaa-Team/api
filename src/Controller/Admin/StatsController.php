@@ -147,15 +147,12 @@ final class StatsController extends AbstractController
         }
 
         $topUser = $this->em->createQuery("
-            SELECT u.id, u.displayName, SUM(o.amount) as credits
-            FROM App\Entity\User u
-            JOIN u.operations o
-            GROUP BY u.id
-            ORDER BY credits DESC
+            SELECT id, displayName, credits
+            FROM App\Entity\User u ORDER BY credits DESC
         ")->setMaxResults(1)->getOneOrNullResult();
 
         $totalCreditsBalance = $this->em->createQuery("
-            SELECT SUM(o.amount) FROM App\Entity\Wallet\Operation o
+            SELECT SUM(credits) FROM App\Entity\User 
         ")->getSingleScalarResult() ?? 0;
 
         // === ENGAGEMENT ===
