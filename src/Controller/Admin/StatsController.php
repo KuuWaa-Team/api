@@ -155,7 +155,7 @@ final class StatsController extends AbstractController
         ->getOneOrNullResult();
 
         $totalCreditsBalance = $this->em->createQuery("
-            SELECT SUM(credits) FROM App\Entity\User 
+            SELECT SUM(u.credits) FROM App\Entity\User u
         ")->getSingleScalarResult() ?? 0;
 
         // === ENGAGEMENT ===
