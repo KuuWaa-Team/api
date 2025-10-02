@@ -18,12 +18,8 @@ final class RechargeController extends AbstractController
     #[Route('/admin/recharge', name: 'app_admin_recharge')]
     public function index(): Response
     {
-        $recharges = $this->operationRepository->findAll();
-        foreach ($recharges as $key => $recharge) {
-            if ($recharge->getPhoneNumber() === '243999999999') {
-                unset($recharges[$key]);
-            }
-        }
+        $recharges = $this->operationRepository->findAllValides();
+        
         $normalizedData = $this->normalizer->normalize(
             $recharges,
             null,

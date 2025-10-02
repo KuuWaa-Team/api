@@ -51,6 +51,20 @@ class OperationRepository extends ServiceEntityRepository
     }
 
     /**
+     * @return Operation[] Returns an array of Operation objects
+     */
+    public function findAllValides(): array
+    {
+        return $this->createQueryBuilder('o')
+            ->andWhere('o.phoneNumber <> :testNumber')
+            ->setParameter('status', '243999999999')
+            ->orderBy('o.date', 'DESC')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
+    /**
      * @throws NonUniqueResultException
      */
     public function findOneByOrderNumber(string $orderNumber): ?Operation
