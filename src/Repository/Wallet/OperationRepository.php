@@ -57,7 +57,7 @@ class OperationRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('o')
             ->andWhere('o.phoneNumber <> :testNumber')
-            ->setParameter('status', '243999999999')
+            ->setParameter('testNumber', '243999999999')
             ->orderBy('o.date', 'DESC')
             ->getQuery()
             ->getResult()
