@@ -4,7 +4,7 @@ namespace App\Service;
 
 class SmsService {
     public function send (String $phoneNumber, String $message): void {
-        try {
+        // try {
             $url = 'https://api2.dream-digital.info/api/SendSMS';
             $data = array(
                 'api_id' => 'API2875540209',
@@ -24,6 +24,6 @@ class SmsService {
 
             $response = curl_exec($ch);
             curl_close($ch);
-        } catch (\Exception $e) {}
+        // } catch (\Exception $e) {}
     }
 }
