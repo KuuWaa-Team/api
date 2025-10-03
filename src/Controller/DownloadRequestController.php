@@ -65,9 +65,9 @@ final class DownloadRequestController extends AbstractController
                 'name' => 'David Nseye'
             ],
         ];
-        
+
         foreach ($admins as $admin) {
-            $smsService->send($admin['number'], "Bonjour " . $admin['name'] . "\nVoua avez une nouvelle demande de telechargement en attente");            
+            $smsService->send($admin['number'], "Bonjour " . $admin['name'] . "\nVous avez une nouvelle demande de telechargement en attente");            
         }
 
         return $this->json([
