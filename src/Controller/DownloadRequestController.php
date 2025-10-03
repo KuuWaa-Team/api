@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\DownloadRequest;
+use App\Entity\User;
+use App\Repository\UserRepository;
 use App\Service\SmsService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -14,7 +16,7 @@ use Symfony\Component\Routing\Attribute\Route;
 final class DownloadRequestController extends AbstractController
 {
     #[Route('/api/downlaod/request', name: 'app_download_request', methods: ['POST'])]
-    public function index(Request $request, EntityManagerInterface $em, SmsService $smsService): JsonResponse
+    public function index(Request $request, EntityManagerInterface $em, UserRepository $userRepository, SmsService $smsService): JsonResponse
     {
         // Décoder le JSON envoyé
         $data = json_decode($request->getContent(), true);
@@ -45,7 +47,28 @@ final class DownloadRequestController extends AbstractController
         $em->persist($downloadRequest);
         $em->flush();
 
-        $smsService->send('243814063056', "Nouvelle demande de telechargement de l'app Android : " . $email);
+        $admins = [
+            [
+                'number' => '243814063056',
+                'name' => 'Daniel Mwema'
+            ],
+            [
+                'number' => '243812434586',
+                'name' => 'Emmanuel Velu'
+            ],
+            [
+                'number' => '243818674267',
+                'name' => 'Zenas Momonzo'
+            ],
+            [
+                'number' => '243899411890',
+                'name' => 'David Nseye'
+            ],
+        ];
+        
+        foreach ($admins as $admin) {
+            $smsService->send($admin['number'], "Bonjour " . $admin['name'] . "\nVoua avez une nouvelle demande de telechargement en attente");            
+        }
 
         return $this->json([
             'success' => true,
