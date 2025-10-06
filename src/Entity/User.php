@@ -160,6 +160,24 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Groups(['user:pRead', 'operation:fRead'])]
     private ?bool $passwordUpdated = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?int $countNewEvents = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $countNewUsers = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $countNewDownloadRequests = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $countNewNewsletters = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $countNewRecharges = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $countNewContacts = null;
+
     public function __construct()
     {
         $this->events = new ArrayCollection();
@@ -463,6 +481,78 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setPasswordUpdated(?bool $passwordUpdated): static
     {
         $this->passwordUpdated = $passwordUpdated;
+
+        return $this;
+    }
+
+    public function getCountNewEvents(): ?int
+    {
+        return $this->countNewEvents;
+    }
+
+    public function setCountNewEvents(?int $countNewEvents): static
+    {
+        $this->countNewEvents = $countNewEvents;
+
+        return $this;
+    }
+
+    public function getCountNewUsers(): ?int
+    {
+        return $this->countNewUsers;
+    }
+
+    public function setCountNewUsers(?int $countNewUsers): static
+    {
+        $this->countNewUsers = $countNewUsers;
+
+        return $this;
+    }
+
+    public function getCountNewDownloadRequests(): ?int
+    {
+        return $this->countNewDownloadRequests;
+    }
+
+    public function setCountNewDownloadRequests(?int $countNewDownloadRequests): static
+    {
+        $this->countNewDownloadRequests = $countNewDownloadRequests;
+
+        return $this;
+    }
+
+    public function getCountNewNewsletters(): ?int
+    {
+        return $this->countNewNewsletters;
+    }
+
+    public function setCountNewNewsletters(?int $countNewNewsletters): static
+    {
+        $this->countNewNewsletters = $countNewNewsletters;
+
+        return $this;
+    }
+
+    public function getCountNewRecharges(): ?int
+    {
+        return $this->countNewRecharges;
+    }
+
+    public function setCountNewRecharges(?int $countNewRecharges): static
+    {
+        $this->countNewRecharges = $countNewRecharges;
+
+        return $this;
+    }
+
+    public function getCountNewContacts(): ?int
+    {
+        return $this->countNewContacts;
+    }
+
+    public function setCountNewContacts(?int $countNewContacts): static
+    {
+        $this->countNewContacts = $countNewContacts;
 
         return $this;
     }

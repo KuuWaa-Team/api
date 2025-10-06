@@ -14,6 +14,7 @@ use App\Repository\EventRepository;
 use App\Repository\EventTemplateRepository;
 use App\Repository\FeatureRepository;
 use App\Repository\UserRepository;
+use App\Service\AdminService;
 use Imagine\Gd\Imagine;
 use Imagine\Image\Box;
 use Imagine\Image\ImageInterface;
@@ -34,6 +35,7 @@ class CreateEventController extends AbstractController
         private readonly EventCategoryRepository $categoryRepository,
         private readonly UserRepository $userRepository,
         private readonly EventTemplateRepository $templateRepository,
+        private readonly AdminService $adminService,
     ) {
     }
 
@@ -132,6 +134,7 @@ class CreateEventController extends AbstractController
         }
 
         $this->eventRepository->save($event, true);
+        $this->adminService->addUnreadNewEvent();
 
         $response = [
             'success'   => $success,

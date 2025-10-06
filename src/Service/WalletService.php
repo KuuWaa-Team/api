@@ -24,6 +24,7 @@ class WalletService
         private readonly PaymentService $paymentService,
         private readonly CreditService $creditService,
         private readonly NotificationService $notificationService,
+        private readonly AdminService $adminService,
         private readonly OperationRepository $operationRepository,
     ){}
 
@@ -41,6 +42,9 @@ class WalletService
                         body: "Votre recharge de " . $operation->getCredits() . " crédits a ete validé avec succès.",
                         data: ['credits' => (string) $operation->getUser()?->getCredits()]
                     );
+                    if ($operation->getPhoneNumber() != '243999999999') {
+                        $this->adminService->addUnreadNewRecharge();
+                    }
                 } else {
                     $operation->setStatus(self::$STATUS_FAILED);
                 }
