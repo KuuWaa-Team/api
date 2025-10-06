@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\DownloadRequest;
 use App\Entity\User;
 use App\Repository\UserRepository;
+use App\Service\AdminService;
 use App\Service\SmsService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -16,7 +17,7 @@ use Symfony\Component\Routing\Attribute\Route;
 final class DownloadRequestController extends AbstractController
 {
     #[Route('/api/downlaod/request', name: 'app_download_request', methods: ['POST'])]
-    public function index(Request $request, EntityManagerInterface $em, UserRepository $userRepository, SmsService $smsService): JsonResponse
+    public function index(Request $request, AdminService $adminService, EntityManagerInterface $em, UserRepository $userRepository, SmsService $smsService): JsonResponse
     {
         // Décoder le JSON envoyé
         $data = json_decode($request->getContent(), true);
@@ -46,6 +47,8 @@ final class DownloadRequestController extends AbstractController
 
         $em->persist($downloadRequest);
         $em->flush();
+
+        $adminService->addUnreadNewDownloadRequest();
 
         $admins = [
             [

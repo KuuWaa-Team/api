@@ -18,6 +18,7 @@ class LoginController extends AbstractController
     public function __construct(
         private readonly NormalizerInterface         $normalizer,
         private readonly UserRepository              $userRepository,
+        private readonly AdminService $adminService,
     ) {
     }
 
@@ -68,6 +69,9 @@ class LoginController extends AbstractController
 
             $user->setPhoneId($phoneId);
             $this->userRepository->save($user);
+            if ($new) {
+                $this->adminService->addUnreadNewUser();
+            }
 
             if ($new) {
                 $welcomeMessage = "Bienvenue chez KuuWaa!\nLa meuilleur application de gestion d'evenement";

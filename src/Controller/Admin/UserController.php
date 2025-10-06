@@ -30,4 +30,21 @@ final class UserController extends AbstractController
             'data' => $normalizedData
         ]);
     }
+
+    #[Route('/admin/user/my-notifications', name: 'app_admin_get_notifications')]
+    public function myNotifications(): Response
+    {   
+        /**
+         * @var User $user
+         */
+        $user = $this->getUser();
+        return $this->json([
+            'countNewEvents' => $user->getCountNewEvents(),
+            'countNewUsers' => $user->getCountNewUsers(),
+            'countNewDownloadRequests' => $user->getCountNewDownloadRequests(),
+            'countNewNewsletters' => $user->getCountNewNewsletters(),
+            'countNewRecharges' => $user->getCountNewRecharges(),
+            'countNewContacts' => $user->getCountNewContacts(),
+        ]);
+    }
 }

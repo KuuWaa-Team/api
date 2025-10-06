@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\ContactForm;
+use App\Service\AdminService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -12,7 +13,7 @@ use Symfony\Component\Routing\Attribute\Route;
 final class ContactFormController extends AbstractController
 {
     #[Route('/contact/form', name: 'app_contact_form', methods:['POST'])]
-    public function index(Request $request, EntityManagerInterface $em): JsonResponse
+    public function index(Request $request, AdminService $adminService, EntityManagerInterface $em): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
 
@@ -49,6 +50,7 @@ final class ContactFormController extends AbstractController
 
         $em->persist($contact);
         $em->flush();
+        $adminService->addUnreadNewContact();
 
         return $this->json([
             'success' => true,

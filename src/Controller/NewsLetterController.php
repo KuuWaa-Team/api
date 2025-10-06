@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\NewsLetter;
+use App\Service\AdminService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -12,7 +13,7 @@ use Symfony\Component\Routing\Attribute\Route;
 final class NewsLetterController extends AbstractController
 {
     #[Route('/api/news-letter/new', name: 'app_news_letter', methods: ['POST'])]
-    public function index(Request $request, EntityManagerInterface $em): JsonResponse
+    public function index(Request $request, AdminService $adminService, EntityManagerInterface $em): JsonResponse
     {
         // Décoder le JSON envoyé
         $data = json_decode($request->getContent(), true);
@@ -52,6 +53,8 @@ final class NewsLetterController extends AbstractController
 
         $em->persist($newsLetter);
         $em->flush();
+
+        $adminService->addUnreadNewNewsletter();
 
         return $this->json([
             'success' => true,
