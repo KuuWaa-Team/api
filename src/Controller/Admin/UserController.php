@@ -2,6 +2,7 @@
 
 namespace App\Controller\Admin;
 
+use App\Entity\User;
 use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -32,14 +33,9 @@ final class UserController extends AbstractController
         ]);
     }
 
-    #[Route('/admin/user/my-notifications', name: 'app_admin_get_notifications')]
-    #[IsGranted('ROLE_USER')]
-    public function myNotifications(): Response
+    #[Route('/admin/user/my-notifications/{id}', name: 'app_admin_get_notifications')]
+    public function myNotifications(User $user): Response
     {   
-        /**
-         * @var User? $user
-         */
-        $user = $this->getUser();
         return $this->json([
             'countNewEvents' => $user->getCountNewEvents(),
             'countNewUsers' => $user->getCountNewUsers(),
