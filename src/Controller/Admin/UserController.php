@@ -33,7 +33,7 @@ final class UserController extends AbstractController
     }
 
     #[Route('/admin/user/my-notifications', name: 'app_admin_get_notifications')]
-    #[IsGranted(['ROLE_USER'])]
+    #[IsGranted('ROLE_USER')]
     public function myNotifications(): Response
     {   
         /**
