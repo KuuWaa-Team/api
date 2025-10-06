@@ -6,6 +6,7 @@ use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 final class UserController extends AbstractController
@@ -32,10 +33,11 @@ final class UserController extends AbstractController
     }
 
     #[Route('/admin/user/my-notifications', name: 'app_admin_get_notifications')]
+    #[IsGranted(['ROLE_USER'])]
     public function myNotifications(): Response
     {   
         /**
-         * @var User $user
+         * @var User? $user
          */
         $user = $this->getUser();
         return $this->json([
