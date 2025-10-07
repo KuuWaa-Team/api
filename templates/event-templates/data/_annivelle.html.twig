@@ -60,7 +60,7 @@
         animation: anniv-dropIn 1.2s ease;
         position: relative;
         z-index: 2;
-        bottom: -30;
+        top: -30px;
     }
 
     .anniv-topleft, .anniv-topright {
@@ -126,7 +126,7 @@
 
     .anniv-save {
         font-family: 'Mistrully', cursive;
-        font-size: 1rem;
+        font-size: 2rem;
         margin-top: 1rem;
         margin-bottom: 1rem;
         animation: anniv-float 4s ease-in-out infinite;
@@ -136,7 +136,7 @@
 
     /* === DATE ET HEURE === */
     .anniv-date {
-        font-size: 1.2rem;
+        font-size: 1rem;
         font-weight: 500;
         margin-bottom: 0.3rem;
         position: relative;
@@ -175,8 +175,8 @@
     }
 
     .anniv-support {
-        width: 100%;
-        max-width: 500px;
+        width: 120px;
+        max-width: 35%;
         margin: 0 auto;
         display: block;
         position: relative;
@@ -225,8 +225,7 @@
     <div class="anniv-date">{{ date }}</div>
     <div class="anniv-time">{{ 'à'|upper }} {{ hour }}H{{ minute }}</div>
 
-    <div class="anniv-venue">Venue</div>
-    <div class="anniv-address">{{ invitation.event.address }}, {{ invitation.event.placeName }}</div>
+    <div class="anniv-venue">{{ invitation.event.address }}, {{ invitation.event.placeName }}</div>
 
     <!-- Section filles -->
     <div class="anniv-girls-section">
