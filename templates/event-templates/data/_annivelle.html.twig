@@ -59,13 +59,13 @@
         display: block;
         animation: anniv-dropIn 1.2s ease;
         position: relative;
-        z-index: 2;
+        z-index: 4;
     }
 
     .anniv-topleft, .anniv-topright {
         position: absolute;
         top: 0;
-        width: 130px;
+        width: 80px;
         z-index: 2;
         animation: anniv-float 6s ease-in-out infinite;
     }
@@ -208,13 +208,11 @@
     <!-- Bordures -->
     <div class="anniv-frame anniv-frame-left"></div>
     <div class="anniv-frame anniv-frame-right"></div>
-    <div class="anniv-frame anniv-frame-top"></div>
-    <div class="anniv-frame anniv-frame-bottom"></div>
 
     <!-- Décors -->
     <img src="{{ asset('templates/annivelle/top.png') }}" class="anniv-top" alt="Top decor">
-    <img src="{{ asset('templates/annivelle/topleft.png') }}" class="anniv-topleft" alt="Fleur gauche">
-    <img src="{{ asset('templates/annivelle/topright.png') }}" class="anniv-topright" alt="Fleur droite">
+    <img src="{{ asset('templates/annivelle/topleft-2.png') }}" class="anniv-topleft" alt="Fleur gauche">
+    <img src="{{ asset('templates/annivelle/topright-2.png') }}" class="anniv-topright" alt="Fleur droite">
     <img src="{{ asset('templates/annivelle/particulars.png') }}" class="anniv-confetti" alt="Confettis">
 
     <!-- Contenu principal -->
