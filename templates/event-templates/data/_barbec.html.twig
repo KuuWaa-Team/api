@@ -41,7 +41,7 @@
     /* === TITRE PRINCIPAL === */
     .main-title {
         font-family: 'CyGrotesk-GrandBlack', sans-serif;
-        font-size: 5rem;
+        font-size: 3rem;
         line-height: 0.9;
         text-transform: uppercase;
         margin-bottom: 2.5rem;
@@ -60,8 +60,7 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
-        gap: 2rem;
-        flex-wrap: wrap;
+        flex-wrap: no-wrap;
     }
 
     .text-block {
@@ -148,6 +147,7 @@
 
     <!-- CONTENU PRINCIPAL -->
     <div class="party-row">
+        <img src="{{ asset('templates/barbec/glass.png') }}" class="glass" alt="Glass">
         <div class="text-block">
             <div class="script-text">Join us to celebrate</div>
             <div class="text-line">
@@ -155,8 +155,6 @@
                 Saturday, {{ date }} at {{ hour }}h{{ minute }}
             </div>
         </div>
-
-        <img src="{{ asset('templates/barbec/glass.png') }}" class="glass" alt="Glass">
     </div>
 
     <!-- INFORMATIONS ÉVÉNEMENT -->
