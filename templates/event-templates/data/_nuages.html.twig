@@ -19,17 +19,17 @@
 
     @font-face {
         font-family: 'Blackjack';
-        src: url('{{ asset('templates/ocean/blackjack.otf') }}') format('opentype');
+        src: url('{{ asset('templates/nuages/blackjack.otf') }}') format('opentype');
     }
 
     @font-face {
         font-family: 'FairDisplay';
-        src: url('{{ asset('templates/ocean/PlayfairDisplay-Regular.otf') }}') format('opentype');
+        src: url('{{ asset('templates/nuages/PlayfairDisplay-Regular.otf') }}') format('opentype');
     }
 
     @font-face {
         font-family: 'Amsterdam';
-        src: url('{{ asset('templates/ocean/Amsterdam.ttf') }}') format('truetype');
+        src: url('{{ asset('templates/nuages/Amsterdam.ttf') }}') format('truetype');
     }
 
     .decor-top,
@@ -158,14 +158,14 @@
 </style>
 
 <div class="invitation-container">
-    <img src="{{ asset('templates/ocean/top.png') }}" alt="top flower" class="decor-top">
-    <img src="{{ asset('templates/ocean/bottom.png') }}" alt="bottom flower" class="decor-bottom">
+    <img src="{{ asset('templates/nuages/top.png') }}" alt="top flower" class="decor-top">
+    <img src="{{ asset('templates/nuages/bottom.png') }}" alt="bottom flower" class="decor-bottom">
 
     <h2 class="save-title" style="font-family: 'Blackjack', sans-serif">Invitation</h2>
     <p class="invitation-subtitle" style="color: {{ template.secondaryColor }}">{{ invitation is defined ? invitation.event.category.name : 'Mariage Coutumier' }}</p>
 
     <div class="decor-wrapper">
-        <img src="{{ asset('templates/ocean/decor.png') }}" alt="decor hexagon" class="decor-center" />
+        <img src="{{ asset('templates/nuages/decor.png') }}" alt="decor hexagon" class="decor-center" />
         <div class="names-wrapper">
             <div class="names">{{ invitation is defined ? invitation.event.title : "Vide" }}</div>
         </div>
