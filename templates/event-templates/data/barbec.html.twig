@@ -1,0 +1,138 @@
+<style>
+    /* === POLICES === */
+    @font-face {
+        font-family: 'CyGrotesk-GrandBlack';
+        src: url('{{ asset('templates/CyGrotesk/CyGrotesk-GrandBlack.otf') }}') format('opentype');
+    }
+
+    @font-face {
+        font-family: 'CyGrotesk-Regular';
+        src: url('{{ asset('templates/CyGrotesk/CyGrotesk-GrandRegular.otf') }}') format('opentype');
+    }
+
+    @font-face {
+        font-family: 'BrittanySignature';
+        src: url('{{ asset('templates/barbec/BrittanySignature.ttf') }}') format('truetype');
+    }
+
+    body {
+        margin: 0;
+        padding: 0;
+        background-color: #f6f8ff;
+        font-family: 'CyGrotesk-Regular', sans-serif;
+        color: {{ template.primaryColor }};
+    }
+
+    .invitation-card {
+        position: relative;
+        background-color: #f6f8ff;
+        max-width: 600px;
+        margin: auto;
+        text-align: center;
+        padding: 3rem 1rem;
+        border-radius: 8px;
+        overflow: hidden;
+        color: {{ template.primaryColor }};
+        z-index: 2;
+    }
+
+    /* === TITRE PRINCIPAL === */
+    .main-title {
+        font-family: 'CyGrotesk-GrandBlack', sans-serif;
+        font-size: 4rem;
+        line-height: 0.9;
+        text-transform: uppercase;
+        margin-bottom: 2rem;
+        color: {{ template.primaryColor }};
+        animation: popIn 1.2s ease;
+    }
+
+    @keyframes popIn {
+        0% { transform: scale(0.8); opacity: 0; }
+        100% { transform: scale(1); opacity: 1; }
+    }
+
+    /* === TEXTE SCRIPT === */
+    .script-text {
+        font-family: 'BrittanySignature', cursive;
+        font-size: 1.8rem;
+        color: {{ template.primaryColor }};
+        margin-bottom: 1rem;
+        animation: float 4s ease-in-out infinite;
+    }
+
+    @keyframes float {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-8px); }
+    }
+
+    /* === NOM & DESCRIPTION === */
+    .names {
+        font-family: 'CyGrotesk-GrandBlack', sans-serif;
+        font-size: 1.4rem;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        margin-top: 1.5rem;
+    }
+
+    .details {
+        font-family: 'CyGrotesk-Regular', sans-serif;
+        font-size: 0.95rem;
+        margin-top: 1rem;
+        line-height: 1.6;
+    }
+
+    /* === ICÔNES (verre + étoiles) === */
+    .glass {
+        width: 180px;
+        margin: 1.5rem 0;
+        position: relative;
+        animation: shake 6s ease-in-out infinite;
+    }
+
+    @keyframes shake {
+        0%, 100% { transform: rotate(0deg); }
+        50% { transform: rotate(2deg); }
+    }
+
+    .star {
+        position: absolute;
+        width: 40px;
+        animation: twinkle 3s ease-in-out infinite;
+    }
+
+    .star.small { width: 25px; }
+    .star.left { top: 55%; left: 20%; animation-delay: 1s; }
+    .star.right { top: 40%; right: 20%; animation-delay: 2s; }
+    .star.center { top: 35%; left: 50%; transform: translateX(-50%); }
+
+    @keyframes twinkle {
+        0%, 100% { opacity: 0.3; transform: scale(0.9); }
+        50% { opacity: 1; transform: scale(1.2); }
+    }
+
+</style>
+
+<div class="invitation-card">
+    <div class="main-title">LET’S<br>PARTY!</div>
+
+    <div class="script-text">Join us to<br>celebrate</div>
+
+    <img src="{{ asset('templates/barbec/glass.png') }}" class="glass" alt="Glass">
+
+    <!-- étoiles -->
+    <img src="{{ asset('templates/barbec/star.png') }}" class="star left" alt="star">
+    <img src="{{ asset('templates/barbec/star.png') }}" class="star right small" alt="star">
+    <img src="{{ asset('templates/barbec/star.png') }}" class="star center" alt="star">
+
+    <div class="names">
+        {{ invitation.event.title|upper }}
+    </div>
+
+    <div class="details">
+        {{ date }}<br>
+        {{ 'à'|upper }} {{ hour }}H{{ minute }}<br>
+        {{ invitation.event.address }}, {{ invitation.event.placeName }}<br>
+        RSVP: {{ invitation.event.organizerContact }}
+    </div>
+</div>
