@@ -1,4 +1,4 @@
-<style>
+    <style>
     /* === POLICES === */
     @font-face {
         font-family: 'Maragsa';
@@ -59,7 +59,8 @@
         display: block;
         animation: anniv-dropIn 1.2s ease;
         position: relative;
-        z-index: 4;
+        z-index: 2;
+        bottom: -30;
     }
 
     .anniv-topleft, .anniv-topright {
@@ -104,14 +105,14 @@
     /* === TITRES === */
     .anniv-title {
         font-family: 'Maragsa', serif;
-        font-size: 3rem;
+        font-size: 2.5rem;
         line-height: 1;
-        margin-top: 1.5rem;
         margin-bottom: 0.3rem;
         color: {{ template.primaryColor }};
         animation: anniv-fadeIn 1.2s ease;
         z-index: 2;
         position: relative;
+        font-weight: bold;
     }
 
     .anniv-subtitle {
@@ -125,7 +126,8 @@
 
     .anniv-save {
         font-family: 'Mistrully', cursive;
-        font-size: 2rem;
+        font-size: 1rem;
+        margin-top: 1rem;
         margin-bottom: 1rem;
         animation: anniv-float 4s ease-in-out infinite;
         position: relative;
@@ -179,11 +181,12 @@
         display: block;
         position: relative;
         z-index: 1;
+        bottom: -100px
     }
 
     .anniv-girls {
         position: absolute;
-        bottom: 12px;
+        bottom: -60px;
         left: 50%;
         transform: translateX(-50%);
         width: 260px;
@@ -217,7 +220,6 @@
 
     <!-- Contenu principal -->
     <div class="anniv-title">Kitty Party</div>
-    <div class="anniv-subtitle">Invitation</div>
     <div class="anniv-save">Save the date</div>
 
     <div class="anniv-date">{{ date }}</div>
