@@ -10,7 +10,7 @@
         src: url('{{ asset('templates/annivelle/Mistrully.ttf') }}') format('truetype');
     }
 
-    .invitation-card {
+    .anniv-card {
         position: relative;
         background-color: #fff;
         color: {{ template.primaryColor }};
@@ -25,66 +25,66 @@
     }
 
     /* === BORDURES === */
-    .border {
+    .anniv-frame {
         position: absolute;
         background: url('{{ asset('templates/annivelle/border.png') }}') repeat;
         background-size: contain;
         z-index: 3;
     }
 
-    .border.left,
-    .border.right {
+    .anniv-frame-left,
+    .anniv-frame-right {
         top: 0;
         width: 16px;
         height: 100%;
     }
-    .border.left { left: 0; }
-    .border.right { right: 0; }
+    .anniv-frame-left { left: 0; }
+    .anniv-frame-right { right: 0; }
 
-    .border.top,
-    .border.bottom {
+    .anniv-frame-top,
+    .anniv-frame-bottom {
         left: 0;
         width: 100%;
         height: 16px;
         transform: rotate(90deg);
         transform-origin: center;
     }
-    .border.top { top: 0; }
-    .border.bottom { bottom: 0; }
+    .anniv-frame-top { top: 0; }
+    .anniv-frame-bottom { bottom: 0; }
 
     /* === DÉCORS === */
-    .top-decor {
+    .anniv-top {
         width: 100%;
         margin: 0 auto 1rem;
         display: block;
-        animation: dropIn 1.2s ease;
+        animation: anniv-dropIn 1.2s ease;
         position: relative;
         z-index: 2;
     }
 
-    .topleft, .topright {
+    .anniv-topleft, .anniv-topright {
         position: absolute;
         top: 0;
         width: 130px;
         z-index: 2;
-        animation: float 6s ease-in-out infinite;
+        animation: anniv-float 6s ease-in-out infinite;
     }
 
-    .topleft { left: -15px; animation-delay: 0s; }
-    .topright { right: -15px; animation-delay: 3s; }
+    .anniv-topleft { left: -15px; animation-delay: 0s; }
+    .anniv-topright { right: -15px; animation-delay: 3s; }
 
-    @keyframes float {
+    @keyframes anniv-float {
         0%, 100% { transform: translateY(0); }
         50% { transform: translateY(-10px); }
     }
 
-    @keyframes dropIn {
+    @keyframes anniv-dropIn {
         from { transform: translateY(-20px); opacity: 0; }
         to { transform: translateY(0); opacity: 1; }
     }
 
     /* === CONFETTIS === */
-    .confetti {
+    .anniv-confetti {
         position: absolute;
         top: 0;
         left: 0;
@@ -93,28 +93,28 @@
         pointer-events: none;
         opacity: 0.85;
         z-index: 1;
-        animation: confettiFloat 10s linear infinite;
+        animation: anniv-confettiFloat 10s linear infinite;
     }
 
-    @keyframes confettiFloat {
+    @keyframes anniv-confettiFloat {
         0%, 100% { transform: translateY(0); }
         50% { transform: translateY(10px); }
     }
 
     /* === TITRES === */
-    .main-title {
+    .anniv-title {
         font-family: 'Maragsa', serif;
         font-size: 3rem;
         line-height: 1;
         margin-top: 1.5rem;
         margin-bottom: 0.3rem;
         color: {{ template.primaryColor }};
-        animation: fadeIn 1.2s ease;
+        animation: anniv-fadeIn 1.2s ease;
         z-index: 2;
         position: relative;
     }
 
-    .subtitle {
+    .anniv-subtitle {
         font-family: 'Poppins', sans-serif;
         font-weight: 400;
         font-size: 1.1rem;
@@ -123,17 +123,17 @@
         z-index: 2;
     }
 
-    .save-date {
+    .anniv-save {
         font-family: 'Mistrully', cursive;
         font-size: 2rem;
         margin-bottom: 1rem;
-        animation: float 4s ease-in-out infinite;
+        animation: anniv-float 4s ease-in-out infinite;
         position: relative;
         z-index: 2;
     }
 
     /* === DATE ET HEURE === */
-    .date {
+    .anniv-date {
         font-size: 1.2rem;
         font-weight: 500;
         margin-bottom: 0.3rem;
@@ -141,7 +141,7 @@
         z-index: 2;
     }
 
-    .time {
+    .anniv-time {
         font-size: 1rem;
         margin-bottom: 1.5rem;
         position: relative;
@@ -149,7 +149,7 @@
     }
 
     /* === LIEU === */
-    .venue {
+    .anniv-venue {
         font-size: 1.2rem;
         font-weight: 700;
         text-decoration: underline;
@@ -158,7 +158,7 @@
         z-index: 2;
     }
 
-    .address {
+    .anniv-address {
         font-size: 0.95rem;
         line-height: 1.4;
         position: relative;
@@ -166,13 +166,13 @@
     }
 
     /* === SECTION DES FILLES === */
-    .girls-section {
+    .anniv-girls-section {
         position: relative;
         margin-top: 2.8rem;
         z-index: 2;
     }
 
-    .support {
+    .anniv-support {
         width: 100%;
         max-width: 500px;
         margin: 0 auto;
@@ -181,56 +181,56 @@
         z-index: 1;
     }
 
-    .girls {
+    .anniv-girls {
         position: absolute;
         bottom: 12px;
         left: 50%;
         transform: translateX(-50%);
         width: 90%;
         max-width: 500px;
-        animation: riseUp 1.6s ease;
+        animation: anniv-riseUp 1.6s ease;
         z-index: 2;
     }
 
-    @keyframes riseUp {
+    @keyframes anniv-riseUp {
         from { transform: translate(-50%, 25px); opacity: 0; }
         to { transform: translate(-50%, 0); opacity: 1; }
     }
 
-    @keyframes fadeIn {
+    @keyframes anniv-fadeIn {
         from { opacity: 0; }
         to { opacity: 1; }
     }
 
 </style>
 
-<div class="invitation-card">
+<div class="anniv-card">
     <!-- Bordures -->
-    <div class="border left"></div>
-    <div class="border right"></div>
-    <div class="border top"></div>
-    <div class="border bottom"></div>
+    <div class="anniv-frame anniv-frame-left"></div>
+    <div class="anniv-frame anniv-frame-right"></div>
+    <div class="anniv-frame anniv-frame-top"></div>
+    <div class="anniv-frame anniv-frame-bottom"></div>
 
     <!-- Décors -->
-    <img src="{{ asset('templates/annivelle/top.png') }}" class="top-decor" alt="Top decor">
-    <img src="{{ asset('templates/annivelle/topleft.png') }}" class="topleft" alt="Fleur gauche">
-    <img src="{{ asset('templates/annivelle/topright.png') }}" class="topright" alt="Fleur droite">
-    <img src="{{ asset('templates/annivelle/particulars.png') }}" class="confetti" alt="Confettis">
+    <img src="{{ asset('templates/annivelle/top.png') }}" class="anniv-top" alt="Top decor">
+    <img src="{{ asset('templates/annivelle/topleft.png') }}" class="anniv-topleft" alt="Fleur gauche">
+    <img src="{{ asset('templates/annivelle/topright.png') }}" class="anniv-topright" alt="Fleur droite">
+    <img src="{{ asset('templates/annivelle/particulars.png') }}" class="anniv-confetti" alt="Confettis">
 
     <!-- Contenu principal -->
-    <div class="main-title">Kitty Party</div>
-    <div class="subtitle">Invitation</div>
-    <div class="save-date">Save the date</div>
+    <div class="anniv-title">Kitty Party</div>
+    <div class="anniv-subtitle">Invitation</div>
+    <div class="anniv-save">Save the date</div>
 
-    <div class="date">{{ date }}</div>
-    <div class="time">{{ 'à'|upper }} {{ hour }}H{{ minute }}</div>
+    <div class="anniv-date">{{ date }}</div>
+    <div class="anniv-time">{{ 'à'|upper }} {{ hour }}H{{ minute }}</div>
 
-    <div class="venue">Venue</div>
-    <div class="address">{{ invitation.event.address }}, {{ invitation.event.placeName }}</div>
+    <div class="anniv-venue">Venue</div>
+    <div class="anniv-address">{{ invitation.event.address }}, {{ invitation.event.placeName }}</div>
 
     <!-- Section filles -->
-    <div class="girls-section">
-        <img src="{{ asset('templates/annivelle/support.png') }}" class="support" alt="Support">
-        <img src="{{ asset('templates/annivelle/girls.png') }}" class="girls" alt="Girls">
+    <div class="anniv-girls-section">
+        <img src="{{ asset('templates/annivelle/support.png') }}" class="anniv-support" alt="Support">
+        <img src="{{ asset('templates/annivelle/girls.png') }}" class="anniv-girls" alt="Girls">
     </div>
 </div>
