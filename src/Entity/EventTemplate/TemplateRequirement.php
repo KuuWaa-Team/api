@@ -103,7 +103,6 @@ class TemplateRequirement
     public function removeTemplateRequirementValue(TemplateRequirementValue $templateRequirementValue): static
     {
         if ($this->templateRequirementValues->removeElement($templateRequirementValue)) {
-            // set the owning side to null (unless already changed)
             if ($templateRequirementValue->getRequirement() === $this) {
                 $templateRequirementValue->setRequirement(null);
             }
