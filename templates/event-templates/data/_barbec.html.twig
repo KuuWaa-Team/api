@@ -2,7 +2,7 @@
     /* === POLICES === */
     @font-face {
         font-family: 'CyGrotesk-GrandBlack';
-        src: url('{{ asset('templates/CyGrotesk/CyGrotesk-GrandBlack.otf') }}') format('opentype');
+        src: url('{{ asset('templates/barbec/CyGrotesk/CyGrotesk-GrandBlack.otf') }}') format('opentype');
     }
 
     @font-face {
@@ -15,6 +15,7 @@
         src: url('{{ asset('templates/barbec/BrittanySignature.ttf') }}') format('truetype');
     }
 
+    /* === GLOBAL === */
     body {
         margin: 0;
         padding: 0;
@@ -27,23 +28,25 @@
         position: relative;
         background-color: #f6f8ff;
         max-width: 600px;
-        margin: auto;
-        text-align: center;
-        padding: 3rem 1rem;
-        border-radius: 8px;
+        margin: 4rem auto;
+        text-align: left;
+        padding: 3rem 2rem;
+        border-radius: 12px;
         overflow: hidden;
         color: {{ template.primaryColor }};
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
         z-index: 2;
     }
 
     /* === TITRE PRINCIPAL === */
     .main-title {
         font-family: 'CyGrotesk-GrandBlack', sans-serif;
-        font-size: 4rem;
+        font-size: 5rem;
         line-height: 0.9;
         text-transform: uppercase;
-        margin-bottom: 2rem;
+        margin-bottom: 2.5rem;
         color: {{ template.primaryColor }};
+        text-align: left;
         animation: popIn 1.2s ease;
     }
 
@@ -52,41 +55,42 @@
         100% { transform: scale(1); opacity: 1; }
     }
 
-    /* === TEXTE SCRIPT === */
+    /* === BLOC PRINCIPAL: TEXTE + ICÔNE === */
+    .party-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 2rem;
+        flex-wrap: wrap;
+    }
+
+    .text-block {
+        flex: 1;
+        min-width: 220px;
+    }
+
     .script-text {
         font-family: 'BrittanySignature', cursive;
-        font-size: 1.8rem;
-        color: {{ template.primaryColor }};
-        margin-bottom: 1rem;
+        font-size: 2.2rem;
+        margin-bottom: 0.8rem;
         animation: float 4s ease-in-out infinite;
+    }
+
+    .text-line {
+        font-family: 'CyGrotesk-Regular', sans-serif;
+        font-size: 1rem;
+        line-height: 1.5;
     }
 
     @keyframes float {
         0%, 100% { transform: translateY(0); }
-        50% { transform: translateY(-8px); }
+        50% { transform: translateY(-6px); }
     }
 
-    /* === NOM & DESCRIPTION === */
-    .names {
-        font-family: 'CyGrotesk-GrandBlack', sans-serif;
-        font-size: 1.4rem;
-        letter-spacing: 0.5px;
-        text-transform: uppercase;
-        margin-top: 1.5rem;
-    }
-
-    .details {
-        font-family: 'CyGrotesk-Regular', sans-serif;
-        font-size: 0.95rem;
-        margin-top: 1rem;
-        line-height: 1.6;
-    }
-
-    /* === ICÔNES (verre + étoiles) === */
+    /* === ICÔNE DU VERRE === */
     .glass {
         width: 180px;
-        margin: 1.5rem 0;
-        position: relative;
+        height: auto;
         animation: shake 6s ease-in-out infinite;
     }
 
@@ -95,43 +99,70 @@
         50% { transform: rotate(2deg); }
     }
 
+    /* === NOM DE L'ÉVÉNEMENT === */
+    .names {
+        font-family: 'CyGrotesk-GrandBlack', sans-serif;
+        font-size: 1.4rem;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        margin-top: 2rem;
+        text-align: center;
+    }
+
+    /* === DÉTAILS === */
+    .details {
+        font-family: 'CyGrotesk-Regular', sans-serif;
+        font-size: 0.95rem;
+        margin-top: 1rem;
+        line-height: 1.6;
+        text-align: center;
+    }
+
+    /* === ÉTOILES === */
     .star {
         position: absolute;
         width: 40px;
         animation: twinkle 3s ease-in-out infinite;
+        z-index: 1;
     }
 
     .star.small { width: 25px; }
-    .star.left { top: 55%; left: 20%; animation-delay: 1s; }
-    .star.right { top: 40%; right: 20%; animation-delay: 2s; }
-    .star.center { top: 35%; left: 50%; transform: translateX(-50%); }
+    .star.left { top: 10%; left: 10%; animation-delay: 1s; }
+    .star.right { top: 15%; right: 15%; animation-delay: 2s; }
+    .star.bottom { bottom: 10%; right: 25%; animation-delay: 3s; }
 
     @keyframes twinkle {
         0%, 100% { opacity: 0.3; transform: scale(0.9); }
         50% { opacity: 1; transform: scale(1.2); }
     }
-
 </style>
 
 <div class="invitation-card">
-    <div class="main-title">LET’S<br>PARTY!</div>
-
-    <div class="script-text">Join us to<br>celebrate</div>
-
-    <img src="{{ asset('templates/barbec/glass.png') }}" class="glass" alt="Glass">
-
-    <!-- étoiles -->
+    <!-- ÉTOILES DÉCORATIVES -->
     <img src="{{ asset('templates/barbec/star.png') }}" class="star left" alt="star">
     <img src="{{ asset('templates/barbec/star.png') }}" class="star right small" alt="star">
-    <img src="{{ asset('templates/barbec/star.png') }}" class="star center" alt="star">
+    <img src="{{ asset('templates/barbec/star.png') }}" class="star bottom" alt="star">
 
-    <div class="names">
-        {{ invitation.event.title|upper }}
+    <!-- TITRE -->
+    <div class="main-title">LET’S<br>PARTY!</div>
+
+    <!-- CONTENU PRINCIPAL -->
+    <div class="party-row">
+        <div class="text-block">
+            <div class="script-text">Join us to celebrate</div>
+            <div class="text-line">
+                A night full of laughter, music & good vibes.<br>
+                Saturday, {{ date }} at {{ hour }}h{{ minute }}
+            </div>
+        </div>
+
+        <img src="{{ asset('templates/barbec/glass.png') }}" class="glass" alt="Glass">
     </div>
 
+    <!-- INFORMATIONS ÉVÉNEMENT -->
+    <div class="names">{{ invitation.event.title|upper }}</div>
+
     <div class="details">
-        {{ date }}<br>
-        {{ 'à'|upper }} {{ hour }}H{{ minute }}<br>
         {{ invitation.event.address }}, {{ invitation.event.placeName }}<br>
         RSVP to Juli +123-456-7890
     </div>
