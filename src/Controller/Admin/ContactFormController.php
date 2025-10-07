@@ -30,7 +30,7 @@ final class ContactFormController extends AbstractController
         }
 
         $user->setCountNewContacts(0);
-        $contacts = $this->contactFormRepository->findAll();
+        $contacts = $this->contactFormRepository->findBy([], ['createdAt' => 'DESC']);
         $normalizedData = $this->normalizer->normalize(
             $contacts,
             null,
