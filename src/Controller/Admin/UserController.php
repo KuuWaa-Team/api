@@ -29,7 +29,7 @@ final class UserController extends AbstractController
             throw new UnauthorizedHttpException("Veuillez vous connecter", 1);
         }
 
-        $user->setCountNewNewsletters(0);
+        $user->setCountNewUsers(0);
         $this->userRepository->save($user);
         
         $users = $this->userRepository->findAll();
