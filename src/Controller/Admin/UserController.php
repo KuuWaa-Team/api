@@ -6,6 +6,7 @@ use App\Entity\User;
 use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
@@ -20,6 +21,17 @@ final class UserController extends AbstractController
     #[Route('/admin/user', name: 'app_admin_user')]
     public function index(): Response
     {
+        /**
+         * @var User $user
+         */
+        $user = $this->getUser();
+        if (!$user) {
+            throw new UnauthorizedHttpException("Veuillez vous connecter", 1);
+        }
+
+        $user->setCountNewNewsletters(0);
+        $this->userRepository->save($user);
+        
         $users = $this->userRepository->findAll();
         $normalizedData = $this->normalizer->normalize(
             $users,
