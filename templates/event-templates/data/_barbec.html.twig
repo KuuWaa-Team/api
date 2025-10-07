@@ -112,9 +112,11 @@
 
     /* === DÉTAILS === */
     .details {
+        font-weight: bolder;
+        margin-top: 40px;
+        color: black;
         font-family: 'CyGrotesk-Regular', sans-serif;
         font-size: 0.95rem;
-        margin-top: 1rem;
         line-height: 1.6;
         text-align: center;
     }
@@ -160,7 +162,7 @@
     </div>
 
     <!-- INFORMATIONS ÉVÉNEMENT -->
-    <div class="names">{{ invitation.event.title|upper }}</div>
+    {# <div class="names">{{ invitation.event.title|upper }}</div> #}
 
     <div class="details">
         {{ invitation.event.address }}, {{ invitation.event.placeName }}<br>
