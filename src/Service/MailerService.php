@@ -35,11 +35,11 @@ class MailerService {
         if (!empty($attachment)) {
             $email->attachFromPath($attachment["path"], $attachment["name"]);
         }
-        try {
+        // try {
             $this->mailer->send($email);
             return true;
-        } catch (Exception $e) {
-            return true;
-        }
+        // } catch (Exception $e) {
+        //     return true;
+        // }
     }
 }
