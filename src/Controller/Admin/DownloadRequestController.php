@@ -7,6 +7,7 @@ use App\Entity\User;
 use App\Repository\DownloadRequestRepository;
 use App\Repository\UserRepository;
 use App\Service\MailerService;
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
@@ -59,15 +60,23 @@ final class DownloadRequestController extends AbstractController
             "download_link" => "https://play.google.com/store/apps/details?id=com.dmwema.kuuwaa"
         ];
 
-        $mailerService->sendEmail(
-            $email,
-            $template, $templateDatas, 'Lien de telechargement KuuWaa Android');
+        $success = true;
+        $message = "Lien envoye avec success";
 
-        $downloadRequest->setSent(true);
+        try {
+            $mailerService->sendEmail(
+                $email,
+                $template, $templateDatas, 'Lien de telechargement KuuWaa Android');
+
+            $downloadRequest->setSent(true);
+        } catch (Exception $e) {
+            $success = false;
+            $message = "Une erreur est survenue lors de l'envoie du mail";
+        }
 
         return $this->json([
-            'success' => true,
-            'message' => "Lien envoye avec success"
+            'success' => $success,
+            'message' => $message
         ]);
     }
 }
