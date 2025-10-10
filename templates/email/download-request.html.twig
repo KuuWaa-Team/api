@@ -1,0 +1,114 @@
+{% apply inline_css %}
+<style>
+	main {
+		padding: 50px 0;
+		background: #eee;
+		min-height: 100vh;
+		color: #000;
+	}
+
+	p {
+		margin: 0 !important;
+	}
+
+	main > .container {
+		width: 700px;
+		max-width: 90%;
+		border-radius: 5px;
+		padding: 0;
+		margin: 0 auto;
+		text-align: center;
+	}
+
+	main > .container .top {
+		padding: 50px;
+		background-color: #4C3AE0;
+		color: white;
+		background-size: cover;
+	}
+
+	.mail-body {
+		padding: 30px 40px;
+		text-align: left;
+		background-color: #f7f7f7;
+		margin-bottom: 18px;
+	}
+
+	.bottom {
+		padding: 30px 40px;
+		background-color: #f7f7f7;
+	}
+
+	.links {
+		text-align: center;
+		padding-top: 30px;
+		font-size: 13px
+	}
+
+	.links a {
+		text-decoration: none;
+		color: #4C3AE0;
+		font-weight: 900
+	}
+
+	.btn {
+		display: inline-block;
+		background-color: #4C3AE0;
+		color: #fff !important;
+		padding: 12px 25px;
+		border-radius: 5px;
+		text-decoration: none;
+		font-weight: bold;
+		margin-top: 20px;
+	}
+</style>
+<body>
+	<main>
+		<div class="container">
+			<div class="top">
+				<h2>KuuWaa</h2>
+				<p>Votre lien de téléchargement est prêt 🎉</p>
+			</div>
+			<div class="mail-body">
+				<h3 style="font-weight:700; margin:0;">{{ title }}</h3>
+				<hr>
+				<h3>Bonjour Monsieur (Madame),</h3>
+				<p>Merci d’avoir demandé à télécharger <b>KuuWaa</b> — l’application qui transforme la gestion de vos événements en une expérience simple, moderne et connectée.</p>
+
+				<p style="margin-top:20px;">Cliquez ci-dessous pour télécharger dès maintenant :</p>
+				<p style="text-align:center;">
+					<a href="{{ download_link }}" class="btn" target="_blank">Télécharger KuuWaa</a>
+				</p>
+
+				<p style="margin-top:20px;font-size:14px;color:#555;">
+					Si le téléchargement ne démarre pas automatiquement, copiez et collez ce lien dans votre navigateur :  
+					<br>
+					<a href="{{ download_link }}" target="_blank">{{ download_link }}</a>
+				</p>
+
+				<p style="margin-top:30px;">Avec <b>KuuWaa</b>, vous pouvez :</p>
+				<ul style="margin-top:10px;">
+					<li>Créer et personnaliser vos événements en quelques clics ;</li>
+					<li>Envoyer des invitations numériques élégantes ;</li>
+					<li>Suivre la présence de vos invités en temps réel ;</li>
+					<li>Et bien plus encore !</li>
+				</ul>
+
+				<p style="margin-top:20px;">Merci de faire partie de la communauté KuuWaa 💛</p>
+			</div>
+			<div class="bottom">
+				<p>Ceci est un message automatique envoyé par notre serveur.
+					<b>Ne répondez pas à ce message.</b>
+				</p>
+			</div>
+			<div class="links">
+				Envoyé par
+				<a href="https://kuuwaa.com" target="_blank">KuuWaa</a>
+				<p>© {{ "now"|date("Y") }} KuuWaa - Kinshasa, RDC</p>
+			</div>
+		</div>
+	</main>
+
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.min.js" integrity="sha384-ODmDIVzN+pFdexxHEHFBQH3/9/vQ9uori45z4JjnFsRydbmQbmL5t1tQ0culUzyK" crossorigin="anonymous"></script>
+</body>
+{% endapply %}
