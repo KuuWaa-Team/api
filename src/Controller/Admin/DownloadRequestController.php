@@ -69,7 +69,7 @@ final class DownloadRequestController extends AbstractController
                 $template, $templateDatas, 'Lien de telechargement KuuWaa Android');
 
             $downloadRequest->setSent(true);
-            $this->downloadRequestRepository->save($downloadRequest);
+            $this->downloadRequestRepository->save($downloadRequest); //persits
         } catch (Exception $e) {
             $success = false;
             $message = "Une erreur est survenue lors de l'envoie du mail";
