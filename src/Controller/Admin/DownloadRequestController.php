@@ -55,6 +55,7 @@ final class DownloadRequestController extends AbstractController
         $template = "email/download-request.html.twig";
         $templateDatas = [
             "address" => $email,
+            "title" => "Telechargement KuuWaa Android",
             "download_link" => "https://play.google.com/store/apps/details?id=com.dmwema.kuuwaa"
         ];
 

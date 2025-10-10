@@ -42,6 +42,8 @@
         "symfony/validator": "7.0.*",
         "symfony/workflow": "7.0.*",
         "symfony/yaml": "7.0.*",
+        "twig/cssinliner-extra": "*",
+        "twig/extra-bundle": "*",
         "twilio/sdk": "^7.13",
         "vich/uploader-bundle": "^2.3"
     },
