@@ -16,6 +16,13 @@ class DownloadRequestRepository extends ServiceEntityRepository
         parent::__construct($registry, DownloadRequest::class);
     }
 
+    public function save (DownloadRequest $downloadRequest, bool $flush = true) {
+        $this->getEntityManager()->persist($downloadRequest);
+        if ($flush) {
+            $this->getEntityManager()->flush();
+        }
+    }
+
     //    /**
     //     * @return DownloadRequest[] Returns an array of DownloadRequest objects
     //     */
