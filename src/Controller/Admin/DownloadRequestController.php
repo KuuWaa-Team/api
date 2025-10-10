@@ -62,16 +62,11 @@ final class DownloadRequestController extends AbstractController
             $email,
             $template, $templateDatas, 'Lien de telechargement KuuWaa Android');
 
-        $requests = $this->downloadRequestRepository->findAll();
-        $normalizedData = $this->normalizer->normalize(
-            $requests,
-            null,
-            ['groups' => ['request:fRead']]
-        );
+        $downloadRequest->setSent(true);
 
         return $this->json([
             'success' => true,
-            'data' => $normalizedData
+            'message' => "Lien envoye avec success"
         ]);
     }
 }
