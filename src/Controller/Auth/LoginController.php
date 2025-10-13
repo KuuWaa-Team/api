@@ -82,15 +82,16 @@ class LoginController extends AbstractController
             $success = false;
             $message = "Une erreur est survenue. Veuillez ressayer";
         }
+        $normalizedUser = $user ? $this->normalizer->normalize($user, null, ['groups' => 'user:pRead']) : null;
+        
         $return = [
             'success'   => $success,
             'message'   => $message ?? '',
             'new'       => $new ?? false,
-            'user'      => $user ?? null,
+            'user'      => $normalizedUser,
             'token'     => $token,
         ];
 
-        $response = $this->normalizer->normalize($return, null, ['groups' => 'user:pRead']);
-        return new JsonResponse($response, Response::HTTP_OK);
+        return new JsonResponse($return, Response::HTTP_OK);
     }
 }
