@@ -31,6 +31,7 @@ use Symfony\Component\Serializer\Attribute\Groups;
         new GetCollection(),
         new Post(
             uriTemplate: '/login',
+            deserialize: false,
             requirements: [
                 'email' => 'String', 'phoneId' => 'String', 'displayName' => 'String', 'provider' => 'String'
             ],
