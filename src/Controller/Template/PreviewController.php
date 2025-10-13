@@ -89,7 +89,7 @@ final class PreviewController extends AbstractController
                 (new Beverage)
                     ->setName("Coca cola")->setType("solf")
             )
-            ->addBeverage(
+            ->addBeverage( //update
                 (new Beverage)
                     ->setName("Castel")->setType("Beear")
             )
