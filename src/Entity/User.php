@@ -31,19 +31,14 @@ use Symfony\Component\Serializer\Attribute\Groups;
         new GetCollection(),
         new Post(
             uriTemplate: '/login',
-            serialize: false,
-            requirements: [
-                'email' => 'String', 'phoneId' => 'String', 'displayName' => 'String', 'provider' => 'String'
-            ],
             controller: LoginController::class,
-            description: "Login with google",
+            deserialize: false,
+            description: "Login with Google",
         ),
         new Post(
             uriTemplate: '/login-admin',
-            requirements: [
-                'email' => 'String', 'password' => 'String'
-            ],
             controller: LoginAdminController::class,
+            deserialize: false,
             description: "Login admin",
         ),
         new GetCollection(
