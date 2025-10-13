@@ -40,7 +40,7 @@ class LoginController extends AbstractController
         $new = false;
         $user = null;
         $message =  '';
-        $token = '';
+        $token = ''; // init token
 
         try {
             $email       = $content['email'];
