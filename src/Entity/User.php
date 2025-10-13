@@ -33,6 +33,8 @@ use Symfony\Component\Serializer\Attribute\Groups;
             uriTemplate: '/login',
             controller: LoginController::class,
             deserialize: false,
+            read: false,
+            write: false,
             description: "Login with Google",
         ),
         new Post(
