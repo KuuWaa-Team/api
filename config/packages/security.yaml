@@ -15,10 +15,10 @@ security:
 
         # Point d’entrée de ton login
         login:
-            pattern: ^/api/login
+            pattern: ^/api/login-admin
             stateless: true
             json_login:
-                check_path: /api/login
+                check_path: /api/login-admin
                 username_path: email
                 password_path: password
                 success_handler: lexik_jwt_authentication.handler.authentication_success
