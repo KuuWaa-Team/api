@@ -2,6 +2,8 @@
 
 namespace App\Controller\Template;
 
+use App\Entity\Beverage;
+use App\Entity\Event;
 use App\Entity\Event\Book;
 use App\Entity\Event\EventTemplate;
 use App\Entity\Invitation;
@@ -10,7 +12,6 @@ use App\Repository\Event\BookRepository;
 use App\Repository\EventCategoryRepository;
 use App\Service\ApiService;
 use App\Service\DateService;
-use Proxies\__CG__\App\Entity\Event;
 use App\Entity\EventCategory;
 use DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -48,10 +49,9 @@ final class PreviewController extends AbstractController
 
         $category = $this->categoryRepository->find((int) $categoryId);
         if ($category === null) {
-             $category = (new EventCategory())
+            $category = (new EventCategory())
                 ->setName($request->request->get('category_name') ?? 'Mariage Religieux')
-                ->setValidated(false)
-            ;
+                ->setValidated(false);
         }
 
         if ($imageBase64 && $imageName) {
@@ -74,22 +74,44 @@ final class PreviewController extends AbstractController
             ->setStartDate(new \DateTime($startDate))
             ->setAddress($address)
             ->setPlaceLatitude($placeName)
+            ->setHasBeverage(true)
+            ->setHasBook(true)
+            ->setHasMusic(true)
             ->setDetails($details)
             ->setCategory($category)
             ->setImagePath($imagePath)
-            ->setTemplate($template);
+            ->setTemplate($template)
+            ->addBeverage(
+                (new Beverage)
+                    ->setName("Fanta")->setType("solf")
+            )
+            ->addBeverage(
+                (new Beverage)
+                    ->setName("Coca cola")->setType("solf")
+            )
+            ->addBeverage( //update
+                (new Beverage)
+                    ->setName("Castel")->setType("Beear")
+            )
+            ->addBeverage(
+                (new Beverage)
+                    ->setName("Nkoyi Black")->setType("Beear")
+            )
+            ->addBeverage(
+                (new Beverage)
+                    ->setName("Savana")->setType("Beear")
+            );
 
         if (!empty($endDate) && strtoupper($endDate) != "NULL") {
             $event->setEndDate(new \DateTime($endDate));
         }
-            
+
         $invitation = (new Invitation())
             ->setEvent($event)
             ->setCodePath('/templates/code.png')
             ->setCode('TESTE')
             ->setCivility('Mr.')
-            ->setName('John Doe')
-        ;
+            ->setName('John Doe');
 
         $date = $this->dateService->getFullDate($invitation->getEvent()->getStartDate(), true, true);
         $apiUrl = $this->apiService->getApiUrl();
@@ -128,10 +150,11 @@ final class PreviewController extends AbstractController
         ]);
     }
 
-    function hexToRgb(string $hex): array {
+    function hexToRgb(string $hex): array
+    {
         $hex = ltrim($hex, '#');
         if (strlen($hex) === 3) {
-            $hex = $hex[0].$hex[0] . $hex[1].$hex[1] . $hex[2].$hex[2];
+            $hex = $hex[0] . $hex[0] . $hex[1] . $hex[1] . $hex[2] . $hex[2];
         }
 
         return [
