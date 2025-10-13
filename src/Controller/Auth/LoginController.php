@@ -42,7 +42,7 @@ class LoginController extends AbstractController
         $message =  '';
         $token = ''; // init token
 
-        // try {
+        try {
             $email       = $content['email'];
             $uuid        = $content['uid'];
             $displayName = $content['displayName'];
@@ -79,10 +79,10 @@ class LoginController extends AbstractController
                 $welcomeMessage = "Bienvenue chez KuuWaa!\nLa meuilleur application de gestion d'evenement";
             }
 
-        // } catch (Exception $exception) {
-        //     $success = false;
-        //     $message = "Une erreur est survenue. Veuillez ressayer";
-        // }
+        } catch (Exception $exception) {
+            $success = false;
+            $message = "Une erreur est survenue. Veuillez ressayer";
+        }
         $normalizedUser = $user ? $this->normalizer->normalize($user, null, ['groups' => 'user:pRead']) : null;
         
         $return = [
