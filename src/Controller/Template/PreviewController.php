@@ -82,23 +82,23 @@ final class PreviewController extends AbstractController
             ->setImagePath($imagePath)
             ->setTemplate($template)
             ->addBeverage(
-                (new Beverage)
+                (new Beverage())
                     ->setName("Fanta")->setType("solf")
             )
             ->addBeverage(
-                (new Beverage)
+                (new Beverage())
                     ->setName("Coca cola")->setType("solf")
             )
             ->addBeverage( //update
-                (new Beverage)
+                (new Beverage())
                     ->setName("Castel")->setType("Beear")
             )
             ->addBeverage(
-                (new Beverage)
+                (new Beverage())
                     ->setName("Nkoyi Black")->setType("Beear")
             )
             ->addBeverage(
-                (new Beverage)
+                (new Beverage())
                     ->setName("Savana")->setType("Beear")
             );
 
@@ -111,6 +111,7 @@ final class PreviewController extends AbstractController
             ->setCodePath('/templates/code.png')
             ->setCode('TESTE')
             ->setCivility('Mr.')
+            ->setSlug(uniqid())
             ->setName('John Doe');
 
         $date = $this->dateService->getFullDate($invitation->getEvent()->getStartDate(), true, true);
