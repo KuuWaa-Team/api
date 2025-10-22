@@ -81,7 +81,7 @@ class LoginController extends AbstractController
 
         } catch (Exception $exception) {
             $success = false;
-            $message = "Une erreur est survenue. " . $exception->getMessage();
+            $message = $exception->getMessage();
         }
         $normalizedUser = $user ? $this->normalizer->normalize($user, null, ['groups' => 'user:pRead']) : null;
         
