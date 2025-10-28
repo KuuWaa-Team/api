@@ -34,7 +34,7 @@ class DeleteEventController extends AbstractController
         $errorType = null;
         
         $event->setDeletedAt(new DateTimeImmutable());
-        $this->eventRepository->save($event);
+        $this->eventRepository->save($event, true);
 
         $response = [
             'success'   => $success,
