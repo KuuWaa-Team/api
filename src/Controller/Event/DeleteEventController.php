@@ -8,6 +8,7 @@ use App\Repository\Address\CountryRepository;
 use App\Repository\Address\ProvinceRepository;
 use App\Repository\EventCategoryRepository;
 use App\Repository\EventRepository;
+use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -19,7 +20,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 class DeleteEventController extends AbstractController
 {
     public function __construct(
-        private readonly EntityManagerInterface $em,
+        private readonly EventRepository $eventRepository,
     ) {
     }
 
@@ -31,13 +32,9 @@ class DeleteEventController extends AbstractController
         $message = 'Evénement supprimé avec succès !';
         $success = true;
         $errorType = null;
-        if (!($event->getStatus() === 'paid')) {
-            $this->em->remove($event);
-            $this->em->flush();
-        } else {
-            $message = 'Evénement ne peut pas être supprimé !';
-            $success = false;
-        }
+        
+        $event->setDeletedAt(new DateTimeImmutable());
+        $this->eventRepository->save($event);
 
         $response = [
             'success'   => $success,
