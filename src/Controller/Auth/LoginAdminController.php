@@ -67,8 +67,6 @@ class LoginAdminController extends AbstractController
                 ], Response::HTTP_UNAUTHORIZED);
             }
 
-
-            // Vérification que l'utilisateur est admin
             if (!$user->isAdmin()) {
                 return new JsonResponse([
                     'success' => false,
@@ -76,7 +74,6 @@ class LoginAdminController extends AbstractController
                 ], Response::HTTP_FORBIDDEN);
             }
 
-            // Tout est OK, on renvoie l’utilisateur
             $token = $this->jwtManager->create($user);
             $normalizedUser = $this->normalizer->normalize($user, null, ['groups' => 'user:pRead']);
             $normalizedUser = $this->normalizer->normalize($user, null, ['groups' => 'user:pRead']);
