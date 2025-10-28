@@ -543,6 +543,7 @@ class Event
     private Collection $templateRequirementValues;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['event:pRead', 'event:fRead', 'invitation:fRead'])]
     private ?\DateTimeImmutable $deletedAt = null;
 
     public function getImagePath(): ?string
