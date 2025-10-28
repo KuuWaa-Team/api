@@ -14,15 +14,15 @@ security:
             security: false
 
         # Point d’entrée de ton login
-        login:
-            pattern: ^/api/login-admin
-            stateless: true
-            json_login:
-                check_path: /api/login-admin
-                username_path: email
-                password_path: password
-                success_handler: lexik_jwt_authentication.handler.authentication_success
-                failure_handler: lexik_jwt_authentication.handler.authentication_failure
+        # login:
+        #     pattern: ^/api/login-admin
+        #     stateless: true
+        #     json_login:
+        #         check_path: /api/login-admin
+        #         username_path: email
+        #         password_path: password
+        #         success_handler: lexik_jwt_authentication.handler.authentication_success
+        #         failure_handler: lexik_jwt_authentication.handler.authentication_failure
 
         # Firewall JWT (pour toutes les routes protégées)
         api:
