@@ -1,148 +1,45 @@
 <?php
-
 namespace App\Controller\Event;
-use App\Entity\Address\Address;
-use App\Entity\Event;
-use App\Entity\EventCategory;
-use App\Entity\User;
-use App\Repository\Address\AddressRepository;
-use App\Repository\Address\CountryRepository;
-use App\Repository\Address\ProvinceRepository;
-use App\Repository\EventCategoryRepository;
-use App\Repository\EventPackRepository;
-use App\Repository\EventRepository;
-use App\Repository\EventTemplateRepository;
-use App\Repository\FeatureRepository;
-use App\Repository\UserRepository;
-use App\Service\AdminService;
-use Imagine\Gd\Imagine;
-use Imagine\Image\Box;
-use Imagine\Image\ImageInterface;
-use Imagine\Image\ManipulatorInterface;
-use Imagine\Image\Point;
+
+use App\Service\EventCreationService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
-use Symfony\Component\HttpKernel\KernelInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
 
 class CreateEventController extends AbstractController
 {
     public function __construct(
-        private readonly EventRepository $eventRepository,
-        private readonly EventCategoryRepository $categoryRepository,
-        private readonly UserRepository $userRepository,
-        private readonly EventTemplateRepository $templateRepository,
-        private readonly AdminService $adminService,
-    ) {
-    }
+        private readonly EventCreationService $eventCreationService
+    ) {}
 
-    /**
-     * @throws \JsonException
-     */
-    public function __invoke(Request $request, KernelInterface $kernel): JsonResponse
+    public function __invoke(Request $request): JsonResponse
     {
-        $content = $request->request->all();
-        $message = 'Evénement créé avec succès !';
-        $success = true;
-        $errorType = null;
+        try {
+            $content = $request->request->all();
+            $image = $request->files->get('image');
+            $templateImage = $request->files->get('template_image');
 
-        $userUid = $content['user_uid'];
-        $user = $this->userRepository->findOneBy(['uid' => $userUid]);
+            $event = $this->eventCreationService->createEvent(
+                $content, 
+                $image, 
+                $templateImage
+            );
 
-        if ($user === null) {
-            throw new UnauthorizedHttpException("Vous devez vous connecter");
+            return new JsonResponse([
+                'success' => true,
+                'eventId' => $event->getId(),
+                'message' => 'Événement créé avec succès !',
+                'errorType' => null,
+            ], Response::HTTP_OK);
+
+        } catch (\Exception $e) {
+            return new JsonResponse([
+                'success' => false,
+                'eventId' => null,
+                'message' => $e->getMessage(),
+                'errorType' => 'error',
+            ], Response::HTTP_BAD_REQUEST);
         }
-
-        $title = $content['title'];
-        $startDate = $content['start_date'];
-        $endDate = $content['end_date'];
-        $details = $content['details'];
-
-        $address = $content['address'];
-        $placeName = $content['place_name'];
-        $placeLongitude = $content['place_longitude'];
-        $placeLatitude = $content['place_latitude'];
-
-        $specifications = json_decode($content['specifications'], true, 512, JSON_THROW_ON_ERROR);
-
-        $templateId = $content['template_id'];
-
-        $category_id = $content['category_id'] ?? null;
-
-        $category = $this->categoryRepository->find($category_id ?? 0);
-        if ($category === null) {
-            $category = (new EventCategory())
-                ->setName($content['category_name'] ?? 'Non défini')
-                ->setValidated(false)
-            ;
-            $this->categoryRepository->save($category);
-        }
-        
-        $destinationPath = $kernel->getProjectDir() . '/public/events/images';
-
-        $image = $request->files->get('image');
-        $fileName = uniqid('', true) . '.' . $image->guessExtension();
-        $image->move($destinationPath, $fileName);
-        $imagePath = '/events/images/'.$fileName;
-        
-        $templateImage = $request->files->get('template_image');
-        $templateImagePath = null;
-        if ($templateImage !== null) {
-            $templateImageFileName = uniqid('', true) . '.' . $templateImage->guessExtension();
-            $templateImage->move($destinationPath, $templateImageFileName);
-            $templateImagePath = '/events/images/'.$templateImageFileName;
-        }
-
-        $thumbnailPath = '/events/thumb/'.$fileName;
-        $thumbnailAbsolutePath = $kernel->getProjectDir() . '/public/events/thumb/' . $fileName;
-
-        $imagine = new Imagine();
-        $image = $imagine->open($destinationPath . '/' . $fileName);
-        $thumbnail = $image->thumbnail(new Box(375, 375), ManipulatorInterface::THUMBNAIL_OUTBOUND);
-        $thumbnail->resize(new Box(375, 375))
-            ->crop(new Point(0, 0), new Box(375, 375))
-            ->save($thumbnailAbsolutePath);
-
-        $template = $this->templateRepository->find($templateId);
-
-        $event = (new Event())
-            ->setTitle($title)
-            ->setStartDate(new \DateTime($startDate))
-            ->setCategory($category)
-            ->setDetails($details)
-            ->setAddress($address)
-            ->setPlaceName($placeName)
-            ->setPlaceName($placeName)
-            ->setOwner($user)
-            ->setTemplate($template)
-            ->setPlaceLongitude($placeLongitude)
-            ->setPlaceLatitude($placeLatitude)
-            ->setImagePath($imagePath)
-            ->setTemplateImage($templateImagePath)
-            ->setThumbPath($thumbnailPath)
-        ;
-
-        if (!empty($endDate) && strtoupper($endDate) != "NULL") {
-            $event->setEndDate(new \DateTime($endDate));
-        }
-
-        foreach ($specifications as $specification) {
-            $event->addEventSpecification((new Event\EventSpecification())->setName($specification));
-        }
-
-        $this->eventRepository->save($event, true);
-        $this->adminService->addUnreadNewEvent();
-
-        $response = [
-            'success'   => $success,
-            'eventId'   => $success ? $event->getId() : null,
-            'message'   => $message,
-            'errorType' => $errorType,
-        ];
-
-        return new JsonResponse($response, Response::HTTP_OK);
     }
 }
