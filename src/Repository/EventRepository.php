@@ -51,8 +51,8 @@ class EventRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('e')
             ->leftJoin('e.eventAdmins', 'ea')
-            ->where('e.owner = :u')
-            ->orWhere('ea.user = :u')
+            ->where('e.owner = :u or ea.user = :u')
+            ->andWhere('e.deletedAt is null')
             ->setParameter('u', $user)
             ->orderBy('e.startDate')
             ->getQuery()

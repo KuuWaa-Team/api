@@ -542,6 +542,9 @@ class Event
     #[Groups(['event:pRead', 'event:fRead', 'invitation:fRead'])]
     private Collection $templateRequirementValues;
 
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $deletedAt = null;
+
     public function getImagePath(): ?string
     {
         return $this->imagePath;
@@ -1191,6 +1194,18 @@ class Event
                 $templateRequirementValue->setEvent(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getDeletedAt(): ?\DateTimeImmutable
+    {
+        return $this->deletedAt;
+    }
+
+    public function setDeletedAt(?\DateTimeImmutable $deletedAt): static
+    {
+        $this->deletedAt = $deletedAt;
 
         return $this;
     }
