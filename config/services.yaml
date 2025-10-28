@@ -44,3 +44,11 @@ services:
     arguments:
       $telegramBotToken: '%telegram_bot_token%'
       $telegramChatId: '%telegram_chat_id%'
+
+  App\MessageHandler\GenerateEventThumbnailHandler:
+    arguments:
+        $projectDir: '%kernel.project_dir%'
+
+  App\Service\EventCreationService:
+    arguments:
+        $projectDir: '%kernel.project_dir%'
