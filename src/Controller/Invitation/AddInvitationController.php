@@ -100,7 +100,7 @@ class AddInvitationController extends AbstractController
             'count' => $invitation->getCount(),
             'table' => $invitation->getInvitationTable()?->getName(),
             'kwEv' => "KW000" . $event->getId(),
-            'code' => $invitation->getCode()
+            'code' => $invitation->getCode() // add invitation code
         ];
 
         $jsonQrCodeData = json_encode($qrCodeData, JSON_THROW_ON_ERROR);
