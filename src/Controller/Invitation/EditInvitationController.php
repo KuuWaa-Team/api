@@ -43,7 +43,7 @@ class EditInvitationController extends AbstractController
     public function __invoke(Request $request, Invitation $invitation, KernelInterface $kernel)
     {
         $oldCount = $this->invitationRepository->find($invitation->getId())->getCount();
-        $oldTable = $this->tableRepository->find($invitation->getInvitationTable()->getId());
+        $oldTable = $invitation->getInvitationTable() == null ? null : $this->tableRepository->find($invitation->getInvitationTable()->getId());
 
         if ($oldTable !== null) {
             $oldTable->setCount($oldTable->getCount() - $oldCount);
