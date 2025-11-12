@@ -72,7 +72,7 @@ class LoginController extends AbstractController
             $user->setPhoneId($phoneId);
 
             if (empty(trim($user->getDisplayName()))) {
-                $user->setDisplayName(explode('@', $user->getEmail())[0]);
+                $user->setDisplayName(ucfirst(explode('@', $user->getEmail())[0]));
             }
             $this->userRepository->save($user);
             if ($new) {
