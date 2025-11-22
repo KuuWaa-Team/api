@@ -101,8 +101,8 @@ class PaymentService
         $redirectUrl = '';
 
         $orderNumber = "";
-        if (curl_errno($ch)) {
-            $message = 'Une erreur lors du traitement de votre requête';
+        if (curl_errno(handle: $ch)) {
+            $message = 'Une erreur lors du traitement de votre requête ' . curl_error($ch);
             $success = false;
         } else {
             curl_close($ch);
