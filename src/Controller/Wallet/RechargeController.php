@@ -86,15 +86,15 @@ class RechargeController extends AbstractController
                 $payment = [];
             }
 
+            $message = $payment["message"];
             if ($payment['success']) {
                 $orderNumber = $payment['orderNumber'];
-                $message = $payment["message"];
                 $operation->setOrderNumber($orderNumber);
                 $operation->setRedirectUrl($redirectUrl);
                 $this->operationRepository->save($operation);
             } else {
                 $success = false;
-                $message = "Une erreur s'est produite lors du paiement";
+                $message = $message ?? "Une erreur s'est produite lors du paiement";
                 $operation->setStatus(WalletService::$STATUS_FAILED);
                 $this->operationRepository->save($operation);
             }

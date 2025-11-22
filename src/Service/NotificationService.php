@@ -13,7 +13,7 @@ use Google\Service\Exception as GoogleException;
 
 class NotificationService
 {
-    private string $projectId = '77651918174';
+    private string $projectId = '20793118775';
     private string $messagingUrl;
     private string $serviceAccountPath;
     private HttpClientInterface $httpClient;
