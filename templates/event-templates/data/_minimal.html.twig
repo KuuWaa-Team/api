@@ -51,13 +51,13 @@
         position: relative;
         z-index: 3;
         text-align: center;
-        padding: 6rem 2rem 5rem;
+        padding: 1rem 2rem 5rem;
     }
 
     .subtitle {
         font-size: 0.9rem;
         letter-spacing: 2px;
-        margin-bottom: 2rem;
+        margin-bottom: 5px;
         text-transform: uppercase;
         font-family: 'Alice', serif;
         color: {{ template.secondaryColor }};
@@ -108,12 +108,12 @@
     .flower.top.right {
         top: 160px;
         right: 0;
-        transform: rotate(180deg);
         animation: fadeUp 1.2s ease forwards 1s, parallaxFloat2 10s ease-in-out infinite;
     }
 
     .flower.bottom.left {
         animation: fadeUp 1.2s ease forwards 1.2s, parallaxFloat3 7s ease-in-out infinite;
+        position: relative;
     }
 
     .flower.bottom.right {
@@ -227,7 +227,7 @@
         </div>
         <div class="date">
             {{ date }}<br>
-            {{ hour }}:{{ minute }}<br><br>
+            {{ hour }}:{{ minute }}<br>
             <strong>{{ invitation is defined ? invitation.event.placeName : 'Salle de fête' }}</strong><br>
             {{ invitation is defined ? invitation.event.address : '15, Avenue de la justice. Kinshasa' }}
         </div>
