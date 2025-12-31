@@ -17,13 +17,13 @@ INSERT INTO event_template (
 ) VALUES (
     'Minimal',
     'minimal',
-    '0',
-    '/templates/minimal/bgtop.png',
+    '2',
+    'minimal.png',
     1,
-    'Mariage, Anniversaire, Cérémonie',
+    'Mariage',
     0,
-    '#8B6B1F',
-    '#A77B00',
+    '#757a68',
+    '#000000',
     NULL,
     NULL,
     0
