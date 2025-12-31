@@ -102,6 +102,7 @@
 
     .flower.top.left {
         top: 160px;
+        left: 0;
         animation: fadeUp 1.2s ease forwards 0.8s, parallaxFloat1 8s ease-in-out infinite;
     }
 
@@ -112,12 +113,14 @@
     }
 
     .flower.bottom.left {
+        bottom: 0;
+        left: 0;
         animation: fadeUp 1.2s ease forwards 1.2s, parallaxFloat3 7s ease-in-out infinite;
-        position: relative;
     }
 
     .flower.bottom.right {
-        transform: rotate(180deg);
+        bottom: 0;
+        right: 0;
         animation: fadeUp 1.2s ease forwards 1.4s, parallaxFloat4 9s ease-in-out infinite;
     }
 
@@ -146,7 +149,7 @@
         }
     }
 
-    /* Effet parallax avec différentes vitesses et directions */
+    /* Effet parallax avec différentes vitesses et directions - sans rotation */
     @keyframes parallaxFloat1 {
         0%, 100% {
             transform: translateY(0) translateX(0);
@@ -164,16 +167,16 @@
 
     @keyframes parallaxFloat2 {
         0%, 100% {
-            transform: translateY(0) translateX(0) rotate(180deg);
+            transform: translateY(0) translateX(0);
         }
         25% {
-            transform: translateY(-12px) translateX(-5px) rotate(180deg);
+            transform: translateY(-12px) translateX(-5px);
         }
         50% {
-            transform: translateY(-18px) translateX(3px) rotate(180deg);
+            transform: translateY(-18px) translateX(3px);
         }
         75% {
-            transform: translateY(-10px) translateX(-2px) rotate(180deg);
+            transform: translateY(-10px) translateX(-2px);
         }
     }
 
@@ -194,16 +197,16 @@
 
     @keyframes parallaxFloat4 {
         0%, 100% {
-            transform: translateY(0) translateX(0) rotate(180deg);
+            transform: translateY(0) translateX(0);
         }
         20% {
-            transform: translateY(-16px) translateX(6px) rotate(180deg);
+            transform: translateY(-16px) translateX(6px);
         }
         40% {
-            transform: translateY(-9px) translateX(-4px) rotate(180deg);
+            transform: translateY(-9px) translateX(-4px);
         }
         80% {
-            transform: translateY(-13px) translateX(2px) rotate(180deg);
+            transform: translateY(-13px) translateX(2px);
         }
     }
 </style>
