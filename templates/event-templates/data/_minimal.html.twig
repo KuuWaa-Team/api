@@ -11,8 +11,6 @@
     .invitation-card {
         position: relative;
         background-color: #fff;
-        padding: 2rem 1rem;
-        border: 1px solid {{ template.primaryColor }};
         max-width: 600px;
         margin: auto;
         text-align: center;
@@ -31,6 +29,7 @@
         height: 260px;
         background: url('{{ asset('templates/minimal/bgtop.png') }}') center/cover no-repeat;
         position: relative;
+        background-size: cover;
     }
 
     /* === MASQUE BLANC === */
@@ -39,7 +38,7 @@
         top: 200px;
         left: 50%;
         transform: translateX(-50%);
-        width: 120%;
+        width: 90%;
         height: 320px;
         background: white;
         border-radius: 50%;
@@ -103,26 +102,21 @@
 
     .flower.top.left {
         top: 160px;
-        left: -60px;
         animation: fadeUp 1.2s ease forwards 0.8s, parallaxFloat1 8s ease-in-out infinite;
     }
 
     .flower.top.right {
         top: 160px;
-        right: -60px;
+        right: 0;
         transform: rotate(180deg);
         animation: fadeUp 1.2s ease forwards 1s, parallaxFloat2 10s ease-in-out infinite;
     }
 
     .flower.bottom.left {
-        bottom: -40px;
-        left: -60px;
         animation: fadeUp 1.2s ease forwards 1.2s, parallaxFloat3 7s ease-in-out infinite;
     }
 
     .flower.bottom.right {
-        bottom: -40px;
-        right: -60px;
         transform: rotate(180deg);
         animation: fadeUp 1.2s ease forwards 1.4s, parallaxFloat4 9s ease-in-out infinite;
     }
@@ -223,7 +217,7 @@
 
     <!-- Fleurs haut -->
     <img src="{{ asset('templates/minimal/folwer.png') }}" class="flower top left" alt="flower decoration">
-    <img src="{{ asset('templates/minimal/folwer.png') }}" class="flower top right" alt="flower decoration">
+    <img src="{{ asset('templates/minimal/folwer2.png') }}" class="flower top right" alt="flower decoration">
 
     <!-- Contenu -->
     <div class="content">
@@ -240,7 +234,7 @@
     </div>
 
     <!-- Fleurs bas -->
-    <img src="{{ asset('templates/minimal/folwer.png') }}" class="flower bottom left" alt="flower decoration">
+    <img src="{{ asset('templates/minimal/folwer2.png') }}" class="flower bottom left" alt="flower decoration">
     <img src="{{ asset('templates/minimal/folwer.png') }}" class="flower bottom right" alt="flower decoration">
 </div>
 
