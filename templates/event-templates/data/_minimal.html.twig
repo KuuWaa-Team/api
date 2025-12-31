@@ -11,6 +11,7 @@
     .invitation-card {
         position: relative;
         background-color: #fff;
+        border: 1px solid {{ template.primaryColor }};
         max-width: 600px;
         margin: auto;
         text-align: center;
@@ -231,7 +232,7 @@
         <div class="date">
             {{ date }}<br>
             {{ hour }}:{{ minute }}<br>
-            <strong>{{ invitation is defined ? invitation.event.placeName : 'Salle de fête' }}</strong><br>
+            <strong>{{ invitation is defined ? invitation.event.placeName|upper : 'Salle de fête' }}</strong><br>
             {{ invitation is defined ? invitation.event.address : '15, Avenue de la justice. Kinshasa' }}
         </div>
     </div>
