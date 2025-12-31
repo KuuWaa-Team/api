@@ -1110,7 +1110,7 @@
             <!-- END MUSIC -->
             {% endif %}
             
-            {% if invitation.event.hasBeverage == true %}
+            {% if invitation.event.hasBeverage == true and invitation.event.beverages|length > 0 %}
             <!-- BEVERAGE -->
             <div class="rounded-lg border bg-card text-card-foreground border-[{{ template.primaryColor }}]/20 shadow-lg">
                 <div class="flex flex-col space-y-1.5 p-6 text-center">
@@ -1492,7 +1492,6 @@
             {% endif %}
             <!-- END SPECIFICATIONS -->
 
-            {% if template.name != 'minimal' %}
             <div class="rounded-lg border bg-card text-card-foreground border-[{{ template.primaryColor }}]/20 shadow-lg bg-gradient-to-br from-[{{ template.primaryColor }}]/50 to-purple-50">
                 <div class="p-6 text-center py-8"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
@@ -1510,7 +1509,6 @@
                         ensemble des souvenirs inoubliables !</p>
                 </div>
             </div>
-            {% endif %}
             <div class="jsx-d0ada46de86ca64b text-center py-8">
                 <p class="jsx-d0ada46de86ca64b text-[{{ template.secondaryColor }}]/60">Créez des invitations électroniques avec <a
                 href="https://kuuwaa.com" target="_blanck"
