@@ -1,32 +1,36 @@
 <style>
-    @font-face {
-        font-family: 'Fraunces';
-        src: url('{{ asset('templates/basic/Fraunces/Fraunces-VariableFont_SOFT,WONK,opsz,wght.ttf') }}') format('truetype');
-        font-weight: normal;
-        font-style: normal;
+    @import url('https://fonts.googleapis.com/css2?family=Alex+Brush&family=Alice&display=swap');
+
+    body {
+        margin: 0;
+        background-color: #fff;
+        font-family: 'Alice', serif;
+        color: {{ template.primaryColor }};
     }
 
-    @font-face {
-        font-family: 'TheSeasons';
-        src: url('{{ asset('templates/basic/TheSeasons/Fontspring-DEMO-theseasons-reg.otf') }}') format('opentype');
-        font-weight: normal;
-        font-style: normal;
-    }
-
-    .wedding-card {
+    .invitation-card {
         position: relative;
+        background-color: #fff;
+        padding: 2rem 1rem;
+        border: 1px solid {{ template.primaryColor }};
         max-width: 600px;
         margin: auto;
-        background: #fff;
-        overflow: hidden;
-        font-family: 'Fraunces', serif;
+        text-align: center;
+        font-family: 'Alice', serif;
         color: {{ template.primaryColor }};
+        overflow: hidden;
+        z-index: 2;
+        border-radius: 5px;
+        box-shadow:
+            0 4px 6px rgba(0, 0, 0, 0.05),
+            0 8px 20px rgba(0, 0, 0, 0.08);
     }
 
     /* === IMAGE TOP === */
     .bg-top {
         height: 260px;
         background: url('{{ asset('templates/minimal/bgtop.png') }}') center/cover no-repeat;
+        position: relative;
     }
 
     /* === MASQUE BLANC === */
@@ -56,16 +60,19 @@
         letter-spacing: 2px;
         margin-bottom: 2rem;
         text-transform: uppercase;
+        font-family: 'Alice', serif;
+        color: {{ template.secondaryColor }};
         animation: fadeUp 1s ease forwards;
         animation-delay: 0.6s;
         opacity: 0;
     }
 
     .names {
-        font-family: 'TheSeasons', cursive;
+        font-family: 'Alex Brush', cursive;
         font-size: 3rem;
         line-height: 1.1;
         margin-bottom: 2rem;
+        color: {{ template.primaryColor }};
         animation: fadeUp 1s ease forwards;
         animation-delay: 1s;
         opacity: 0;
@@ -74,9 +81,15 @@
     .date {
         font-size: 0.95rem;
         line-height: 1.7;
+        font-family: 'Alice', serif;
+        color: {{ template.secondaryColor }};
         animation: fadeUp 1s ease forwards;
         animation-delay: 1.4s;
         opacity: 0;
+    }
+
+    .date strong {
+        color: {{ template.primaryColor }};
     }
 
     /* === FLEURS === */
@@ -85,33 +98,33 @@
         width: 180px;
         z-index: 4;
         opacity: 0;
-        animation: fadeUp 1.2s ease forwards, floatFlower 6s ease-in-out infinite;
+        pointer-events: none;
     }
 
     .flower.top.left {
         top: 160px;
         left: -60px;
-        animation-delay: 0.8s;
+        animation: fadeUp 1.2s ease forwards 0.8s, parallaxFloat1 8s ease-in-out infinite;
     }
 
     .flower.top.right {
         top: 160px;
         right: -60px;
-        transform: scaleX(-1);
-        animation-delay: 1s;
+        transform: rotate(180deg);
+        animation: fadeUp 1.2s ease forwards 1s, parallaxFloat2 10s ease-in-out infinite;
     }
 
     .flower.bottom.left {
         bottom: -40px;
         left: -60px;
-        animation-delay: 1.2s;
+        animation: fadeUp 1.2s ease forwards 1.2s, parallaxFloat3 7s ease-in-out infinite;
     }
 
     .flower.bottom.right {
         bottom: -40px;
         right: -60px;
-        transform: scaleX(-1);
-        animation-delay: 1.4s;
+        transform: rotate(180deg);
+        animation: fadeUp 1.2s ease forwards 1.4s, parallaxFloat4 9s ease-in-out infinite;
     }
 
     /* ======================
@@ -139,17 +152,69 @@
         }
     }
 
-    @keyframes floatFlower {
+    /* Effet parallax avec différentes vitesses et directions */
+    @keyframes parallaxFloat1 {
         0%, 100% {
-            transform: translateY(0);
+            transform: translateY(0) translateX(0);
+        }
+        25% {
+            transform: translateY(-15px) translateX(5px);
         }
         50% {
-            transform: translateY(-10px);
+            transform: translateY(-8px) translateX(-3px);
+        }
+        75% {
+            transform: translateY(-12px) translateX(3px);
+        }
+    }
+
+    @keyframes parallaxFloat2 {
+        0%, 100% {
+            transform: translateY(0) translateX(0) rotate(180deg);
+        }
+        25% {
+            transform: translateY(-12px) translateX(-5px) rotate(180deg);
+        }
+        50% {
+            transform: translateY(-18px) translateX(3px) rotate(180deg);
+        }
+        75% {
+            transform: translateY(-10px) translateX(-2px) rotate(180deg);
+        }
+    }
+
+    @keyframes parallaxFloat3 {
+        0%, 100% {
+            transform: translateY(0) translateX(0);
+        }
+        30% {
+            transform: translateY(-10px) translateX(-4px);
+        }
+        60% {
+            transform: translateY(-14px) translateX(4px);
+        }
+        90% {
+            transform: translateY(-6px) translateX(-2px);
+        }
+    }
+
+    @keyframes parallaxFloat4 {
+        0%, 100% {
+            transform: translateY(0) translateX(0) rotate(180deg);
+        }
+        20% {
+            transform: translateY(-16px) translateX(6px) rotate(180deg);
+        }
+        40% {
+            transform: translateY(-9px) translateX(-4px) rotate(180deg);
+        }
+        80% {
+            transform: translateY(-13px) translateX(2px) rotate(180deg);
         }
     }
 </style>
 
-<div class="wedding-card">
+<div class="invitation-card">
     <!-- Background top -->
     <div class="bg-top"></div>
 
@@ -164,13 +229,13 @@
     <div class="content">
         <div class="subtitle">SAVE THE DATE</div>
         <div class="names">
-            {{ invitation.event.title }}
+            {{ invitation is defined ? invitation.event.title : 'Jean & Jeanne' }}
         </div>
         <div class="date">
             {{ date }}<br>
             {{ hour }}:{{ minute }}<br><br>
-            <strong>{{ invitation.event.placeName }}</strong><br>
-            {{ invitation.event.address }}
+            <strong>{{ invitation is defined ? invitation.event.placeName : 'Salle de fête' }}</strong><br>
+            {{ invitation is defined ? invitation.event.address : '15, Avenue de la justice. Kinshasa' }}
         </div>
     </div>
 
