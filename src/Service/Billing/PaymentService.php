@@ -20,7 +20,7 @@ class PaymentService
 
     private $mobileBaseUrlFlexPay = 'https://backend.flexpay.cd/api/rest/v1/';
     private $cardBaseUrlFlexPay = 'https://cardpayment.flexpay.cd/v1.1/pay';
-    private $token = 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJcL2xvZ2luIiwicm9sZXMiOlsiTUVSQ0hBTlQiXSwiZXhwIjoxNzcwODE5NjExLCJzdWIiOiI2NjBmOWI0MGIzMmIzMjNhZjU2ZmMwYjFlMGI3OTc5NyJ9.0N2RaMA6SFdMqJVARUeVBSTxgEH9ru2G4VFGyVlhzD4';
+    private $token = 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJcL2xvZ2luIiwicm9sZXMiOlsiTUVSQ0hBTlQiXSwiZXhwIjoxODM0MDMyMjYwLCJzdWIiOiI1NTlmMDFjMzk5NjcxNzVhNWVhMTk2YzI3YTdlZTFjNSJ9.tQKTGxec0rc_BqYMk36UsyzSI6Q4k8QUR3PAwNx4WLk';
     /**
      * @throws \JsonException
      */
